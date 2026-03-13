@@ -1,0 +1,2 @@
+[    2476ms] [WARNING] The PerformanceObserver does not support buffered flag with the entryTypes argument. @ https://static.leadconnectorhq.com/1159/js/chunk.D6JPssER.js:57
+[    2595ms] [ERROR] The user is not logged in. user_not_logged_in @ https://static.leadconnectorhq.com/1159/js/chunk.9kRT7qk9.js:16

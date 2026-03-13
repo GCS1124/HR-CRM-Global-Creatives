@@ -1,0 +1,287 @@
+- generic [active] [ref=e1]:
+  - generic [ref=e2]:
+    - banner [ref=e3]:
+      - generic [ref=e4]:
+        - generic [ref=e10]:
+          - heading "Global Creative Services" [level=2] [ref=e15]
+          - navigation [ref=e21]:
+            - list [ref=e22]:
+              - listitem [ref=e23]:
+                - link "Home" [ref=e24] [cursor=pointer]:
+                  - /url: https://globalcreativeservices.us/
+              - listitem [ref=e25]:
+                - button "Solutions " [ref=e26]:
+                  - link "Solutions " [ref=e27] [cursor=pointer]:
+                    - /url: "#"
+                    - text: Solutions
+                    - generic [ref=e29]: 
+              - listitem [ref=e30]:
+                - button "Pricing " [ref=e31]:
+                  - link "Pricing " [ref=e32] [cursor=pointer]:
+                    - /url: "#"
+                    - text: Pricing
+                    - generic [ref=e34]: 
+              - listitem [ref=e35]:
+                - link "Who We Are" [ref=e36] [cursor=pointer]:
+                  - /url: https://globalcreativeservices.us/about-us/
+              - listitem [ref=e37]:
+                - link "Contact Us" [ref=e38] [cursor=pointer]:
+                  - /url: https://globalcreativeservices.us/contact-us/
+          - link "Request a Quote" [ref=e44] [cursor=pointer]:
+            - /url: https://calendly.com/shadma/30min
+            - generic [ref=e46]: Request a Quote
+        - text:  
+    - generic [ref=e47]:
+      - generic [ref=e52]:
+        - heading "Run your business. We'll handle the heavy lifting." [level=1] [ref=e55]
+        - paragraph [ref=e58]:
+          - text: Between cyber scams, rising costs, hiring headaches, and endless red tape,
+          - text: running a small business in 2025 is harder than ever. We help you grow revenue
+          - text: and reduce risk-so you can focus on what matters.
+        - generic [ref=e60]:
+          - generic [ref=e65]:
+            - figure [ref=e66]
+            - paragraph [ref=e68]: $16.6B in U.S. cybercrime losses
+          - generic [ref=e73]:
+            - figure [ref=e74]
+            - paragraph [ref=e76]: "58% cite inflation as #1 concern"
+          - generic [ref=e81]:
+            - figure [ref=e82]
+            - paragraph [ref=e84]: 89% find recruiting difficult
+        - paragraph [ref=e87]: "Sources: FBI Internet Crime Complaint Center, U.S. Chamber of Commerce, Goldman Sachs 10,000 Small Businesses Survey"
+        - generic [ref=e89]:
+          - link "Hire Offshore Talent" [ref=e95] [cursor=pointer]:
+            - /url: https://hireoffshoreresource.com/
+            - generic [ref=e97]: Hire Offshore Talent
+          - link "Outsource Business Operations" [ref=e103] [cursor=pointer]:
+            - /url: https://outsoursingservices.com/
+            - generic [ref=e105]: Outsource Business Operations
+          - link "Buy Digital Products & Services" [ref=e111] [cursor=pointer]:
+            - /url: https://globalcreativeservicesllc.com/
+            - generic [ref=e113]: Buy Digital Products & Services
+      - generic [ref=e118]:
+        - heading "Main Street Challenges in 2025" [level=3] [ref=e121]
+        - paragraph [ref=e124]:
+          - text: American small businesses face unprecedented pressures. Here’s what’s keeping owners
+          - text: up at night-and how we help.
+      - generic [ref=e128]:
+        - heading "Stop Managing Tools. Start Managing Your Business." [level=3] [ref=e131]
+        - paragraph [ref=e134]:
+          - text: We don’t just sell services-we build systems that compound. Each solution strengthens
+          - text: the others, creating momentum for sustainable growth.
+        - generic [ref=e138]:
+          - generic [ref=e139]:
+            - heading "Operational Efficiency Audit" [level=2] [ref=e140]
+            - paragraph [ref=e141]: Analyze your tech stack bloat and discover hidden operational costs.
+            - generic [ref=e142]: Current Subscriptions (CRM, Email, etc.)
+            - spinbutton [ref=e143]: "4"
+            - generic [ref=e144]: Monthly Software Spend ($)
+            - slider [ref=e145]: "700"
+            - text: $700
+            - generic [ref=e146]: Weekly Hours on Admin / Manual Tasks
+            - slider [ref=e147]: "10"
+            - text: 10 hrs
+            - generic [ref=e148]: Monthly Lead Volume
+            - slider [ref=e149]: "1000"
+            - text: "1000"
+            - button "Calculate" [ref=e150] [cursor=pointer]
+          - generic [ref=e151]:
+            - generic [ref=e152]:
+              - heading "Projected Annual Savings" [level=4] [ref=e153]
+              - generic [ref=e154]: $0
+            - generic [ref=e155]:
+              - heading "Time Recaptured" [level=4] [ref=e156]
+              - generic [ref=e157]: 0 hrs / year
+            - generic [ref=e158]:
+              - heading "Cost of Inaction" [level=4] [ref=e159]
+              - generic [ref=e160]: $0
+        - paragraph [ref=e163]: "Disclaimer : Cost of Inaction is not a service fee. This represents your estimated annual loss."
+      - generic [ref=e167]:
+        - heading "Solutions That Work Together" [level=3] [ref=e170]
+        - paragraph [ref=e173]:
+          - text: We don’t just sell services-we build systems that compound. Each solution strengthens
+          - text: the others, creating momentum for sustainable growth.
+        - paragraph [ref=e176]: Each solution amplifies the others. Here’s how they work together to accelerate your growth.
+      - generic [ref=e180]:
+        - heading "Over the years of experimenting we have developed expertise with these tools." [level=2] [ref=e183]
+        - region "Image Carousel" [ref=e186]:
+          - generic [ref=e187]:
+            - group [ref=e188]:
+              - figure [ref=e189]:
+                - img [ref=e190]
+            - group [ref=e191]:
+              - figure [ref=e192]:
+                - img [ref=e193]
+            - group [ref=e194]:
+              - figure [ref=e195]:
+                - img [ref=e196]
+            - group [ref=e197]:
+              - figure [ref=e198]:
+                - img [ref=e199]
+            - group [ref=e200]:
+              - figure [ref=e201]:
+                - img [ref=e202]
+            - group [ref=e203]:
+              - figure [ref=e204]:
+                - img [ref=e205]
+            - group [ref=e206]:
+              - figure [ref=e207]:
+                - img [ref=e208]
+            - group [ref=e209]:
+              - figure [ref=e210]:
+                - img [ref=e211]
+            - group "1 / 8" [ref=e212]:
+              - figure [ref=e213]:
+                - img "GCS website graphics (5)" [ref=e214]
+            - group "2 / 8" [ref=e215]:
+              - figure [ref=e216]:
+                - img "GCS website graphics (8)" [ref=e217]
+            - group "3 / 8" [ref=e218]:
+              - figure [ref=e219]:
+                - img "GCS website graphics (9)" [ref=e220]
+            - group "4 / 8" [ref=e221]:
+              - figure [ref=e222]:
+                - img "GCS website graphics (10)" [ref=e223]
+            - group "5 / 8" [ref=e224]:
+              - figure [ref=e225]:
+                - img "GCS website graphics (11)" [ref=e226]
+            - group "6 / 8" [ref=e227]:
+              - figure [ref=e228]:
+                - img "GCS website graphics (12)" [ref=e229]
+            - group "7 / 8" [ref=e230]:
+              - figure [ref=e231]:
+                - img "GCS website graphics (13)" [ref=e232]
+            - group "8 / 8" [ref=e233]:
+              - figure [ref=e234]:
+                - img "GCS website graphics (14)" [ref=e235]
+            - group [ref=e236]:
+              - figure [ref=e237]:
+                - img [ref=e238]
+            - group [ref=e239]:
+              - figure [ref=e240]:
+                - img [ref=e241]
+            - group [ref=e242]:
+              - figure [ref=e243]:
+                - img [ref=e244]
+            - group [ref=e245]:
+              - figure [ref=e246]:
+                - img [ref=e247]
+            - group [ref=e248]:
+              - figure [ref=e249]:
+                - img [ref=e250]
+            - group [ref=e251]:
+              - figure [ref=e252]:
+                - img [ref=e253]
+            - group [ref=e254]:
+              - figure [ref=e255]:
+                - img [ref=e256]
+            - group [ref=e257]:
+              - figure [ref=e258]:
+                - img [ref=e259]
+          - button "Previous slide"
+          - button "Next slide"
+          - generic [ref=e262]:
+            - button "Go to slide 1" [ref=e263] [cursor=pointer]
+            - button "Go to slide 2" [ref=e264] [cursor=pointer]
+            - button "Go to slide 3" [ref=e265] [cursor=pointer]
+            - button "Go to slide 4" [ref=e266] [cursor=pointer]
+            - button "Go to slide 5" [ref=e267] [cursor=pointer]
+            - button "Go to slide 6" [ref=e268] [cursor=pointer]
+            - button "Go to slide 7" [ref=e269] [cursor=pointer]
+            - button "Go to slide 8" [ref=e270] [cursor=pointer]
+      - generic [ref=e275]:
+        - heading "The Compounding Effect" [level=4] [ref=e278]
+        - paragraph [ref=e281]:
+          - text: This is how most small businesses fail. Not from one catastrophic mistake – but from a chain
+          - text: reaction of unaddressed vulnerabilities. We break the cycle by fixing the root causes, not the
+          - text: symptoms.
+    - contentinfo [ref=e282]:
+      - generic [ref=e288]:
+        - generic [ref=e290]:
+          - generic [ref=e292]:
+            - link "GCS website graphics (4)" [ref=e296] [cursor=pointer]:
+              - /url: https://globalcreativeservices.us
+              - img "GCS website graphics (4)" [ref=e299]
+            - paragraph [ref=e302]:
+              - text: Global Creative Services LLC Helping American small businesses grow
+              - text: revenue and reduce risk through practical digital solutions.
+            - list [ref=e305]:
+              - listitem [ref=e306]:
+                - link "Facebook" [ref=e307] [cursor=pointer]:
+                  - /url: https://www.facebook.com/people/Global-Creative-Services/100072569042679/
+                  - generic [ref=e308]: Facebook
+                  - img [ref=e309]
+              - listitem [ref=e311]:
+                - link "Instagram" [ref=e312] [cursor=pointer]:
+                  - /url: https://www.instagram.com/shadmaali.official/
+                  - generic [ref=e313]: Instagram
+                  - img [ref=e314]
+              - listitem [ref=e316]:
+                - link "Youtube" [ref=e317] [cursor=pointer]:
+                  - /url: https://www.youtube.com/@foundrX
+                  - generic [ref=e318]: Youtube
+                  - img [ref=e319]
+              - listitem [ref=e321]:
+                - link "Linkedin" [ref=e322] [cursor=pointer]:
+                  - /url: https://www.linkedin.com/company/globalcreativeservicesllc
+                  - generic [ref=e323]: Linkedin
+                  - img [ref=e324]
+              - listitem [ref=e326]:
+                - link "X-twitter" [ref=e327] [cursor=pointer]:
+                  - /url: https://x.com/global_cre_serv
+                  - generic [ref=e328]: X-twitter
+                  - img [ref=e329]
+          - generic [ref=e332]:
+            - heading "Solutions" [level=2] [ref=e335]
+            - list [ref=e338]:
+              - listitem [ref=e339]:
+                - link "Shopify/WordPress Site Setup" [ref=e340] [cursor=pointer]:
+                  - /url: https://globalcreativeservices.us/shopify-wordpress-site-setup/
+                  - generic [ref=e341]: Shopify/WordPress Site Setup
+              - listitem [ref=e342]:
+                - link "Virtual Assistance" [ref=e343] [cursor=pointer]:
+                  - /url: https://globalcreativeservices.us/virtual-assistance/
+                  - generic [ref=e344]: Virtual Assistance
+              - listitem [ref=e345]:
+                - link "Content Creation & Video Editing" [ref=e346] [cursor=pointer]:
+                  - /url: https://globalcreativeservices.us/content-creation-video-editing/
+                  - generic [ref=e347]: Content Creation & Video Editing
+              - listitem [ref=e348]:
+                - link "Custom Chatbot Development" [ref=e349] [cursor=pointer]:
+                  - /url: https://globalcreativeservices.us/custom-chatbot-development/
+                  - generic [ref=e350]: Custom Chatbot Development
+              - listitem [ref=e351]:
+                - link "GMB and Local SEO Boosts" [ref=e352] [cursor=pointer]:
+                  - /url: https://globalcreativeservices.us/gmb-and-local-seo-boosts/
+                  - generic [ref=e353]: GMB and Local SEO Boosts
+          - generic [ref=e355]:
+            - heading "Industries" [level=2] [ref=e358]
+            - list [ref=e361]:
+              - listitem [ref=e362]:
+                - generic [ref=e363]: Young Entrepreneurs & High-Growth Startups
+              - listitem [ref=e364]:
+                - generic [ref=e365]: Legal & Compliance
+              - listitem [ref=e366]:
+                - generic [ref=e367]: Healthcare & Wellness
+              - listitem [ref=e368]:
+                - generic [ref=e369]: E-commerce
+          - generic [ref=e371]:
+            - heading "Head Office" [level=2] [ref=e374]
+            - list [ref=e377]:
+              - listitem [ref=e378]:
+                - img [ref=e380]
+                - generic [ref=e382]: 304 S Jones Blvd, Las Vegas, NV 89107, United States
+            - heading "Operational Office" [level=2] [ref=e385]
+            - list [ref=e388]:
+              - listitem [ref=e389]:
+                - img [ref=e391]
+                - generic [ref=e393]: B- 509 , Bhutani Cyber Park , Block-C , Sector 62 Noida , India
+        - generic [ref=e395]:
+          - paragraph [ref=e400]: 2025 Global Creative Services. All rights reserved.
+          - heading "Privacy Policy" [level=2] [ref=e405]:
+            - link "Privacy Policy" [ref=e406] [cursor=pointer]:
+              - /url: https://globalcreativeservices.us/privacy-policy/
+          - heading "Terms of Service" [level=2] [ref=e411]:
+            - link "Terms of Service" [ref=e412] [cursor=pointer]:
+              - /url: https://globalcreativeservices.us/terms-conditions/
+  - generic [ref=e413]: desktop

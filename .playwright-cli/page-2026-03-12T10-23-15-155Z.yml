@@ -1,0 +1,14 @@
+- generic [ref=e7]:
+  - generic [ref=e8]:
+    - img [ref=e10]
+    - paragraph [ref=e13]: Global Creative Services
+    - heading "HR CRM Portal" [level=1] [ref=e14]
+    - paragraph [ref=e15]: Sign in to access employees, payroll, and talent operations.
+  - generic [ref=e16]:
+    - generic [ref=e17]:
+      - generic [ref=e18]: Email
+      - textbox "Email" [ref=e19]: hr@gcs.us
+    - generic [ref=e20]:
+      - generic [ref=e21]: Password
+      - textbox "Password" [ref=e22]: password
+    - button "Sign in" [ref=e23] [cursor=pointer]
