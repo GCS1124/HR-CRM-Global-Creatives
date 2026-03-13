@@ -2,6 +2,7 @@
 
 Role-based frontend CRM built with React + Vite and fully wired to Supabase.
 
+HR CRM Global Creatives is a modern, role-based Human Resources and Customer Relationship Management system tailored for Global Creative Services. It provides comprehensive HR tools including employee management, attendance tracking, leave management, payroll processing, recruitment workflows, and analytics dashboards for admins, alongside simplified self-service views for employees. Built with React, Tailwind CSS, TypeScript, and powered by Supabase for secure authentication and real-time database with Row Level Security (RLS).
 ## Stack
 
 - Frontend: React + Vite + TypeScript + Tailwind CSS
