@@ -1,0 +1,90 @@
+- generic [ref=e8]:
+  - generic [ref=e10]:
+    - paragraph [ref=e11]:
+      - img [ref=e12]
+      - text: Global Creative Services
+    - heading "Premium HR CRM access with a sharper operational shell." [level=1] [ref=e15]
+    - paragraph [ref=e16]: Sign in to the admin or employee workspace with secure Supabase auth, role-aware access, and faster day-to-day workflows.
+    - generic [ref=e17]:
+      - generic [ref=e18]:
+        - paragraph [ref=e19]: Access
+        - paragraph [ref=e20]: "2"
+        - paragraph [ref=e21]: Admin + Employee workspaces
+      - generic [ref=e22]:
+        - paragraph [ref=e23]: Auth
+        - paragraph [ref=e24]: OAuth
+        - paragraph [ref=e25]: Google and GitHub ready
+      - generic [ref=e26]:
+        - paragraph [ref=e27]: Security
+        - paragraph [ref=e28]: RLS
+        - paragraph [ref=e29]: Role-aligned data visibility
+    - generic [ref=e30]:
+      - paragraph [ref=e31]:
+        - img [ref=e32]
+        - text: Workspace Value
+      - list [ref=e35]:
+        - listitem [ref=e36]:
+          - img [ref=e37]
+          - generic [ref=e40]: Attendance, leave, payroll, and employee identity in one system.
+        - listitem [ref=e41]:
+          - img [ref=e42]
+          - generic [ref=e45]: Role-scoped routes so the UI stays focused and safe.
+        - listitem [ref=e46]:
+          - img [ref=e47]
+          - generic [ref=e50]: A cleaner shell aligned to the Global Creative visual tone.
+    - generic [ref=e51]:
+      - generic [ref=e52]:
+        - paragraph [ref=e53]:
+          - img [ref=e54]
+          - text: Built for operations
+        - paragraph [ref=e58]: Designed for HR teams that need controlled access, fast navigation, and a more serious product surface.
+      - generic [ref=e59]:
+        - paragraph [ref=e60]:
+          - img [ref=e61]
+          - text: Faster daily flow
+        - paragraph [ref=e64]: Cleaner hierarchy reduces friction when employees check attendance and admins review live records.
+  - generic [ref=e66]:
+    - generic [ref=e67]:
+      - img [ref=e69]
+      - paragraph [ref=e72]: Global Creative Services
+      - heading "Access your workspace" [level=2] [ref=e73]
+      - paragraph [ref=e74]: Use your approved credentials or connected provider to enter the HR CRM.
+    - generic [ref=e75]:
+      - button "Sign in" [ref=e76] [cursor=pointer]
+      - button "Sign up" [ref=e77] [cursor=pointer]
+    - generic [ref=e78]:
+      - button "Continue with Google" [ref=e79] [cursor=pointer]:
+        - generic [ref=e80]:
+          - img [ref=e81]
+          - text: Continue with Google
+        - img [ref=e84]
+      - button "Continue with GitHub" [ref=e86] [cursor=pointer]:
+        - generic [ref=e87]:
+          - img [ref=e88]
+          - text: Continue with GitHub
+        - img [ref=e91]
+    - generic [ref=e93]: Secure email access
+    - generic [ref=e96]:
+      - generic [ref=e97]:
+        - generic [ref=e98]: Email
+        - textbox "Email" [ref=e99]:
+          - /placeholder: name@company.com
+      - generic [ref=e100]:
+        - generic [ref=e101]: Password
+        - textbox "Password" [ref=e102]:
+          - /placeholder: Enter your password
+      - button "Sign in" [ref=e103] [cursor=pointer]:
+        - img [ref=e104]
+        - text: Sign in
+    - generic [ref=e108]:
+      - generic [ref=e109]:
+        - paragraph [ref=e110]: Security Layer
+        - paragraph [ref=e111]: Session-protected access with role-aware routing and Supabase-backed authentication across the CRM.
+        - button "View security details" [ref=e112] [cursor=pointer]:
+          - text: View security details
+          - img [ref=e113]
+      - generic [ref=e115]:
+        - paragraph [ref=e116]:
+          - img [ref=e117]
+          - text: Access note
+        - paragraph [ref=e121]: New users default to employee access unless elevated by HR admin in the CRM.

@@ -96,8 +96,8 @@ export function EmployeeLeavePage() {
       </div>
 
       <div className="grid gap-4 xl:grid-cols-[1.05fr_0.95fr]">
-        <section className="relative overflow-hidden rounded-[32px] border border-brand-200 bg-[linear-gradient(135deg,rgba(10,46,102,0.96),rgba(19,95,171,0.92))] p-6 text-white shadow-soft">
-          <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_top_left,rgba(255,255,255,0.18),transparent_36%),radial-gradient(circle_at_bottom_right,rgba(255,211,120,0.15),transparent_30%)]" />
+        <section className="relative overflow-hidden rounded-[32px] border border-brand-200 bg-[linear-gradient(135deg,rgba(26,42,105,0.96),rgba(59,130,246,0.92))] p-6 text-white shadow-soft">
+          <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_top_left,rgba(255,255,255,0.18),transparent_36%),radial-gradient(circle_at_bottom_right,rgba(249,115,22,0.16),transparent_30%)]" />
           <div className="relative">
             <p className="inline-flex items-center gap-2 rounded-full border border-white/15 bg-white/10 px-3 py-1 text-[0.68rem] font-bold uppercase tracking-[0.18em] text-white/90">
               <Sparkles className="h-3.5 w-3.5" />
@@ -193,6 +193,7 @@ export function EmployeeLeavePage() {
             columns={columns}
             rows={leaveHook.data ?? []}
             rowKey={(row) => row.id}
+            exportFileName="my-leave"
             emptyText="No leave requests yet."
           />
         </SectionCard>

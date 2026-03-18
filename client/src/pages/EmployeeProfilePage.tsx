@@ -47,8 +47,8 @@ export function EmployeeProfilePage() {
       </div>
 
       <div className="grid gap-4 xl:grid-cols-[1.1fr_0.9fr]">
-        <section className="relative overflow-hidden rounded-[32px] border border-brand-200 bg-[linear-gradient(135deg,rgba(243,248,255,0.98),rgba(225,236,255,0.95))] p-6 shadow-soft">
-          <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_top_right,rgba(33,91,184,0.12),transparent_36%)]" />
+        <section className="relative overflow-hidden rounded-[32px] border border-brand-200 bg-[linear-gradient(135deg,rgba(248,250,255,0.98),rgba(229,236,255,0.95))] p-6 shadow-soft">
+          <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_top_right,rgba(59,130,246,0.12),transparent_36%)]" />
           <div className="relative">
             <p className="inline-flex items-center gap-2 rounded-full border border-brand-200 bg-white/80 px-3 py-1 text-[0.68rem] font-bold uppercase tracking-[0.18em] text-brand-700">
               <Sparkles className="h-3.5 w-3.5" />

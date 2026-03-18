@@ -6,27 +6,26 @@ interface StatCardProps {
   hint?: string;
   icon: LucideIcon;
   trend?: string;
+  accent?: boolean;
 }
 
-export function StatCard({ title, value, hint, icon: Icon, trend }: StatCardProps) {
+export function StatCard({ title, value, hint, icon: Icon, trend, accent = false }: StatCardProps) {
   return (
-    <article className="surface-card relative overflow-hidden p-4 md:p-5">
-      <div className="absolute inset-x-0 top-0 h-1 bg-brand-700" />
-      <div className="flex items-start justify-between gap-3 pt-1">
+    <article className="relative overflow-hidden rounded-xl border border-slate-200/80 bg-white/95 p-4 shadow-[0_12px_30px_rgba(15,23,42,0.08)]">
+      {accent ? (
+        <div className="pointer-events-none absolute inset-x-0 top-0 h-1 bg-[linear-gradient(90deg,#1a2a69,#3b82f6,#f97316)]" />
+      ) : null}
+      <div className="flex items-center justify-between gap-3">
         <div>
-          <p className="text-[0.7rem] font-black uppercase tracking-[0.16em] text-slate-500">{title}</p>
-          <p className="mt-3 text-3xl font-extrabold tracking-tight text-slate-950">{value}</p>
+          <p className="text-xs font-semibold uppercase tracking-[0.14em] text-brand-700">{title}</p>
+          <p className="mt-2 text-2xl font-semibold text-ink">{value}</p>
         </div>
-        <span className="rounded-lg bg-slate-50 p-2.5 text-slate-600">
+        <span className="rounded-lg bg-brand-50 p-2 text-brand-600">
           <Icon className="h-4 w-4" />
         </span>
       </div>
-      {(hint || trend) ? (
-        <div className="mt-3 flex flex-wrap items-center gap-2">
-          {hint ? <p className="text-sm font-medium text-slate-600">{hint}</p> : null}
-          {trend ? <span className="rounded-full bg-emerald-50 px-2 py-1 text-[0.68rem] font-bold text-emerald-700">{trend}</span> : null}
-        </div>
-      ) : null}
+      {hint ? <p className="mt-2 text-xs font-medium text-slate-500">{hint}</p> : null}
+      {trend ? <p className="mt-1 text-xs font-semibold text-emerald-700">{trend}</p> : null}
     </article>
   );
 }

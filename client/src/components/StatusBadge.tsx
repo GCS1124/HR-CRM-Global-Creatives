@@ -21,6 +21,14 @@ const toneMap: Record<string, string> = {
   hired: "border-emerald-200 bg-emerald-50 text-emerald-700",
   processed: "border-emerald-200 bg-emerald-50 text-emerald-700",
   scheduled: "border-blue-200 bg-blue-50 text-blue-700",
+  todo: "border-slate-200 bg-slate-100 text-slate-700",
+  in_progress: "border-amber-200 bg-amber-50 text-amber-700",
+  blocked: "border-rose-200 bg-rose-50 text-rose-700",
+  done: "border-emerald-200 bg-emerald-50 text-emerald-700",
+  low: "border-slate-200 bg-slate-100 text-slate-700",
+  medium: "border-sky-200 bg-sky-50 text-sky-700",
+  high: "border-amber-200 bg-amber-50 text-amber-700",
+  critical: "border-rose-200 bg-rose-50 text-rose-700",
 };
 
 const dotMap: Record<string, string> = {
@@ -40,6 +48,14 @@ const dotMap: Record<string, string> = {
   hired: "bg-emerald-500",
   processed: "bg-emerald-500",
   scheduled: "bg-blue-500",
+  todo: "bg-slate-500",
+  in_progress: "bg-amber-500",
+  blocked: "bg-rose-500",
+  done: "bg-emerald-500",
+  low: "bg-slate-500",
+  medium: "bg-sky-500",
+  high: "bg-amber-500",
+  critical: "bg-rose-500",
 };
 
 function toLabel(value: string): string {

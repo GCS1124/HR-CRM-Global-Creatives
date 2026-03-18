@@ -1,16 +1,12 @@
 import { useCallback } from "react";
 import {
-  AlertTriangle,
-  ArrowUpRight,
+  BadgeCheck,
   BriefcaseBusiness,
-  CheckCircle2,
+  CalendarClock,
   CircleDollarSign,
   Clock3,
-  FileText,
-  LineChart,
   Users,
 } from "lucide-react";
-import { ModuleHero } from "../components/ModuleHero";
 import { PageHeader } from "../components/PageHeader";
 import { SectionCard } from "../components/SectionCard";
 import { StatCard } from "../components/StatCard";
@@ -30,137 +26,154 @@ export function DashboardPage() {
     return <p className="text-sm font-semibold text-rose-700">{error ?? "Failed to load dashboard"}</p>;
   }
 
-  const statusBlocks = [
+  const activeRate = data.metrics.totalEmployees
+    ? Math.round((data.metrics.activeEmployees / data.metrics.totalEmployees) * 100)
+    : 0;
+  const attendanceRate = Math.min(100, Math.max(0, data.metrics.attendanceRate));
+
+  const actionItems = [
     {
-      label: "Active",
-      value: data.metrics.activeEmployees,
-      color: "bg-emerald-500",
+      label: "Pending leave approvals",
+      value: `${data.metrics.pendingLeaves} requests`,
+      meta: "Requires manager sign-off",
+      icon: CalendarClock,
+      tone: "border-amber-200/70 bg-amber-50/60 text-amber-700",
+      iconTone: "bg-amber-100 text-amber-700",
     },
     {
-      label: "Pending Leave",
-      value: data.metrics.pendingLeaves,
-      color: "bg-amber-500",
+      label: "Open roles in pipeline",
+      value: `${data.metrics.activeOpenings} roles`,
+      meta: "Review hiring stages today",
+      icon: BriefcaseBusiness,
+      tone: "border-indigo-200/70 bg-indigo-50/60 text-indigo-700",
+      iconTone: "bg-indigo-100 text-indigo-700",
     },
     {
-      label: "Hiring Pipeline",
-      value: data.metrics.activeOpenings,
-      color: "bg-sky-500",
+      label: "Payroll review",
+      value: formatCurrency(data.metrics.payrollTotal),
+      meta: "Total for current cycle",
+      icon: CircleDollarSign,
+      tone: "border-emerald-200/70 bg-emerald-50/60 text-emerald-700",
+      iconTone: "bg-emerald-100 text-emerald-700",
     },
   ];
 
   return (
     <div className="animate-page-enter space-y-6">
       <PageHeader
-        title="HR Control Center"
-        subtitle="Live snapshot of Global Creative workforce operations, hiring velocity, and payroll health"
+        title="Dashboard"
+        subtitle="Real-time view of headcount, attendance, and payroll readiness."
         eyebrow="Executive Dashboard"
-        action={
-          <button type="button" className="btn-primary">
-            <FileText className="h-4 w-4" />
-            Export report
-          </button>
-        }
-      />
-
-      <ModuleHero
-        icon={LineChart}
-        title="Operate HR, Recruitment, and Payroll from One Command Layer"
-        subtitle={`Attendance is at ${formatPercent(data.metrics.attendanceRate)} and payroll is tracking ${formatCurrency(data.metrics.payrollTotal)} in current-cycle net payouts.`}
-        chips={["Executive visibility", "Fast approvals", "Recruitment momentum"]}
-        spotlight={`${data.metrics.activeEmployees} Active Team Members`}
       />
 
       <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-4">
         <StatCard
           title="Total Employees"
           value={String(data.metrics.totalEmployees)}
-          hint="Across all departments"
-          trend="+4%"
           icon={Users}
+          hint={`${data.metrics.activeEmployees} active`}
+          accent
         />
         <StatCard
           title="Active Openings"
           value={String(data.metrics.activeOpenings)}
-          hint="Recruitment pipeline"
-          trend="+2 roles"
           icon={BriefcaseBusiness}
+          hint="Hiring pipeline"
         />
         <StatCard
           title="Attendance Rate"
           value={formatPercent(data.metrics.attendanceRate)}
-          hint="Present + remote today"
-          trend="+1.2%"
           icon={Clock3}
+          hint="Present + remote"
         />
         <StatCard
           title="Payroll Total"
           value={formatCurrency(data.metrics.payrollTotal)}
-          hint="Current cycle net payouts"
-          trend="On track"
           icon={CircleDollarSign}
+          hint="Current cycle"
         />
       </div>
 
-      <div className="grid gap-4 xl:grid-cols-[1.35fr_1fr]">
-        <SectionCard
-          title="Workforce Distribution"
-          subtitle="Current team composition and active HR load"
-          rightSlot={
-            <span className="inline-flex items-center gap-1 rounded-full bg-brand-100 px-2.5 py-1 text-xs font-bold text-brand-700">
-              <ArrowUpRight className="h-3.5 w-3.5" />
-              Updated live
-            </span>
-          }
-        >
-          <div className="space-y-4">
-            {statusBlocks.map((item) => {
-              const pct = Math.max((item.value / Math.max(data.metrics.totalEmployees, 1)) * 100, 5);
-
-              return (
-                <div key={item.label}>
-                  <div className="mb-1 flex items-center justify-between text-sm font-semibold text-brand-700">
-                    <span>{item.label}</span>
-                    <span>{item.value}</span>
-                  </div>
-                  <div className="h-2.5 rounded-full bg-brand-100">
-                    <div className={`h-full rounded-full ${item.color}`} style={{ width: `${pct}%` }} />
-                  </div>
-                </div>
-              );
-            })}
+      <div className="grid gap-6 xl:grid-cols-[1.6fr_1fr]">
+        <SectionCard title="Workforce Pulse" subtitle="Active headcount health and attendance quality">
+          <div className="grid gap-4 md:grid-cols-3">
+            {[
+              {
+                label: "Active Employees",
+                value: data.metrics.activeEmployees,
+                meta: `${activeRate}% of total`,
+                tone: "border-emerald-200/70 bg-emerald-50/60 text-emerald-700",
+              },
+              {
+                label: "Pending Leaves",
+                value: data.metrics.pendingLeaves,
+                meta: "Awaiting approval",
+                tone: "border-amber-200/70 bg-amber-50/60 text-amber-700",
+              },
+              {
+                label: "Open Positions",
+                value: data.metrics.activeOpenings,
+                meta: "Hiring in flight",
+                tone: "border-indigo-200/70 bg-indigo-50/60 text-indigo-700",
+              },
+            ].map((item) => (
+              <div key={item.label} className={`rounded-2xl border p-4 ${item.tone}`}>
+                <p className="text-xs font-semibold uppercase tracking-[0.18em]">{item.label}</p>
+                <p className="mt-3 text-3xl font-semibold text-ink">{item.value}</p>
+                <p className="mt-1 text-xs font-medium text-slate-500">{item.meta}</p>
+              </div>
+            ))}
           </div>
 
-          <div className="mt-5 grid gap-2 sm:grid-cols-3">
-            <div className="rounded-xl border border-emerald-200 bg-emerald-50 p-3">
-              <p className="inline-flex items-center gap-2 text-xs font-bold uppercase tracking-[0.12em] text-emerald-700">
-                <CheckCircle2 className="h-3.5 w-3.5" />
-                Stable
+          <div className="mt-5 grid gap-4 lg:grid-cols-2">
+            <div className="rounded-2xl border border-slate-200/80 bg-white/90 p-4">
+              <div className="flex items-center justify-between text-xs font-semibold uppercase tracking-[0.16em] text-slate-500">
+                <span>Attendance Health</span>
+                <span className="text-emerald-700">{formatPercent(attendanceRate)}</span>
+              </div>
+              <div className="mt-3 h-2 w-full rounded-full bg-slate-200">
+                <div
+                  className="h-2 rounded-full bg-emerald-500 transition-all"
+                  style={{ width: `${attendanceRate}%` }}
+                />
+              </div>
+              <p className="mt-2 text-xs font-medium text-slate-500">
+                Based on present + remote check-ins across the company.
               </p>
-              <p className="mt-1 text-sm font-medium text-emerald-800">Core teams are fully staffed for this sprint.</p>
             </div>
-            <div className="rounded-xl border border-amber-200 bg-amber-50 p-3">
-              <p className="inline-flex items-center gap-2 text-xs font-bold uppercase tracking-[0.12em] text-amber-700">
-                <AlertTriangle className="h-3.5 w-3.5" />
-                Watchlist
+            <div className="rounded-2xl border border-slate-200/80 bg-white/90 p-4">
+              <div className="flex items-center justify-between text-xs font-semibold uppercase tracking-[0.16em] text-slate-500">
+                <span>Active Workforce</span>
+                <span className="text-brand-700">{activeRate}%</span>
+              </div>
+              <div className="mt-3 h-2 w-full rounded-full bg-slate-200">
+                <div
+                  className="h-2 rounded-full bg-brand-600 transition-all"
+                  style={{ width: `${activeRate}%` }}
+                />
+              </div>
+              <p className="mt-2 text-xs font-medium text-slate-500">
+                Active employees vs. total headcount.
               </p>
-              <p className="mt-1 text-sm font-medium text-amber-800">Leave approvals need fast turn-around.</p>
-            </div>
-            <div className="rounded-xl border border-sky-200 bg-sky-50 p-3">
-              <p className="inline-flex items-center gap-2 text-xs font-bold uppercase tracking-[0.12em] text-sky-700">
-                <LineChart className="h-3.5 w-3.5" />
-                Growth
-              </p>
-              <p className="mt-1 text-sm font-medium text-sky-800">Hiring pipeline remains active and healthy.</p>
             </div>
           </div>
         </SectionCard>
 
-        <SectionCard title="Operational Highlights" subtitle="Focus items for this week">
+        <SectionCard title="Action Center" subtitle="What needs attention right now">
           <div className="space-y-3">
-            {data.highlights.map((highlight) => (
-              <div key={highlight.title} className="rounded-xl border border-brand-200 bg-brand-50/65 p-4">
-                <p className="text-xs font-bold uppercase tracking-[0.12em] text-brand-700">{highlight.title}</p>
-                <p className="mt-2 font-display text-3xl font-bold text-brand-900">{highlight.value}</p>
+            {actionItems.map((item) => (
+              <div
+                key={item.label}
+                className={`flex items-start gap-3 rounded-xl border px-4 py-3 ${item.tone}`}
+              >
+                <span className={`flex h-9 w-9 items-center justify-center rounded-lg ${item.iconTone}`}>
+                  <item.icon className="h-4 w-4" />
+                </span>
+                <div className="min-w-0">
+                  <p className="text-sm font-semibold text-ink">{item.label}</p>
+                  <p className="text-lg font-semibold">{item.value}</p>
+                  <p className="text-xs font-medium text-slate-500">{item.meta}</p>
+                </div>
               </div>
             ))}
           </div>

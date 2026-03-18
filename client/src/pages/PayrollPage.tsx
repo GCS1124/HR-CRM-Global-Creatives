@@ -166,6 +166,11 @@ export function PayrollPage() {
   const averageNetPay = filteredRecords.length > 0 ? summary.totalNetPay / filteredRecords.length : 0;
   const deductionRate = summary.totalNetPay > 0 ? (summary.totalDeductions / (summary.totalNetPay + summary.totalDeductions)) * 100 : 0;
   const netPayPreview = Math.max(Number(formState.baseSalary) + Number(formState.bonus) - Number(formState.deductions), 0);
+  const grossPayPreview = Math.max(Number(formState.baseSalary) + Number(formState.bonus), 0);
+  const deductionRatePreview = grossPayPreview > 0 ? (Number(formState.deductions) / grossPayPreview) * 100 : 0;
+  const latestPayrollSnapshot = formState.employeeId
+    ? latestRecordByEmployee.get(formState.employeeId) ?? latestRecordByEmployee.get(formState.employeeName)
+    : null;
   const hasActiveFilters = Boolean(search || department || monthFilter || statusFilter || focusMode !== "all");
   const allVisibleSelected = filteredRecords.length > 0 && selectedIds.length === filteredRecords.length;
 
@@ -173,18 +178,6 @@ export function PayrollPage() {
     () => filteredRecords.filter((record) => record.status === "scheduled").sort((left, right) => right.netPay - left.netPay).slice(0, 5),
     [filteredRecords],
   );
-
-  const cycleDistribution = useMemo(() => {
-    return months.slice(0, 4).map((month) => {
-      const monthRecords = filteredRecords.filter((record) => record.month === month);
-      return {
-        month,
-        count: monthRecords.length,
-        total: monthRecords.reduce((sum, record) => sum + record.netPay, 0),
-        processed: monthRecords.filter((record) => record.status === "processed").length,
-      };
-    });
-  }, [filteredRecords, months]);
 
   const toggleSelection = (id: string) => {
     setSelectedIds((current) => (current.includes(id) ? current.filter((value) => value !== id) : [...current, id]));
@@ -501,10 +494,10 @@ export function PayrollPage() {
       />
 
       <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-4">
-        <StatCard title="Visible net pay" value={formatCurrency(summary.totalNetPay)} hint="Current register scope" icon={Wallet} />
-        <StatCard title="Average payout" value={formatCurrency(averageNetPay)} hint="Per record in active view" icon={BadgeDollarSign} />
-        <StatCard title="Scheduled exposure" value={formatCurrency(summary.scheduledExposure)} hint="Awaiting finance close" icon={Clock3} />
-        <StatCard title="Deduction rate" value={`${deductionRate.toFixed(1)}%`} hint="Of gross visible payout" icon={ReceiptText} />
+        <StatCard title="Visible net pay" value={formatCurrency(summary.totalNetPay)} hint="Current register scope" icon={Wallet} accent />
+        <StatCard title="Average payout" value={formatCurrency(averageNetPay)} hint="Per record in active view" icon={BadgeDollarSign} accent />
+        <StatCard title="Scheduled exposure" value={formatCurrency(summary.scheduledExposure)} hint="Awaiting finance close" icon={Clock3} accent />
+        <StatCard title="Deduction rate" value={`${deductionRate.toFixed(1)}%`} hint="Of gross visible payout" icon={ReceiptText} accent />
       </div>
 
       <SectionCard title="Payroll controls" subtitle="Move between period review, payout state, and deduction-focused analysis without leaving the register">
@@ -579,6 +572,7 @@ export function PayrollPage() {
             columns={columns}
             rows={filteredRecords}
             rowKey={(row) => row.id}
+            exportFileName="payroll"
             emptyText="No payroll records available for this filter."
             rowClassName={(row) => {
               if (selectedIds.includes(row.id)) {
@@ -669,23 +663,6 @@ export function PayrollPage() {
         </div>
       </div>
 
-      <SectionCard title="Cycle distribution" subtitle="Understand how payroll volume is spread across the most recent cycles">
-        <div className="grid gap-3 md:grid-cols-2 xl:grid-cols-4">
-          {cycleDistribution.map((cycle) => {
-            const processedRatio = Math.round((cycle.processed / Math.max(cycle.count, 1)) * 100);
-            return (
-              <div key={cycle.month} className="rounded-xl border border-slate-200 bg-slate-50 px-4 py-4">
-                <p className="text-[0.68rem] font-black uppercase tracking-[0.14em] text-slate-500">{formatMonthLabel(cycle.month)}</p>
-                <p className="mt-3 text-2xl font-extrabold tracking-tight text-slate-950">{formatCurrency(cycle.total)}</p>
-                <p className="mt-1 text-sm text-slate-600">{cycle.count} records · {processedRatio}% processed</p>
-                <div className="mt-3 h-2 rounded-full bg-white">
-                  <div className="h-full rounded-full bg-brand-700" style={{ width: `${Math.max(processedRatio, cycle.count > 0 ? 8 : 0)}%` }} />
-                </div>
-              </div>
-            );
-          })}
-        </div>
-      </SectionCard>
     </div>
   );
 }

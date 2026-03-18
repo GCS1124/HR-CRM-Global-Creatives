@@ -18,7 +18,6 @@ import {
 } from "lucide-react";
 import { DataTable } from "../components/DataTable";
 import type { TableColumn } from "../components/DataTable";
-import { ModuleHero } from "../components/ModuleHero";
 import { PageHeader } from "../components/PageHeader";
 import { SectionCard } from "../components/SectionCard";
 import { StatCard } from "../components/StatCard";
@@ -235,16 +234,6 @@ export function EmployeesPage() {
       .sort((left, right) => right.count - left.count)
       .slice(0, 4);
   }, [presetScopedEmployees]);
-
-  const watchlist = useMemo(() => {
-    return filteredEmployees
-      .filter((employee) => getEmployeePriority(employee) !== "normal")
-      .sort((left, right) => {
-        const priorityRank = { high: 2, medium: 1, normal: 0 };
-        return priorityRank[getEmployeePriority(right)] - priorityRank[getEmployeePriority(left)] || left.performanceScore - right.performanceScore;
-      })
-      .slice(0, 5);
-  }, [filteredEmployees]);
 
   const columns: Array<TableColumn<Employee>> = [
     {
@@ -492,14 +481,6 @@ export function EmployeesPage() {
         }
       />
 
-      <ModuleHero
-        icon={Users}
-        title="People operations with stronger triage and assignment visibility"
-        subtitle="Use saved views, manager coverage, watchlists, and direct lifecycle actions to keep the directory operational instead of static."
-        chips={["Saved views", "Manager load", "Lifecycle control"]}
-        spotlight={filteredEmployees.length > 0 ? `${stats.averagePerformance}% average performance` : "People workspace"}
-      />
-
       <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-4">
         <StatCard title="Visible people" value={String(stats.total)} hint="Current working set" icon={Users} />
         <StatCard title="Active workforce" value={String(stats.active)} hint="Ready for allocation" icon={UserCheck} />
@@ -607,6 +588,7 @@ export function EmployeesPage() {
             columns={columns}
             rows={filteredEmployees}
             rowKey={(row) => row.id}
+            exportFileName="employees"
             emptyText="No employees match this filter."
             rowClassName={(row) => {
               if (row.id === selectedEmployeeId) {
@@ -760,31 +742,6 @@ export function EmployeesPage() {
             )}
           </SectionCard>
 
-          <SectionCard title="People watchlist" subtitle="The records that need the fastest follow-up this cycle">
-            {watchlist.length > 0 ? (
-              <div className="space-y-3">
-                {watchlist.map((employee) => (
-                  <button
-                    key={employee.id}
-                    type="button"
-                    onClick={() => setSelectedEmployeeId(employee.id)}
-                    className="flex w-full items-start justify-between rounded-xl border border-slate-200 bg-white px-4 py-4 text-left transition hover:border-slate-300"
-                  >
-                    <div>
-                      <p className="font-semibold text-slate-950">{employee.name}</p>
-                      <p className="mt-1 text-sm text-slate-600">{employee.role} · {employee.manager}</p>
-                    </div>
-                    <div className="text-right">
-                      <p className="text-sm font-bold text-slate-950">{employee.performanceScore}%</p>
-                      <p className="mt-1 text-xs text-slate-500">{getEmployeePriority(employee)} priority</p>
-                    </div>
-                  </button>
-                ))}
-              </div>
-            ) : (
-              <p className="text-sm font-medium text-slate-600">No watchlist records in the current working set.</p>
-            )}
-          </SectionCard>
         </div>
       </div>
     </div>

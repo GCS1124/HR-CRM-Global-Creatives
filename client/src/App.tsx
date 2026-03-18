@@ -1,4 +1,5 @@
 import {
+  ClipboardList,
   CalendarClock,
   CircleDollarSign,
   Gauge,
@@ -15,6 +16,7 @@ import { RoleRoute } from "./components/RoleRoute";
 import { useAuthSession } from "./hooks/useAuthSession";
 import { AppLayout } from "./layouts/AppLayout";
 import { AttendancePage } from "./pages/AttendancePage";
+import { AuthCallbackPage } from "./pages/AuthCallbackPage";
 import { DashboardPage } from "./pages/DashboardPage";
 import { EmployeeAttendancePage } from "./pages/EmployeeAttendancePage";
 import { EmployeeDashboardPage } from "./pages/EmployeeDashboardPage";
@@ -28,6 +30,7 @@ import { NotFoundPage } from "./pages/NotFoundPage";
 import { PayrollPage } from "./pages/PayrollPage";
 import { RecruitmentPage } from "./pages/RecruitmentPage";
 import { SettingsPage } from "./pages/SettingsPage";
+import { TasksPage } from "./pages/TasksPage";
 import type { UserRole } from "./types/auth";
 import type { NavItem } from "./types/navigation";
 
@@ -35,6 +38,7 @@ const adminNavItems: NavItem[] = [
   { label: "Dashboard", path: "/admin", icon: Gauge },
   { label: "Employees", path: "/admin/employees", icon: Users },
   { label: "Attendance", path: "/admin/attendance", icon: UserCheck },
+  { label: "Tasks", path: "/admin/tasks", icon: ClipboardList },
   { label: "Leave", path: "/admin/leave", icon: CalendarClock },
   { label: "Recruitment", path: "/admin/recruitment", icon: UserRound },
   { label: "Payroll", path: "/admin/payroll", icon: CircleDollarSign },
@@ -45,6 +49,7 @@ const employeeNavItems: NavItem[] = [
   { label: "Dashboard", path: "/employee", icon: Gauge },
   { label: "My Attendance", path: "/employee/attendance", icon: UserCheck },
   { label: "My Leave", path: "/employee/leave", icon: CalendarClock },
+  { label: "Tasks", path: "/employee/tasks", icon: ClipboardList },
   { label: "My Payroll", path: "/employee/payroll", icon: Wallet },
   { label: "My Profile", path: "/employee/profile", icon: User },
 ];
@@ -72,11 +77,9 @@ export default function App() {
     signInWithGitHub,
     isSupabaseConfigured,
     role,
-    profile,
   } = useAuthSession();
 
   const landingPath = resolveLandingPath(role);
-  const userLabel = profile?.fullName?.trim() || profile?.email || "Workspace User";
 
   if (isLoading) {
     return (
@@ -107,6 +110,8 @@ export default function App() {
         }
       />
 
+      <Route path="/auth/callback" element={<AuthCallbackPage />} />
+
       <Route element={<ProtectedRoute isAuthenticated={isAuthenticated} isLoading={isLoading} />}>
         <Route index element={<Navigate to={landingPath} replace />} />
 
@@ -125,13 +130,13 @@ export default function App() {
                 onSignOut={() => void signOut()}
                 items={adminNavItems}
                 workspaceLabel="Admin Command Center"
-                userLabel={userLabel}
               />
             }
           >
             <Route index element={<DashboardPage />} />
             <Route path="employees" element={<EmployeesPage />} />
             <Route path="attendance" element={<AttendancePage />} />
+            <Route path="tasks" element={<TasksPage />} />
             <Route path="leave" element={<LeavePage />} />
             <Route path="recruitment" element={<RecruitmentPage />} />
             <Route path="payroll" element={<PayrollPage />} />
@@ -148,13 +153,13 @@ export default function App() {
                 onSignOut={() => void signOut()}
                 items={employeeNavItems}
                 workspaceLabel="Employee Workspace"
-                userLabel={userLabel}
               />
             }
           >
             <Route index element={<EmployeeDashboardPage />} />
             <Route path="attendance" element={<EmployeeAttendancePage />} />
             <Route path="leave" element={<EmployeeLeavePage />} />
+            <Route path="tasks" element={<TasksPage />} />
             <Route path="payroll" element={<EmployeePayrollPage />} />
             <Route path="profile" element={<EmployeeProfilePage />} />
             <Route path="*" element={<NotFoundPage />} />

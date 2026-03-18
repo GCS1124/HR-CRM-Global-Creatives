@@ -22,6 +22,13 @@ let cachedProfileUserId: string | null = null;
 let profileFetchPromise: Promise<UserProfile> | null = null;
 let profileFetchPromiseUserId: string | null = null;
 
+const oauthRedirectBase =
+  (import.meta.env.VITE_SUPABASE_REDIRECT_URL as string | undefined)?.replace(/\/+$/, "") ??
+  (import.meta.env.VITE_SITE_URL as string | undefined)?.replace(/\/+$/, "") ??
+  (typeof window !== "undefined" ? window.location.origin : undefined);
+
+const oauthRedirectTo = oauthRedirectBase ? `${oauthRedirectBase}/auth/callback` : undefined;
+
 function toUserRole(value: string | null | undefined, email: string | undefined): UserRole {
   if (value === "admin" || value === "employee") {
     return value;
@@ -256,7 +263,7 @@ export function useAuthSession() {
     const { error } = await supabase.auth.signInWithOAuth({
       provider: "google",
       options: {
-        redirectTo: `${window.location.origin}/`,
+        redirectTo: oauthRedirectTo,
       },
     });
 
@@ -278,7 +285,7 @@ export function useAuthSession() {
     const { error } = await supabase.auth.signInWithOAuth({
       provider: "github",
       options: {
-        redirectTo: `${window.location.origin}/`,
+        redirectTo: oauthRedirectTo,
       },
     });
 

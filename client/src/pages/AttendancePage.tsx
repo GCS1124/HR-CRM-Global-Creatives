@@ -476,6 +476,7 @@ export function AttendancePage() {
             columns={columns}
             rows={filteredRecords}
             rowKey={(row) => row.id}
+            exportFileName="attendance"
             emptyText="No attendance records available for this filter."
             rowClassName={(row) => {
               if (selectedIds.includes(row.id)) {

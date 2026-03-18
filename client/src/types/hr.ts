@@ -3,6 +3,8 @@ export type AttendanceStatus = "present" | "late" | "remote" | "absent";
 export type LeaveStatus = "approved" | "pending" | "rejected";
 export type CandidateStage = "sourced" | "interview" | "offer" | "hired" | "rejected";
 export type PayrollStatus = "processed" | "scheduled";
+export type TaskStatus = "todo" | "in_progress" | "blocked" | "done";
+export type TaskPriority = "low" | "medium" | "high" | "critical";
 
 export interface DashboardOverview {
   metrics: {
@@ -87,6 +89,30 @@ export interface Candidate {
   stage: CandidateStage;
   interviewDate: string;
   rating: number;
+}
+
+export interface Task {
+  id: string;
+  title: string;
+  description: string | null;
+  status: TaskStatus;
+  priority: TaskPriority;
+  dueDate: string | null;
+  assigneeId: string | null;
+  assigneeName: string | null;
+  createdBy: string;
+  createdByEmail: string | null;
+  createdAt: string;
+}
+
+export interface NewTaskPayload {
+  title: string;
+  description?: string;
+  status: TaskStatus;
+  priority: TaskPriority;
+  dueDate?: string | null;
+  assigneeId?: string | null;
+  assigneeName?: string | null;
 }
 
 export interface NewCandidatePayload {

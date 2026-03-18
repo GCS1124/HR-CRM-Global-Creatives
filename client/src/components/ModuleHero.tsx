@@ -8,30 +8,25 @@ interface ModuleHeroProps {
   spotlight?: string;
 }
 
-export function ModuleHero({ title, subtitle, chips, spotlight }: ModuleHeroProps) {
+export function ModuleHero({ icon: Icon, title, subtitle, chips, spotlight }: ModuleHeroProps) {
   return (
-    <section className="surface-card p-5 md:p-6">
-      <div className="grid gap-4 md:grid-cols-[1fr_auto] md:items-start">
-        <div>
-          <h3 className="text-2xl font-bold tracking-tight text-slate-950">{title}</h3>
-          <p className="mt-2 max-w-3xl text-sm leading-relaxed text-slate-600 md:text-base">{subtitle}</p>
-          {chips.length > 0 ? (
-            <div className="mt-4 flex flex-wrap gap-2">
-              {chips.map((chip) => (
-                <span key={chip} className="rounded-full bg-slate-100 px-3 py-1 text-xs font-semibold text-slate-700">
-                  {chip}
-                </span>
-              ))}
-            </div>
-          ) : null}
+    <section className="relative overflow-hidden rounded-2xl border border-brand-200/70 bg-white p-5 shadow-soft">
+      <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_top_left,rgba(59,130,246,0.12),transparent_40%),radial-gradient(circle_at_bottom_right,rgba(249,115,22,0.12),transparent_42%)]" />
+      <div className="flex items-start gap-3">
+        <span className="flex h-9 w-9 items-center justify-center rounded-lg bg-brand-50 text-brand-600">
+          <Icon className="h-4 w-4" />
+        </span>
+        <div className="relative">
+          <h3 className="text-lg font-semibold text-ink">{title}</h3>
+          <p className="mt-1 text-sm text-slate-600">{subtitle}</p>
         </div>
-        {spotlight ? (
-          <div className="rounded-xl bg-slate-50 px-4 py-3 text-sm text-slate-700 md:min-w-[180px] md:text-right">
-            <p className="text-[0.64rem] font-black uppercase tracking-[0.14em] text-slate-500">Spotlight</p>
-            <p className="mt-1 font-semibold text-slate-900">{spotlight}</p>
-          </div>
-        ) : null}
       </div>
+      {chips.length > 0 ? (
+        <p className="mt-2 text-xs font-semibold uppercase tracking-[0.14em] text-brand-700">
+          {chips.join(" · ")}
+        </p>
+      ) : null}
+      {spotlight ? <p className="mt-2 text-xs font-semibold text-[#ea580c]">{spotlight}</p> : null}
     </section>
   );
 }

@@ -16,6 +16,10 @@ import type {
   UpdateAttendanceRecordPayload,
   UpdateCRMSettingsPayload,
   UpdateEmployeePayload,
+  Task,
+  TaskPriority,
+  TaskStatus,
+  NewTaskPayload,
 } from "../types/hr";
 import { supabase } from "./supabaseClient";
 import { getLocalDateKey, getLocalTimeLabel } from "../utils/formatters";
@@ -83,6 +87,20 @@ interface PayrollRow {
   deductions: number;
   net_pay: number;
   status: PayrollRecord["status"];
+}
+
+interface TaskRow {
+  id: string;
+  title: string;
+  description: string | null;
+  status: TaskStatus;
+  priority: TaskPriority;
+  due_date: string | null;
+  assignee_id: string | null;
+  assignee_name: string | null;
+  created_by: string;
+  created_by_email: string | null;
+  created_at: string;
 }
 
 interface SettingsRow {
@@ -177,6 +195,22 @@ function toPayrollRecord(row: PayrollRow): PayrollRecord {
   };
 }
 
+function toTask(row: TaskRow): Task {
+  return {
+    id: row.id,
+    title: row.title,
+    description: row.description,
+    status: row.status,
+    priority: row.priority,
+    dueDate: row.due_date,
+    assigneeId: row.assignee_id,
+    assigneeName: row.assignee_name,
+    createdBy: row.created_by,
+    createdByEmail: row.created_by_email,
+    createdAt: row.created_at,
+  };
+}
+
 function toSettings(row: SettingsRow): CRMSettings {
   return {
     companyName: row.company_name,
@@ -196,6 +230,19 @@ function throwIfError(error: { message: string } | null, context: string): void 
   if (error) {
     throw new Error(`Supabase ${context} failed: ${error.message}`);
   }
+}
+
+function isDuplicateError(error: { message: string; code?: string } | null): boolean {
+  if (!error) {
+    return false;
+  }
+
+  if (error.code === "23505") {
+    return true;
+  }
+
+  const message = error.message.toLowerCase();
+  return message.includes("duplicate") || message.includes("unique");
 }
 
 function createId(prefix: string): string {
@@ -380,6 +427,33 @@ async function getCurrentUserAuth(): Promise<CurrentUserAuth> {
     fullName:
       typeof data.user.user_metadata.full_name === "string" ? data.user.user_metadata.full_name : null,
   };
+}
+
+async function getIsAdmin(): Promise<boolean> {
+  const client = assertSupabase();
+  const { data, error } = await client.rpc("is_admin");
+  if (error) {
+    throw new Error(`Supabase admin check failed: ${error.message}`);
+  }
+  return Boolean(data);
+}
+
+async function assertTaskAssignmentPermission(taskId: string): Promise<void> {
+  const client = assertSupabase();
+  if (await getIsAdmin()) {
+    return;
+  }
+
+  const user = await getCurrentUserAuth();
+  const { data, error } = await client.from("tasks").select("created_by").eq("id", taskId).single();
+
+  if (error || !data) {
+    throw new Error("Unable to verify task assignment permissions.");
+  }
+
+  if (data.created_by !== user.id) {
+    throw new Error("Only admins or the task's assigned client can assign tasks.");
+  }
 }
 
 export const hrService = {
@@ -720,6 +794,96 @@ export const hrService = {
     };
   },
 
+  getTasks: async (): Promise<Task[]> => {
+    const client = assertSupabase();
+    const { data, error } = await client.from("tasks").select("*").order("created_at", { ascending: false });
+    throwIfError(error, "tasks fetch");
+    return (data ?? []).map((row) => toTask(row as TaskRow));
+  },
+
+  createTask: async (payload: NewTaskPayload): Promise<Task> => {
+    const client = assertSupabase();
+    const user = await getCurrentUserAuth();
+    const row: TaskRow = {
+      id: createId("TSK"),
+      title: payload.title,
+      description: payload.description ?? null,
+      status: payload.status,
+      priority: payload.priority,
+      due_date: payload.dueDate ?? null,
+      assignee_id: payload.assigneeId ?? null,
+      assignee_name: payload.assigneeName ?? null,
+      created_by: user.id,
+      created_by_email: user.email,
+      created_at: new Date().toISOString(),
+    };
+
+    const { data, error } = await client.from("tasks").insert(row).select("*").single();
+    throwIfError(error, "task create");
+    return toTask(data as TaskRow);
+  },
+
+  updateTaskStatus: async (id: string, status: TaskStatus): Promise<Task> => {
+    const client = assertSupabase();
+    const { data, error } = await client
+      .from("tasks")
+      .update({ status })
+      .eq("id", id)
+      .select("*")
+      .single();
+
+    throwIfError(error, "task status update");
+    return toTask(data as TaskRow);
+  },
+
+  updateTask: async (id: string, updates: Partial<NewTaskPayload>): Promise<Task> => {
+    const client = assertSupabase();
+    const patch: Partial<TaskRow> = {};
+    const isAssignmentUpdate = updates.assigneeId !== undefined || updates.assigneeName !== undefined;
+
+    if (updates.title !== undefined) {
+      patch.title = updates.title;
+    }
+    if (updates.description !== undefined) {
+      patch.description = updates.description ?? null;
+    }
+    if (updates.status !== undefined) {
+      patch.status = updates.status;
+    }
+    if (updates.priority !== undefined) {
+      patch.priority = updates.priority;
+    }
+    if (updates.dueDate !== undefined) {
+      patch.due_date = updates.dueDate ?? null;
+    }
+    if (updates.assigneeId !== undefined) {
+      patch.assignee_id = updates.assigneeId ?? null;
+    }
+    if (updates.assigneeName !== undefined) {
+      patch.assignee_name = updates.assigneeName ?? null;
+    }
+
+    if (isAssignmentUpdate) {
+      await assertTaskAssignmentPermission(id);
+    }
+
+    const { data, error } = await client
+      .from("tasks")
+      .update(patch)
+      .eq("id", id)
+      .select("*")
+      .single();
+
+    throwIfError(error, "task update");
+    return toTask(data as TaskRow);
+  },
+
+  deleteTask: async (id: string): Promise<void> => {
+    const client = assertSupabase();
+    const { error } = await client.from("tasks").delete().eq("id", id);
+    throwIfError(error, "task delete");
+  },
+
   getSettings: async (): Promise<CRMSettings> => {
     const client = assertSupabase();
     const { data, error } = await client.from("crm_settings").select("*").limit(1).maybeSingle();
@@ -844,19 +1008,27 @@ export const hrService = {
     const { data, error } = await client
       .from("attendance_records")
       .select("*")
+      .eq("employee_id", employee.id)
       .order("date", { ascending: false });
 
     throwIfError(error, "my attendance fetch");
-    return (data ?? [])
-      .map((row) => toAttendanceRecord(row as AttendanceRow))
-      .filter((row) => row.employeeId === employee.id || row.employeeName === employee.name);
+    return (data ?? []).map((row) => toAttendanceRecord(row as AttendanceRow));
   },
 
   getMyTodayAttendance: async (): Promise<AttendanceRecord | null> => {
-    const records = await hrService.getMyAttendanceRecords();
+    const client = assertSupabase();
+    const employee = await hrService.getCurrentEmployee();
     const today = getLocalDateKey();
 
-    return records.find((record) => record.date === today) ?? null;
+    const { data, error } = await client
+      .from("attendance_records")
+      .select("*")
+      .eq("employee_id", employee.id)
+      .eq("date", today)
+      .maybeSingle();
+
+    throwIfError(error, "my attendance today fetch");
+    return data ? toAttendanceRecord(data as AttendanceRow) : null;
   },
 
   getMyAttendanceSummary: async (): Promise<AttendanceSummary> => {
@@ -873,12 +1045,14 @@ export const hrService = {
   getMyLeaveRequests: async (): Promise<LeaveRequest[]> => {
     const client = assertSupabase();
     const employee = await hrService.getCurrentEmployee();
-    const { data, error } = await client.from("leave_requests").select("*").order("start_date", { ascending: false });
+    const { data, error } = await client
+      .from("leave_requests")
+      .select("*")
+      .eq("employee_id", employee.id)
+      .order("start_date", { ascending: false });
 
     throwIfError(error, "my leave fetch");
-    return (data ?? [])
-      .map((row) => toLeaveRequest(row as LeaveRequestRow))
-      .filter((row) => row.employeeId === employee.id || row.employeeName === employee.name);
+    return (data ?? []).map((row) => toLeaveRequest(row as LeaveRequestRow));
   },
 
   createMyLeaveRequest: async (payload: NewLeaveRequestPayload): Promise<LeaveRequest> => {
@@ -909,12 +1083,24 @@ export const hrService = {
     const { data, error } = await client
       .from("payroll_records")
       .select("*")
+      .eq("employee_id", employee.id)
       .order("month", { ascending: false });
 
     throwIfError(error, "my payroll fetch");
-    return (data ?? [])
-      .map((row) => toPayrollRecord(row as PayrollRow))
-      .filter((row) => row.employeeId === employee.id || row.employeeName === employee.name);
+    const records = (data ?? []).map((row) => toPayrollRecord(row as PayrollRow));
+
+    if (records.length > 0 || !employee.name) {
+      return records;
+    }
+
+    const { data: fallback, error: fallbackError } = await client
+      .from("payroll_records")
+      .select("*")
+      .eq("employee_name", employee.name)
+      .order("month", { ascending: false });
+
+    throwIfError(fallbackError, "my payroll fetch fallback");
+    return (fallback ?? []).map((row) => toPayrollRecord(row as PayrollRow));
   },
 
   markMyAttendance: async (mode: AttendanceCheckInMode): Promise<AttendanceRecord> => {
@@ -956,8 +1142,23 @@ export const hrService = {
     };
 
     const { data, error } = await client.from("attendance_records").insert(row).select("*").single();
-    throwIfError(error, "attendance check-in create");
 
+    if (error && isDuplicateError(error)) {
+      const { data: existing, error: fetchError } = await client
+        .from("attendance_records")
+        .select("*")
+        .eq("employee_id", employee.id)
+        .eq("date", today)
+        .maybeSingle();
+
+      throwIfError(fetchError, "attendance check-in conflict fetch");
+
+      if (existing) {
+        return toAttendanceRecord(existing as AttendanceRow);
+      }
+    }
+
+    throwIfError(error, "attendance check-in create");
     return toAttendanceRecord(data as AttendanceRow);
   },
 

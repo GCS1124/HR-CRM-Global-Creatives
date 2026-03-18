@@ -144,8 +144,8 @@ export function LoginPage({
   };
 
   return (
-    <div className="relative flex min-h-screen animate-page-enter items-center justify-center overflow-hidden bg-[#071126] px-4 py-8 sm:px-6 lg:px-8">
-      <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_left,rgba(255,255,255,0.08),transparent_26%),radial-gradient(circle_at_88%_18%,rgba(53,130,220,0.18),transparent_20%),linear-gradient(180deg,#071126_0%,#0d1b3c_45%,#12396d_100%)]" />
+    <div className="relative flex min-h-screen animate-page-enter items-center justify-center overflow-hidden bg-[#1a2a69] px-4 py-8 sm:px-6 lg:px-8">
+      <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_left,rgba(255,255,255,0.08),transparent_26%),radial-gradient(circle_at_88%_18%,rgba(59,130,246,0.22),transparent_22%),linear-gradient(180deg,#1a2a69_0%,#20357a_45%,#3b82f6_100%)]" />
       <div className="absolute inset-0 bg-[linear-gradient(120deg,transparent_0%,rgba(255,255,255,0.04)_48%,transparent_56%)]" />
       <div className="absolute -left-12 top-8 h-64 w-64 rounded-full bg-white/10 blur-3xl" />
       <div className="absolute bottom-6 right-8 h-72 w-72 rounded-full bg-brand-200/18 blur-3xl" />

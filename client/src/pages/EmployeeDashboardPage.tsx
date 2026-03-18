@@ -1,5 +1,5 @@
-import { useCallback, useMemo } from "react";
-import { ArrowRight, CalendarClock, CircleDollarSign, Clock3, CreditCard, FileClock, UserCircle2 } from "lucide-react";
+import { useCallback, useMemo, useState } from "react";
+import { CalendarClock, CircleDollarSign, Clock3, UserCheck, Wallet, User } from "lucide-react";
 import { Link } from "react-router-dom";
 import { PageHeader } from "../components/PageHeader";
 import { SectionCard } from "../components/SectionCard";
@@ -12,8 +12,11 @@ import { formatCurrency, formatPercent } from "../utils/formatters";
 export function EmployeeDashboardPage() {
   const employeeHook = useApi(useCallback(() => hrService.getCurrentEmployee(), []));
   const attendanceHook = useApi(useCallback(() => hrService.getMyAttendanceSummary(), []));
+  const todayAttendanceHook = useApi(useCallback(() => hrService.getMyTodayAttendance(), []));
   const leaveHook = useApi(useCallback(() => hrService.getMyLeaveRequests(), []));
   const payrollHook = useApi(useCallback(() => hrService.getMyPayrollRecords(), []));
+  const [attendanceBusy, setAttendanceBusy] = useState(false);
+  const [attendanceError, setAttendanceError] = useState<string | null>(null);
 
   const presenceRate = useMemo(() => {
     if (!attendanceHook.data) {
@@ -29,19 +32,37 @@ export function EmployeeDashboardPage() {
     return ((attendanceHook.data.present + attendanceHook.data.remote) / Math.max(total, 1)) * 100;
   }, [attendanceHook.data]);
 
-  const leaveStats = useMemo(() => {
-    const rows = leaveHook.data ?? [];
-
-    return {
-      total: rows.length,
-      pending: rows.filter((row) => row.status === "pending").length,
-      approved: rows.filter((row) => row.status === "approved").length,
-      rejected: rows.filter((row) => row.status === "rejected").length,
-    };
-  }, [leaveHook.data]);
-
   const latestPayroll = payrollHook.data?.[0] ?? null;
-  const latestLeave = leaveHook.data?.[0] ?? null;
+  const pendingLeaveCount = (leaveHook.data ?? []).filter((row) => row.status === "pending").length;
+  const todayAttendance = todayAttendanceHook.data;
+
+  const handleCheckIn = async (mode: "office" | "remote") => {
+    setAttendanceBusy(true);
+    setAttendanceError(null);
+    try {
+      await hrService.markMyAttendance(mode);
+      await todayAttendanceHook.refetch();
+      await attendanceHook.refetch();
+    } catch (error) {
+      setAttendanceError(error instanceof Error ? error.message : "Unable to check in.");
+    } finally {
+      setAttendanceBusy(false);
+    }
+  };
+
+  const handleCheckOut = async () => {
+    setAttendanceBusy(true);
+    setAttendanceError(null);
+    try {
+      await hrService.markMyCheckOut();
+      await todayAttendanceHook.refetch();
+      await attendanceHook.refetch();
+    } catch (error) {
+      setAttendanceError(error instanceof Error ? error.message : "Unable to check out.");
+    } finally {
+      setAttendanceBusy(false);
+    }
+  };
 
   if (employeeHook.loading) {
     return <p className="text-sm font-semibold text-slate-600">Loading employee workspace...</p>;
@@ -57,30 +78,13 @@ export function EmployeeDashboardPage() {
     <div className="animate-page-enter space-y-6">
       <PageHeader
         title={`Welcome, ${employee.name.split(" ")[0]}`}
-        subtitle="Enterprise-ready employee dashboard with the essentials surfaced first."
+        subtitle="Check in, see your status, and navigate quickly."
         eyebrow="Employee dashboard"
-        action={
-          <>
-            <Link to="/employee/attendance" className="btn-secondary">
-              Attendance
-              <ArrowRight className="h-4 w-4" />
-            </Link>
-            <Link to="/employee/leave" className="btn-secondary">
-              Leave
-              <ArrowRight className="h-4 w-4" />
-            </Link>
-            <Link to="/employee/profile" className="btn-secondary">
-              Profile
-              <ArrowRight className="h-4 w-4" />
-            </Link>
-          </>
-        }
       />
 
-      <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-4">
+      <div className="grid gap-4 md:grid-cols-3">
         <StatCard title="Attendance" value={formatPercent(presenceRate)} icon={Clock3} hint="Present + remote ratio" />
-        <StatCard title="Pending leave" value={String(leaveStats.pending)} icon={CalendarClock} />
-        <StatCard title="Approved leave" value={String(leaveStats.approved)} icon={CalendarClock} />
+        <StatCard title="Pending leave" value={String(pendingLeaveCount)} icon={CalendarClock} />
         <StatCard
           title="Net pay"
           value={latestPayroll ? formatCurrency(latestPayroll.netPay) : "--"}
@@ -89,110 +93,118 @@ export function EmployeeDashboardPage() {
         />
       </div>
 
-      <div className="grid gap-4 xl:grid-cols-[1.05fr_0.95fr]">
-        <SectionCard title="Employee summary" subtitle="Current role, reporting, and profile state">
-          <div className="grid gap-3 sm:grid-cols-2 xl:grid-cols-3">
-            <div className="rounded-xl border border-slate-200 bg-slate-50 px-4 py-4">
-              <p className="text-[0.7rem] font-black uppercase tracking-[0.14em] text-slate-500">Role</p>
-              <p className="mt-2 text-sm font-semibold text-slate-950">{employee.role}</p>
+      <div className="grid gap-4 xl:grid-cols-[1fr_1fr]">
+        <SectionCard title="Today" subtitle="Check in or check out">
+          <div className="space-y-3">
+            <div className="flex flex-wrap items-center gap-3 text-sm font-medium text-slate-700">
+              <span>Status:</span>
+              {todayAttendance ? <StatusBadge value={todayAttendance.status} /> : <span>Not checked in</span>}
+              {todayAttendance?.checkIn && todayAttendance.checkIn !== "--" ? (
+                <span className="text-slate-500">Check in: {todayAttendance.checkIn}</span>
+              ) : null}
+              {todayAttendance?.checkOut && todayAttendance.checkOut !== "--" ? (
+                <span className="text-slate-500">Check out: {todayAttendance.checkOut}</span>
+              ) : null}
             </div>
-            <div className="rounded-xl border border-slate-200 bg-slate-50 px-4 py-4">
-              <p className="text-[0.7rem] font-black uppercase tracking-[0.14em] text-slate-500">Manager</p>
-              <p className="mt-2 text-sm font-semibold text-slate-950">{employee.manager}</p>
-            </div>
-            <div className="rounded-xl border border-slate-200 bg-slate-50 px-4 py-4">
-              <p className="text-[0.7rem] font-black uppercase tracking-[0.14em] text-slate-500">Location</p>
-              <p className="mt-2 text-sm font-semibold text-slate-950">{employee.location}</p>
-            </div>
-            <div className="rounded-xl border border-slate-200 bg-slate-50 px-4 py-4">
-              <p className="text-[0.7rem] font-black uppercase tracking-[0.14em] text-slate-500">Department</p>
-              <p className="mt-2 text-sm font-semibold text-slate-950">{employee.department}</p>
-            </div>
-            <div className="rounded-xl border border-slate-200 bg-slate-50 px-4 py-4">
-              <p className="text-[0.7rem] font-black uppercase tracking-[0.14em] text-slate-500">Status</p>
-              <div className="mt-2">
-                <StatusBadge value={employee.status} />
-              </div>
-            </div>
-            <div className="rounded-xl border border-slate-200 bg-slate-50 px-4 py-4">
-              <p className="text-[0.7rem] font-black uppercase tracking-[0.14em] text-slate-500">Profile</p>
-              <p className="mt-2 text-sm font-semibold text-slate-950">Employee record linked</p>
+            {attendanceError ? <p className="text-sm font-semibold text-rose-700">{attendanceError}</p> : null}
+            <div className="flex flex-wrap gap-2">
+              <button
+                type="button"
+                onClick={() => void handleCheckIn("office")}
+                className="btn-primary"
+                disabled={attendanceBusy || Boolean(todayAttendance?.checkIn && todayAttendance.checkIn !== "--")}
+              >
+                Check in (Office)
+              </button>
+              <button
+                type="button"
+                onClick={() => void handleCheckIn("remote")}
+                className="btn-secondary"
+                disabled={attendanceBusy || Boolean(todayAttendance?.checkIn && todayAttendance.checkIn !== "--")}
+              >
+                Check in (Remote)
+              </button>
+              <button
+                type="button"
+                onClick={() => void handleCheckOut()}
+                className="btn-secondary"
+                disabled={attendanceBusy || !todayAttendance || todayAttendance.checkOut !== "--"}
+              >
+                Check out
+              </button>
             </div>
           </div>
         </SectionCard>
 
-        <SectionCard title="Action center" subtitle="What needs attention right now">
-          <div className="space-y-3">
-            <Link
-              to="/employee/attendance"
-              className="flex items-start justify-between rounded-xl border border-slate-200 px-4 py-4 transition hover:border-slate-300 hover:bg-slate-50"
-            >
-              <div className="flex gap-3">
-                <span className="mt-0.5 flex h-10 w-10 items-center justify-center rounded-lg bg-brand-50 text-brand-700">
-                  <Clock3 className="h-4 w-4" />
-                </span>
-                <div>
-                  <p className="text-sm font-semibold text-slate-950">Attendance</p>
-                  <p className="mt-1 text-sm text-slate-600">Current attendance quality is {formatPercent(presenceRate)}.</p>
-                </div>
-              </div>
-              <ArrowRight className="h-4 w-4 text-slate-400" />
-            </Link>
-
-            <Link
-              to="/employee/leave"
-              className="flex items-start justify-between rounded-xl border border-slate-200 px-4 py-4 transition hover:border-slate-300 hover:bg-slate-50"
-            >
-              <div className="flex gap-3">
-                <span className="mt-0.5 flex h-10 w-10 items-center justify-center rounded-lg bg-amber-50 text-amber-700">
-                  <FileClock className="h-4 w-4" />
-                </span>
-                <div>
-                  <p className="text-sm font-semibold text-slate-950">Leave queue</p>
-                  <p className="mt-1 text-sm text-slate-600">
-                    {leaveStats.pending > 0
-                      ? `${leaveStats.pending} request${leaveStats.pending > 1 ? "s" : ""} pending approval.`
-                      : "No pending leave requests right now."}
-                  </p>
-                </div>
-              </div>
-              <ArrowRight className="h-4 w-4 text-slate-400" />
-            </Link>
-
-            <Link
-              to="/employee/payroll"
-              className="flex items-start justify-between rounded-xl border border-slate-200 px-4 py-4 transition hover:border-slate-300 hover:bg-slate-50"
-            >
-              <div className="flex gap-3">
-                <span className="mt-0.5 flex h-10 w-10 items-center justify-center rounded-lg bg-emerald-50 text-emerald-700">
-                  <CreditCard className="h-4 w-4" />
-                </span>
-                <div>
-                  <p className="text-sm font-semibold text-slate-950">Payroll</p>
-                  <p className="mt-1 text-sm text-slate-600">
-                    {latestPayroll ? `${latestPayroll.month} processed at ${formatCurrency(latestPayroll.netPay)}.` : "No payroll record processed yet."}
-                  </p>
-                </div>
-              </div>
-              <ArrowRight className="h-4 w-4 text-slate-400" />
-            </Link>
-
-            <div className="rounded-xl border border-slate-200 bg-slate-50 px-4 py-4">
-              <div className="flex gap-3">
-                <span className="flex h-10 w-10 items-center justify-center rounded-lg bg-slate-200 text-slate-700">
-                  <UserCircle2 className="h-4 w-4" />
-                </span>
-                <div>
-                  <p className="text-sm font-semibold text-slate-950">Latest leave update</p>
-                  <p className="mt-1 text-sm text-slate-600">
-                    {latestLeave ? `${latestLeave.leaveType.toUpperCase()} from ${latestLeave.startDate} to ${latestLeave.endDate}.` : "No leave activity recorded yet."}
-                  </p>
-                </div>
+        <SectionCard title="Profile" subtitle="Your current record">
+          <div className="grid gap-3 sm:grid-cols-2">
+            <div>
+              <p className="text-xs font-semibold uppercase tracking-[0.14em] text-slate-500">Role</p>
+              <p className="mt-1 text-sm font-semibold text-slate-900">{employee.role}</p>
+            </div>
+            <div>
+              <p className="text-xs font-semibold uppercase tracking-[0.14em] text-slate-500">Department</p>
+              <p className="mt-1 text-sm font-semibold text-slate-900">{employee.department}</p>
+            </div>
+            <div>
+              <p className="text-xs font-semibold uppercase tracking-[0.14em] text-slate-500">Manager</p>
+              <p className="mt-1 text-sm font-semibold text-slate-900">{employee.manager}</p>
+            </div>
+            <div>
+              <p className="text-xs font-semibold uppercase tracking-[0.14em] text-slate-500">Status</p>
+              <div className="mt-1">
+                <StatusBadge value={employee.status} />
               </div>
             </div>
           </div>
         </SectionCard>
       </div>
+
+      <SectionCard title="Quick links" subtitle="Go straight to your tools">
+        <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
+          {[
+            {
+              label: "Attendance",
+              path: "/employee/attendance",
+              icon: UserCheck,
+              tone: "border-sky-200 bg-sky-50/60 text-sky-700",
+              iconTone: "bg-sky-100 text-sky-700",
+            },
+            {
+              label: "Leave",
+              path: "/employee/leave",
+              icon: CalendarClock,
+              tone: "border-amber-200 bg-amber-50/60 text-amber-700",
+              iconTone: "bg-amber-100 text-amber-700",
+            },
+            {
+              label: "Payroll",
+              path: "/employee/payroll",
+              icon: Wallet,
+              tone: "border-emerald-200 bg-emerald-50/60 text-emerald-700",
+              iconTone: "bg-emerald-100 text-emerald-700",
+            },
+            {
+              label: "Profile",
+              path: "/employee/profile",
+              icon: User,
+              tone: "border-slate-200 bg-slate-50/60 text-slate-700",
+              iconTone: "bg-slate-100 text-slate-700",
+            },
+          ].map((card) => (
+            <Link
+              key={card.path}
+              to={card.path}
+              className={`flex items-center gap-3 rounded-lg border px-4 py-3 text-sm font-semibold transition hover:brightness-95 ${card.tone}`}
+            >
+              <span className={`flex h-9 w-9 items-center justify-center rounded-lg ${card.iconTone}`}>
+                <card.icon className="h-4 w-4" />
+              </span>
+              {card.label}
+            </Link>
+          ))}
+        </div>
+      </SectionCard>
     </div>
   );
 }

@@ -5,6 +5,7 @@ import { DataTable } from "../components/DataTable";
 import type { TableColumn } from "../components/DataTable";
 import { ModuleHero } from "../components/ModuleHero";
 import { PageHeader } from "../components/PageHeader";
+import { RecruitmentKanban } from "../components/RecruitmentKanban";
 import { SectionCard } from "../components/SectionCard";
 import { StatusBadge } from "../components/StatusBadge";
 import { useApi } from "../hooks/useApi";
@@ -30,6 +31,10 @@ export function RecruitmentPage() {
   const [submitError, setSubmitError] = useState<string | null>(null);
   const [updatingCandidateId, setUpdatingCandidateId] = useState<string | null>(null);
   const [updateError, setUpdateError] = useState<string | null>(null);
+  const [search, setSearch] = useState("");
+  const [stageFilter, setStageFilter] = useState<CandidateStage | "">("");
+  const [sourceFilter, setSourceFilter] = useState("");
+  const [sortMode, setSortMode] = useState<"interview_soon" | "interview_late" | "rating" | "name">("interview_soon");
 
   const stageCount = useMemo(() => {
     const list = candidatesHook.data ?? [];
@@ -42,6 +47,75 @@ export function RecruitmentPage() {
       rejected: list.filter((item) => item.stage === "rejected").length,
     };
   }, [candidatesHook.data]);
+
+  const filteredCandidates = useMemo(() => {
+    const list = candidatesHook.data ?? [];
+    const query = search.trim().toLowerCase();
+
+    const filtered = list.filter((candidate) => {
+      const matchesSearch = query
+        ? [candidate.name, candidate.role, candidate.source].join(" ").toLowerCase().includes(query)
+        : true;
+      const matchesStage = stageFilter ? candidate.stage === stageFilter : true;
+      const matchesSource = sourceFilter ? candidate.source === sourceFilter : true;
+      return matchesSearch && matchesStage && matchesSource;
+    });
+
+    const safeDate = (value: string) => {
+      const parsed = new Date(value);
+      return Number.isNaN(parsed.valueOf()) ? null : parsed;
+    };
+
+    filtered.sort((left, right) => {
+      if (sortMode === "rating") {
+        return right.rating - left.rating;
+      }
+
+      if (sortMode === "name") {
+        return left.name.localeCompare(right.name);
+      }
+
+      const leftDate = safeDate(left.interviewDate);
+      const rightDate = safeDate(right.interviewDate);
+      if (!leftDate || !rightDate) {
+        return 0;
+      }
+
+      return sortMode === "interview_late"
+        ? rightDate.valueOf() - leftDate.valueOf()
+        : leftDate.valueOf() - rightDate.valueOf();
+    });
+
+    return filtered;
+  }, [candidatesHook.data, search, sortMode, sourceFilter, stageFilter]);
+
+  const upcomingInterviews = useMemo(() => {
+    const list = candidatesHook.data ?? [];
+    const today = new Date();
+    const windowEnd = new Date(today);
+    windowEnd.setDate(windowEnd.getDate() + 14);
+
+    return list
+      .filter((candidate) => {
+        if (candidate.stage === "rejected") {
+          return false;
+        }
+        const interviewDate = new Date(candidate.interviewDate);
+        if (Number.isNaN(interviewDate.valueOf())) {
+          return false;
+        }
+        return interviewDate >= new Date(today.toDateString()) && interviewDate <= windowEnd;
+      })
+      .sort((left, right) => new Date(left.interviewDate).valueOf() - new Date(right.interviewDate).valueOf())
+      .slice(0, 6);
+  }, [candidatesHook.data]);
+
+  const sources = useMemo(() => {
+    const list = candidatesHook.data ?? [];
+    return Array.from(new Set(list.map((candidate) => candidate.source).filter(Boolean))).sort((a, b) => a.localeCompare(b));
+  }, [candidatesHook.data]);
+
+  const hasActiveFilters = Boolean(search || stageFilter || sourceFilter || sortMode !== "interview_soon");
 
   const handleFormChange = (field: keyof NewCandidatePayload, value: string) => {
     setFormState((current) => ({
@@ -131,6 +205,87 @@ export function RecruitmentPage() {
         chips={["Candidate intake", "Stage control", "Selection tracking"]}
         spotlight={`${stageCount.offer} Offers In Motion`}
       />
+
+      <SectionCard
+        title="Talent command bar"
+        subtitle="Search and sort the pipeline without leaving the page"
+        rightSlot={<span className="insight-pill">{filteredCandidates.length} visible</span>}
+      >
+        <div className="grid gap-3 xl:grid-cols-[1.1fr_0.7fr_0.7fr_0.7fr]">
+          <input
+            type="search"
+            value={search}
+            onChange={(event) => setSearch(event.target.value)}
+            placeholder="Search candidate, role, or source"
+            className="input-surface"
+          />
+          <select
+            value={stageFilter}
+            onChange={(event) => setStageFilter(event.target.value as CandidateStage | "")}
+            className="input-surface"
+          >
+            <option value="">All stages</option>
+            {stageOptions.map((stage) => (
+              <option key={stage} value={stage}>
+                {stage.charAt(0).toUpperCase() + stage.slice(1)}
+              </option>
+            ))}
+          </select>
+          <select value={sourceFilter} onChange={(event) => setSourceFilter(event.target.value)} className="input-surface">
+            <option value="">All sources</option>
+            {sources.map((source) => (
+              <option key={source} value={source}>
+                {source}
+              </option>
+            ))}
+          </select>
+          <select value={sortMode} onChange={(event) => setSortMode(event.target.value as typeof sortMode)} className="input-surface">
+            <option value="interview_soon">Sort: interview soonest</option>
+            <option value="interview_late">Sort: interview latest</option>
+            <option value="rating">Sort: highest rating</option>
+            <option value="name">Sort: name A-Z</option>
+          </select>
+        </div>
+        <div className="mt-4 flex flex-wrap items-center gap-2">
+          <button
+            type="button"
+            onClick={() => setStageFilter("")}
+            className={`rounded-full px-3 py-1.5 text-sm font-semibold transition ${
+              stageFilter === "" ? "bg-brand-900 text-white" : "border border-slate-200 bg-white text-slate-700 hover:bg-slate-50"
+            }`}
+          >
+            All stages
+          </button>
+          {stageOptions.map((stage) => (
+            <button
+              key={stage}
+              type="button"
+              onClick={() => setStageFilter(stage)}
+              className={`rounded-full px-3 py-1.5 text-sm font-semibold transition ${
+                stageFilter === stage ? "bg-brand-900 text-white" : "border border-slate-200 bg-white text-slate-700 hover:bg-slate-50"
+              }`}
+            >
+              {stage.charAt(0).toUpperCase() + stage.slice(1)} · {stageCount[stage]}
+            </button>
+          ))}
+        </div>
+        {hasActiveFilters ? (
+          <div className="mt-3">
+            <button
+              type="button"
+              onClick={() => {
+                setSearch("");
+                setStageFilter("");
+                setSourceFilter("");
+                setSortMode("interview_soon");
+              }}
+              className="btn-secondary"
+            >
+              Reset filters
+            </button>
+          </div>
+        ) : null}
+      </SectionCard>
 
       <div className="grid gap-4 xl:grid-cols-[1.1fr_0.9fr]">
         <SectionCard title="Pipeline Stages" subtitle="Current distribution by hiring stage">
@@ -223,49 +378,12 @@ export function RecruitmentPage() {
       </div>
 
       <SectionCard title="Kanban Pipeline View" subtitle="Visual status lanes for active candidate flow">
-        <div className="grid gap-3 md:grid-cols-4 xl:grid-cols-5">
-          {[
-            { key: "sourced", label: "Sourced", tone: "border-indigo-200 bg-indigo-50/70" },
-            { key: "interview", label: "Interview", tone: "border-sky-200 bg-sky-50/70" },
-            { key: "offer", label: "Offer", tone: "border-violet-200 bg-violet-50/70" },
-            { key: "hired", label: "Hired", tone: "border-emerald-200 bg-emerald-50/70" },
-            { key: "rejected", label: "Rejected", tone: "border-rose-200 bg-rose-50/70" },
-          ].map((lane) => {
-            const laneRows = (candidatesHook.data ?? []).filter((candidate) => candidate.stage === lane.key);
-
-            return (
-              <div key={lane.key} className={`rounded-xl border p-3 ${lane.tone}`}>
-                <p className="text-xs font-bold uppercase tracking-[0.12em] text-brand-700">{lane.label}</p>
-                <div className="mt-2 space-y-2">
-                  {laneRows.length === 0 ? (
-                    <p className="rounded-lg border border-dashed border-brand-200 bg-white/70 px-3 py-2 text-xs font-semibold text-brand-700">
-                      No candidates
-                    </p>
-                  ) : (
-                    laneRows.map((candidate) => (
-                      <div key={candidate.id} className="rounded-lg border border-brand-200 bg-white px-3 py-3">
-                        <p className="text-sm font-bold text-brand-900">{candidate.name}</p>
-                        <p className="text-xs text-brand-700">{candidate.role}</p>
-                        <select
-                          value={candidate.stage}
-                          onChange={(event) => void handleStageChange(candidate.id, event.target.value as CandidateStage)}
-                          disabled={updatingCandidateId === candidate.id}
-                          className="input-surface mt-3 w-full py-2"
-                        >
-                          {stageOptions.map((stage) => (
-                            <option key={stage} value={stage}>
-                              {stage.charAt(0).toUpperCase() + stage.slice(1)}
-                            </option>
-                          ))}
-                        </select>
-                      </div>
-                    ))
-                  )}
-                </div>
-              </div>
-            );
-          })}
-        </div>
+        <RecruitmentKanban
+          candidates={filteredCandidates}
+          stages={stageOptions}
+          onStageChange={(id, stage) => void handleStageChange(id, stage)}
+          updatingCandidateId={updatingCandidateId}
+        />
       </SectionCard>
 
       <div className="grid gap-4 xl:grid-cols-[1.5fr_1fr]">
@@ -275,31 +393,75 @@ export function RecruitmentPage() {
           {updateError ? <p className="mb-3 rounded-lg bg-rose-50 px-3 py-2 text-sm font-semibold text-rose-700">{updateError}</p> : null}
           <DataTable
             columns={columns}
-            rows={candidatesHook.data ?? []}
+            rows={filteredCandidates}
             rowKey={(row) => row.id}
-            emptyText="No candidates in pipeline."
+            exportFileName="recruitment-pipeline"
+            emptyText="No candidates match the current filter."
           />
         </SectionCard>
 
-        <SectionCard title="Hiring Notes" subtitle="Fast checkpoints for this week">
-          <div className="space-y-3 text-sm font-medium text-brand-700">
-            <div className="rounded-lg border border-brand-200 bg-brand-50 p-3">
-              <p className="inline-flex items-center gap-2 font-semibold text-brand-900">
-                <BriefcaseBusiness className="h-4 w-4" />
-                Open priorities
-              </p>
-              <p className="mt-1">Motion Designer and UI Engineer should be filled in this sprint.</p>
+        <div className="space-y-4">
+          <SectionCard
+            title="Upcoming interviews"
+            subtitle="Next 14 days of interview activity"
+            rightSlot={<span className="insight-pill">{upcomingInterviews.length} scheduled</span>}
+          >
+            {upcomingInterviews.length > 0 ? (
+              <div className="space-y-3">
+                {upcomingInterviews.map((candidate) => (
+                  <div key={candidate.id} className="rounded-xl border border-slate-200 bg-white px-4 py-4">
+                    <div className="flex items-start justify-between gap-3">
+                      <div>
+                        <p className="text-sm font-semibold text-slate-950">{candidate.name}</p>
+                        <p className="mt-1 text-xs text-slate-500">{candidate.role} · {candidate.source}</p>
+                      </div>
+                      <span className="inline-flex items-center rounded-full bg-brand-100 px-2 py-1 text-xs font-semibold text-brand-700">
+                        {formatDate(candidate.interviewDate)}
+                      </span>
+                    </div>
+                    <div className="mt-3 flex flex-wrap items-center gap-2">
+                      <StatusBadge value={candidate.stage} />
+                      <select
+                        value={candidate.stage}
+                        onChange={(event) => void handleStageChange(candidate.id, event.target.value as CandidateStage)}
+                        disabled={updatingCandidateId === candidate.id}
+                        className="input-surface min-w-[140px] py-2"
+                      >
+                        {stageOptions.map((stage) => (
+                          <option key={stage} value={stage}>
+                            {stage.charAt(0).toUpperCase() + stage.slice(1)}
+                          </option>
+                        ))}
+                      </select>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            ) : (
+              <p className="text-sm font-medium text-slate-600">No interviews scheduled in the next two weeks.</p>
+            )}
+          </SectionCard>
+
+          <SectionCard title="Hiring Notes" subtitle="Fast checkpoints for this week">
+            <div className="space-y-3 text-sm font-medium text-brand-700">
+              <div className="rounded-lg border border-brand-200 bg-brand-50 p-3">
+                <p className="inline-flex items-center gap-2 font-semibold text-brand-900">
+                  <BriefcaseBusiness className="h-4 w-4" />
+                  Open priorities
+                </p>
+                <p className="mt-1">Motion Designer and UI Engineer should be filled in this sprint.</p>
+              </div>
+              <div className="rounded-lg border border-brand-200 bg-brand-50 p-3">
+                <p className="font-semibold text-brand-900">Interview panel cadence</p>
+                <p className="mt-1">Bundle first-round interviews on Tue/Thu for faster decisions.</p>
+              </div>
+              <div className="rounded-lg border border-brand-200 bg-brand-50 p-3">
+                <p className="font-semibold text-brand-900">Offer conversion</p>
+                <p className="mt-1">Keep role summary and compensation bands ready before final round.</p>
+              </div>
             </div>
-            <div className="rounded-lg border border-brand-200 bg-brand-50 p-3">
-              <p className="font-semibold text-brand-900">Interview panel cadence</p>
-              <p className="mt-1">Bundle first-round interviews on Tue/Thu for faster decisions.</p>
-            </div>
-            <div className="rounded-lg border border-brand-200 bg-brand-50 p-3">
-              <p className="font-semibold text-brand-900">Offer conversion</p>
-              <p className="mt-1">Keep role summary and compensation bands ready before final round.</p>
-            </div>
-          </div>
-        </SectionCard>
+          </SectionCard>
+        </div>
       </div>
     </div>
   );
