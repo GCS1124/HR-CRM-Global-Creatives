@@ -294,7 +294,11 @@ begin
 
   select
     u.email,
-    coalesce(u.raw_user_meta_data ->> 'full_name', split_part(u.email, '@', 1))
+    coalesce(
+      nullif(btrim(u.raw_user_meta_data ->> 'full_name'), ''),
+      nullif(btrim(u.raw_user_meta_data ->> 'name'), ''),
+      split_part(u.email, '@', 1)
+    )
   into v_email, v_full_name
   from auth.users u
   where u.id = v_user_id;
@@ -323,30 +327,46 @@ begin
 end;
 $$;
 
-create or replace function public.handle_new_auth_user()
+create or replace function public.handle_new_auth_user_compat()
 returns trigger
 language plpgsql
 security definer
 set search_path = public, auth
 as $$
+declare
+  v_email text := lower(coalesce(new.email, ''));
+  v_full_name text := coalesce(
+    nullif(btrim(new.raw_user_meta_data ->> 'full_name'), ''),
+    nullif(btrim(new.raw_user_meta_data ->> 'name'), ''),
+    nullif(split_part(coalesce(new.email, ''), '@', 1), ''),
+    'User'
+  );
+  v_role text := case
+    when lower(coalesce(new.raw_user_meta_data ->> 'role', 'employee')) = 'admin' then 'admin'
+    when v_email = any(public.admin_emails()) then 'admin'
+    else 'employee'
+  end;
 begin
-  insert into public.profiles (id, email, full_name, role)
-  values (
-    new.id,
-    new.email,
-    coalesce(new.raw_user_meta_data ->> 'full_name', split_part(new.email, '@', 1)),
-    case
-      when lower(new.email) = any(public.admin_emails()) then 'admin'
-      else 'employee'
-    end
-  )
-  on conflict (id) do update
-    set email = excluded.email,
-        full_name = coalesce(excluded.full_name, public.profiles.full_name);
+  begin
+    insert into public.profiles (id, email, full_name, role)
+    values (
+      new.id,
+      new.email,
+      v_full_name,
+      v_role
+    )
+    on conflict (id) do update
+      set email = excluded.email,
+          full_name = coalesce(excluded.full_name, public.profiles.full_name),
+          role = excluded.role;
+  exception
+    when unique_violation then
+      null;
+  end;
 
   update public.employees
   set user_id = new.id
-  where lower(email) = lower(new.email)
+  where lower(email) = v_email
     and user_id is null;
 
   return new;
@@ -357,7 +377,7 @@ drop trigger if exists on_auth_user_created on auth.users;
 create trigger on_auth_user_created
 after insert on auth.users
 for each row
-execute function public.handle_new_auth_user();
+execute function public.handle_new_auth_user_compat();
 
 grant execute on function public.current_role() to authenticated;
 grant execute on function public.is_admin() to authenticated;

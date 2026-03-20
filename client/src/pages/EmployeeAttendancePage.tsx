@@ -16,16 +16,19 @@ import {
 import { DataTable } from "../components/DataTable";
 import type { TableColumn } from "../components/DataTable";
 import { ModuleHero } from "../components/ModuleHero";
+import { NewUserSetupModal } from "../components/NewUserSetupModal";
 import { PageHeader } from "../components/PageHeader";
 import { SectionCard } from "../components/SectionCard";
 import { StatCard } from "../components/StatCard";
 import { StatusBadge } from "../components/StatusBadge";
 import { useApi } from "../hooks/useApi";
-import { hrService } from "../services/hrService";
+import { useAuthSession } from "../hooks/useAuthSession";
+import { hrService, isNewUserEmployeeSetupError } from "../services/hrService";
 import type { AttendanceRecord } from "../types/hr";
 import { formatDate, formatPercent, getLocalDateKey } from "../utils/formatters";
 
 export function EmployeeAttendancePage() {
+  const { profile } = useAuthSession();
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [actionError, setActionError] = useState<string | null>(null);
   const [actionMessage, setActionMessage] = useState<string | null>(null);
@@ -91,6 +94,10 @@ export function EmployeeAttendancePage() {
     { key: "check-out", header: "Check Out", render: (row) => row.checkOut },
     { key: "status", header: "Status", render: (row) => <StatusBadge value={row.status} /> },
   ];
+
+  if (isNewUserEmployeeSetupError(summaryHook.error) || isNewUserEmployeeSetupError(recordsHook.error)) {
+    return <NewUserSetupModal email={profile?.email} />;
+  }
 
   const handleCheckIn = async (mode: "office" | "remote") => {
     setActionError(null);

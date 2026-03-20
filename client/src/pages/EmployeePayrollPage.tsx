@@ -3,16 +3,19 @@ import { BadgeDollarSign, CircleDollarSign, ReceiptText, ShieldCheck, Wallet } f
 import { DataTable } from "../components/DataTable";
 import type { TableColumn } from "../components/DataTable";
 import { ModuleHero } from "../components/ModuleHero";
+import { NewUserSetupModal } from "../components/NewUserSetupModal";
 import { PageHeader } from "../components/PageHeader";
 import { SectionCard } from "../components/SectionCard";
 import { StatCard } from "../components/StatCard";
 import { StatusBadge } from "../components/StatusBadge";
 import { useApi } from "../hooks/useApi";
-import { hrService } from "../services/hrService";
+import { useAuthSession } from "../hooks/useAuthSession";
+import { hrService, isNewUserEmployeeSetupError } from "../services/hrService";
 import type { PayrollRecord } from "../types/hr";
 import { formatCurrency } from "../utils/formatters";
 
 export function EmployeePayrollPage() {
+  const { profile } = useAuthSession();
   const payrollHook = useApi(useCallback(() => hrService.getMyPayrollRecords(), []));
 
   const summary = useMemo(() => {
@@ -26,6 +29,10 @@ export function EmployeePayrollPage() {
   }, [payrollHook.data]);
 
   const latestPayroll = payrollHook.data?.[0] ?? null;
+
+  if (isNewUserEmployeeSetupError(payrollHook.error)) {
+    return <NewUserSetupModal email={profile?.email} />;
+  }
 
   const columns: Array<TableColumn<PayrollRecord>> = [
     { key: "month", header: "Month", render: (row) => row.month },

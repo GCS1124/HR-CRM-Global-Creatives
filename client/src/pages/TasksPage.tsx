@@ -3,12 +3,13 @@ import { ClipboardList, Plus } from "lucide-react";
 import { DataTable } from "../components/DataTable";
 import type { TableColumn } from "../components/DataTable";
 import { ModuleHero } from "../components/ModuleHero";
+import { NewUserSetupModal } from "../components/NewUserSetupModal";
 import { PageHeader } from "../components/PageHeader";
 import { SectionCard } from "../components/SectionCard";
 import { StatusBadge } from "../components/StatusBadge";
 import { useApi } from "../hooks/useApi";
 import { useAuthSession } from "../hooks/useAuthSession";
-import { hrService } from "../services/hrService";
+import { hrService, isNewUserEmployeeSetupError } from "../services/hrService";
 import type { Employee, NewTaskPayload, Task, TaskPriority, TaskStatus } from "../types/hr";
 import { formatDate } from "../utils/formatters";
 
@@ -59,6 +60,10 @@ export function TasksPage() {
       assigneeName: current.assigneeName ?? currentEmployee.name,
     }));
   }, [currentEmployee]);
+
+  if (role === "employee" && isNewUserEmployeeSetupError(currentEmployeeHook.error)) {
+    return <NewUserSetupModal email={profile?.email} />;
+  }
 
   const handleChange = (field: keyof NewTaskPayload, value: string) => {
     setFormState((current) => ({

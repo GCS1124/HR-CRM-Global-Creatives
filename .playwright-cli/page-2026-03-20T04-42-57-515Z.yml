@@ -1,0 +1,435 @@
+- generic [ref=e3]:
+  - banner [ref=e4]:
+    - link "Skip to content" [ref=e5] [cursor=pointer]:
+      - /url: "#main-content"
+    - generic [ref=e6]:
+      - link "Heartland Hypnosis Conference home" [ref=e7] [cursor=pointer]:
+        - /url: "#top"
+        - generic [ref=e8]: HH
+        - generic [ref=e9]:
+          - strong [ref=e10]: Heartland
+          - generic [ref=e11]: NGH Certification
+      - navigation "Primary" [ref=e12]:
+        - link "Certification" [ref=e13] [cursor=pointer]:
+          - /url: "#certification"
+        - link "Curriculum" [ref=e14] [cursor=pointer]:
+          - /url: "#curriculum"
+        - link "Instructor" [ref=e15] [cursor=pointer]:
+          - /url: "#instructor"
+        - link "Pricing" [ref=e16] [cursor=pointer]:
+          - /url: "#pricing"
+      - generic [ref=e17]:
+        - link "Submit Application" [ref=e18] [cursor=pointer]:
+          - /url: https://heartlandhypnosisconference.com/ngh-application/
+        - link "Register Now" [ref=e19] [cursor=pointer]:
+          - /url: https://heartlandhypnosisconference.com/item/ngh-certification-conference/
+  - main [ref=e20]:
+    - generic [ref=e22]:
+      - generic [ref=e23]:
+        - generic [ref=e24]: NGH Certified Training
+        - heading "Become a certified hypnotist with the credibility to practice professionally." [level=1] [ref=e26]
+        - paragraph [ref=e27]: A premium certification path for professionals who want legitimacy, clear boundaries, and a credential they can show with confidence.
+        - generic [ref=e28]:
+          - link "Submit Application" [ref=e29] [cursor=pointer]:
+            - /url: https://heartlandhypnosisconference.com/ngh-application/
+          - link "Register Now" [ref=e30] [cursor=pointer]:
+            - /url: https://heartlandhypnosisconference.com/item/ngh-certification-conference/
+        - list "Key trust points" [ref=e31]:
+          - listitem [ref=e32]: NGH and Mitchell Institute certification
+          - listitem [ref=e33]: Led by William Mitchell
+          - listitem [ref=e34]: Clear legal scope-of-practice guidance
+        - generic "Program highlights" [ref=e35]:
+          - generic [ref=e36]:
+            - strong [ref=e37]:
+              - generic [ref=e38]: 3+
+            - text: Years of instructor experience
+          - generic [ref=e39]:
+            - strong [ref=e40]: "8"
+            - text: States covered by NGH practice messaging
+          - generic [ref=e41]:
+            - strong [ref=e42]:
+              - generic [ref=e43]: $96
+            - text: Conference value included
+      - generic [ref=e44]:
+        - generic [ref=e45]:
+          - generic [ref=e46]:
+            - generic [ref=e47]: Dates
+            - strong [ref=e48]: April 20-23, 2026
+          - generic [ref=e49]:
+            - generic [ref=e50]: Schedule
+            - strong [ref=e51]: 9am-6pm daily
+          - generic [ref=e52]:
+            - generic [ref=e53]: Early Bird
+            - strong [ref=e54]: $1,895
+          - generic [ref=e55]:
+            - generic [ref=e56]: Regular
+            - strong [ref=e57]: $2,995
+          - generic [ref=e58]:
+            - generic [ref=e59]: Savings
+            - strong [ref=e60]: Save $1,100
+        - generic [ref=e61]:
+          - generic [ref=e62]:
+            - generic [ref=e63]: Head highlight
+            - heading "Watch the Mitchell Institute invitation before you register." [level=3] [ref=e64]
+            - paragraph [ref=e65]: A direct video invitation that frames the training and certification path.
+          - button "Play Watch the Mitchell Institute invitation before you register." [ref=e66] [cursor=pointer]
+          - generic [ref=e69]:
+            - button "Play Preview" [ref=e70] [cursor=pointer]
+            - link "Open Full Video" [ref=e71] [cursor=pointer]:
+              - /url: https://vimeo.com/221836443?fl=pl&fe=sh
+        - generic [ref=e72]:
+          - generic [ref=e74]: NGH
+          - paragraph [ref=e75]: Professional Certification
+          - heading "National Guild of Hypnotists" [level=2] [ref=e76]
+          - paragraph [ref=e77]: Certified Training with Mitchell Institute recognition
+          - generic [ref=e79]:
+            - generic [ref=e80]:
+              - term [ref=e81]: Lead Instructor
+              - definition [ref=e82]: William Mitchell, M.Div., BCH, CI
+            - generic [ref=e83]:
+              - term [ref=e84]: Training Window
+              - definition [ref=e85]: April 20-23, 2026
+            - generic [ref=e86]:
+              - term [ref=e87]: Positioning
+              - definition [ref=e88]: Ethical, displayable, practice-ready certification
+        - generic "Conference moments from the training" [ref=e89]:
+          - figure "Certificate moment" [ref=e90]:
+            - img "William Mitchell presenting an NGH certificate to an attendee" [ref=e91]
+            - generic [ref=e92]: Certificate moment
+          - figure "Live demo" [ref=e93]:
+            - img "William Mitchell leading a live hypnosis demonstration with an attendee" [ref=e94]
+            - generic [ref=e95]: Live demo
+          - figure "Conference group" [ref=e96]:
+            - img "William Mitchell posing with attendees during the conference" [ref=e97]
+            - generic [ref=e98]: Conference group
+        - generic [ref=e99]:
+          - generic [ref=e100]:
+            - generic [ref=e101]: Conference preview
+            - heading "See the certification experience before you apply." [level=3] [ref=e102]
+          - button "Play See the certification experience before you apply." [ref=e103] [cursor=pointer]
+          - generic [ref=e106]:
+            - button "Play Preview" [ref=e107] [cursor=pointer]
+            - link "Open Full Video" [ref=e108] [cursor=pointer]:
+              - /url: https://www.youtube.com/watch?v=rolGzXdYJNo
+    - generic [ref=e110]:
+      - generic [ref=e111]:
+        - generic [ref=e112]: Certification value
+        - heading "Certification that looks credible because it is structured that way." [level=2] [ref=e113]
+        - paragraph [ref=e114]: More than attendance. A certification pathway built for real-world credibility.
+      - generic [ref=e115]:
+        - generic [ref=e116]:
+          - figure "A real certification image adds proof that this training ends with a credential attendees can proudly display." [ref=e117]:
+            - img "A Heartland Hypnosis Conference certification moment showing an NGH certificate being presented" [ref=e118]
+            - generic [ref=e119]: Real Certification Moment
+            - generic [ref=e120]: A real certification image adds proof that this training ends with a credential attendees can proudly display.
+          - generic [ref=e121]:
+            - generic [ref=e122]:
+              - img "William Mitchell portrait" [ref=e123]
+              - generic [ref=e124]: Lead Instructor
+            - generic [ref=e125]:
+              - img "Conference preview still" [ref=e126]
+              - generic [ref=e127]: Preview the Training
+          - generic "Additional conference photos" [ref=e128]:
+            - figure "Certificate moment" [ref=e129]:
+              - img "William Mitchell presenting an NGH certificate to an attendee" [ref=e130]
+              - generic [ref=e131]: Certificate moment
+            - figure "Live demo" [ref=e132]:
+              - img "William Mitchell leading a live hypnosis demonstration with an attendee" [ref=e133]
+              - generic [ref=e134]: Live demo
+            - figure "Conference group" [ref=e135]:
+              - img "William Mitchell posing with attendees during the conference" [ref=e136]
+              - generic [ref=e137]: Conference group
+            - figure "Training floor" [ref=e138]:
+              - img "William Mitchell with an attendee near a training presentation screen" [ref=e139]
+              - generic [ref=e140]: Training floor
+          - list [ref=e141]:
+            - listitem [ref=e142]: Certificate package designed to display in your office
+            - listitem [ref=e143]: Legal and ethical practice framing aligned with NGH guidelines
+            - listitem [ref=e144]: Positioning for consultants, coaches, therapists, and practice expansion professionals
+          - generic [ref=e145]:
+            - link "Submit Application" [ref=e146] [cursor=pointer]:
+              - /url: https://heartlandhypnosisconference.com/ngh-application/
+            - link "Register Now" [ref=e147] [cursor=pointer]:
+              - /url: https://heartlandhypnosisconference.com/item/ngh-certification-conference/
+        - generic [ref=e148]:
+          - generic [ref=e149]:
+            - generic [ref=e150]: "01"
+            - heading "Official NGH credentialing" [level=3] [ref=e151]
+            - paragraph [ref=e152]: A displayable credential that signals immediate professional legitimacy.
+          - generic [ref=e153]:
+            - generic [ref=e154]: "02"
+            - heading "Mitchell Institute of Professional Hypnosis certificate" [level=3] [ref=e155]
+            - paragraph [ref=e156]: A second certificate that adds premium educational weight.
+          - generic [ref=e157]:
+            - generic [ref=e158]: "03"
+            - heading "Defined scope of practice" [level=3] [ref=e159]
+            - paragraph [ref=e160]: NGH boundaries for ethical non-licensed consulting practice.
+          - generic [ref=e161]:
+            - generic [ref=e162]: "04"
+            - heading "Confidence to practice responsibly" [level=3] [ref=e163]
+            - paragraph [ref=e164]: Legal framing, ethical referrals, and responsible client use.
+    - generic [ref=e167]:
+      - generic [ref=e168]:
+        - generic [ref=e169]: Credential-led offer
+        - heading "See the certificate. Take the next step while the early bird rate is still on the page." [level=2] [ref=e170]
+        - paragraph [ref=e171]: This is the highest-intent moment on the page, so the application and registration actions stay in view.
+      - generic [ref=e172]:
+        - link "Submit Application" [ref=e173] [cursor=pointer]:
+          - /url: https://heartlandhypnosisconference.com/ngh-application/
+        - link "Register Now" [ref=e174] [cursor=pointer]:
+          - /url: https://heartlandhypnosisconference.com/item/ngh-certification-conference/
+    - generic [ref=e176]:
+      - generic [ref=e177]:
+        - generic [ref=e178]: Why become a hypnotist?
+        - heading "A profession with demand, premium positioning, and room to grow." [level=2] [ref=e179]
+        - paragraph [ref=e180]: A practical path into hypnosis or a high-value addition to your practice.
+      - generic [ref=e181]:
+        - generic [ref=e182]:
+          - img [ref=e184]
+          - generic [ref=e187]: High-intent demand
+          - heading "Growing demand" [level=3] [ref=e188]
+          - paragraph [ref=e189]: Clients already search for hypnosis for anxiety, weight loss, and habit change.
+        - generic [ref=e190]:
+          - img [ref=e192]
+          - generic [ref=e195]: $500-750 first-session packages
+          - heading "Excellent income potential" [level=3] [ref=e196]
+          - paragraph [ref=e197]: First-session packages around $500-750 support premium positioning.
+        - generic [ref=e198]:
+          - img [ref=e200]
+          - generic [ref=e203]: Compliance-first positioning
+          - heading "Legal in all 50 states" [level=3] [ref=e204]
+          - paragraph [ref=e205]: Legal nationwide, with some states requiring registration.
+        - generic [ref=e206]:
+          - img [ref=e208]
+          - generic [ref=e213]: Outcome-ready audience
+          - heading "Motivated clients" [level=3] [ref=e214]
+          - paragraph [ref=e215]: Most clients arrive outcome-focused and ready to act.
+        - generic [ref=e216]:
+          - img [ref=e218]
+          - generic [ref=e224]: Trust compounds
+          - heading "Referral-based growth" [level=3] [ref=e225]
+          - paragraph [ref=e226]: Strong outcomes naturally create referrals and repeat trust.
+        - generic [ref=e227]:
+          - img [ref=e229]
+          - generic [ref=e231]: Broaden treatment options
+          - heading "Expand your practice" [level=3] [ref=e232]
+          - paragraph [ref=e233]: A strong add-on for therapists, medical professionals, and wellness practices.
+    - generic [ref=e235]:
+      - generic [ref=e236]:
+        - generic [ref=e237]: What attendees will learn
+        - heading "A curriculum built for practical mastery, not vague inspiration." [level=2] [ref=e238]
+        - paragraph [ref=e239]: Focused training in induction, application, hypnotic phenomena, and business-building.
+      - generic [ref=e240]:
+        - tablist "Curriculum tracks" [ref=e241]:
+          - tab "Core Methods" [selected] [ref=e242] [cursor=pointer]
+          - tab "Client Applications" [ref=e243] [cursor=pointer]
+          - tab "Advanced Skills" [ref=e244] [cursor=pointer]
+        - generic [ref=e245]:
+          - tabpanel "Core Methods" [ref=e246]:
+            - img [ref=e248]
+            - generic [ref=e251]:
+              - generic [ref=e252]: Focused training track
+              - heading "Master induction, deepening, and session architecture" [level=3] [ref=e253]
+              - paragraph [ref=e254]: The core flow of a professional hypnosis session.
+          - generic [ref=e255]:
+            - generic [ref=e256]: Elman induction
+            - generic [ref=e257]: Dr. Flowers induction
+            - generic [ref=e258]: Rapid and instant inductions
+            - generic [ref=e259]: Session structure and pacing
+            - generic [ref=e260]: Depth testing and deepening
+            - generic [ref=e261]: Post-hypnotic suggestions
+    - generic [ref=e263]:
+      - generic [ref=e267]:
+        - img "William Mitchell smiling in a suit and tie" [ref=e269]
+        - generic [ref=e270]:
+          - paragraph [ref=e271]: Lead instructor
+          - heading "William Mitchell" [level=2] [ref=e272]
+          - generic [ref=e273]: M.Div., BCH, CI
+          - generic [ref=e274]:
+            - generic [ref=e275]: M.Div., BCH, CI
+            - generic [ref=e276]: Lead instructor
+            - generic [ref=e277]: Board Certified Hypnotist
+            - generic [ref=e278]: Certified Instructor
+            - generic [ref=e279]: 20+ years experience
+      - generic [ref=e280]:
+        - generic [ref=e281]:
+          - generic [ref=e282]: Instructor spotlight
+          - heading "An authority rooted in ethics, education, and long-term client work." [level=2] [ref=e283]
+          - paragraph [ref=e284]: Pastor, hypnotherapist, educator, clinic operator, and ethical stage hypnotist.
+        - generic [ref=e285]:
+          - paragraph [ref=e288]: Pastor, hypnotherapist, and hypnosis instructor
+          - paragraph [ref=e291]: Former adjunct faculty at Southern Illinois University School of Medicine CAM Panel
+          - paragraph [ref=e294]: Operator of two successful clinics in Illinois
+          - paragraph [ref=e297]: Helping clients lose weight and stop smoking since 2003
+          - paragraph [ref=e300]: Ethical stage hypnotist with real-world performance and teaching depth
+        - generic [ref=e302]:
+          - generic [ref=e303]:
+            - generic [ref=e304]: Sample class preview
+            - heading "Watch a sample class taught by William Mitchell." [level=3] [ref=e305]
+            - paragraph [ref=e306]: A quick look at his teaching style before you enroll.
+          - button "Play Watch a sample class taught by William Mitchell." [ref=e307] [cursor=pointer]
+          - generic [ref=e310]:
+            - button "Play Preview" [ref=e311] [cursor=pointer]
+            - link "Open Full Video" [ref=e312] [cursor=pointer]:
+              - /url: https://www.youtube.com/watch?v=sgxymLL0X3M
+        - generic [ref=e313]:
+          - figure "Conference group" [ref=e314]:
+            - img "William Mitchell posing with attendees during the conference" [ref=e315]
+            - generic [ref=e316]: Conference group
+          - figure "Training floor" [ref=e317]:
+            - img "William Mitchell with an attendee near a training presentation screen" [ref=e318]
+            - generic [ref=e319]: Training floor
+          - figure "Recognition moment" [ref=e320]:
+            - img "A recognition moment from the Heartland Hypnosis Conference stage area" [ref=e321]
+            - generic [ref=e322]: Recognition moment
+        - generic [ref=e323]:
+          - link "Submit Application" [ref=e324] [cursor=pointer]:
+            - /url: https://heartlandhypnosisconference.com/ngh-application/
+          - link "Register Now" [ref=e325] [cursor=pointer]:
+            - /url: https://heartlandhypnosisconference.com/item/ngh-certification-conference/
+    - generic [ref=e327]:
+      - generic [ref=e328]:
+        - generic [ref=e329]: Social proof
+        - heading "Training that leaves people energized, confident, and ready to work." [level=2] [ref=e330]
+        - paragraph [ref=e331]: Short proof from people who completed or endorsed the training.
+      - generic [ref=e332]:
+        - generic [ref=e333]:
+          - article [ref=e334]:
+            - generic [ref=e335]: "\""
+            - blockquote [ref=e336]: One of the best-spent weeks of my professional life. I truly feel ready to put into practice all I learned.
+            - generic [ref=e337]:
+              - strong [ref=e338]: Blair
+              - generic [ref=e339]: Certification attendee
+          - article [ref=e340]:
+            - generic [ref=e341]: "\""
+            - blockquote [ref=e342]: One of the best hypnotism instructors in the United States. His practice is ethical and well-researched.
+            - generic [ref=e343]:
+              - strong [ref=e344]: Rev. Dr. Scot Giles, D.Min
+              - generic [ref=e345]: Professional endorsement
+        - generic "Testimonial controls" [ref=e346]:
+          - button "Show testimonial 1" [pressed] [ref=e347] [cursor=pointer]
+          - button "Show testimonial 2" [ref=e348] [cursor=pointer]
+    - generic [ref=e350]:
+      - generic [ref=e351]:
+        - generic [ref=e352]: Professional and legal practice
+        - heading "Reassurance for students who want clear boundaries as well as strong skills." [level=2] [ref=e353]
+        - paragraph [ref=e354]: Low-friction clarity on legality, boundaries, and continuing education.
+      - generic [ref=e355]:
+        - generic [ref=e356]:
+          - img [ref=e358]
+          - heading "Legal practice positioning" [level=3] [ref=e361]
+          - paragraph [ref=e362]: No state forbids hypnosis, though some may require registration.
+        - generic [ref=e363]:
+          - img [ref=e365]
+          - heading "Official certification pathway" [level=3] [ref=e368]
+          - paragraph [ref=e369]: Dual certificates built to display professionally.
+        - generic [ref=e370]:
+          - img [ref=e372]
+          - heading "Clear scope of practice" [level=3] [ref=e375]
+          - paragraph [ref=e376]: NGH guidelines define clear non-licensed Consulting Hypnotist boundaries.
+        - generic [ref=e377]:
+          - img [ref=e379]
+          - heading "Continuing education and expansion" [level=3] [ref=e382]
+          - paragraph [ref=e383]: Mental health CEs are available, and licensed professionals can expand care options.
+    - generic [ref=e386]:
+      - generic [ref=e387]:
+        - generic [ref=e388]: Decision point
+        - heading "If the legal framing, curriculum, and instructor all check out, the next move is simple." [level=2] [ref=e389]
+        - paragraph [ref=e390]: Apply now or go straight to registration on the official Heartland site.
+      - generic [ref=e391]:
+        - link "Submit Application" [ref=e392] [cursor=pointer]:
+          - /url: https://heartlandhypnosisconference.com/ngh-application/
+        - link "Register Now" [ref=e393] [cursor=pointer]:
+          - /url: https://heartlandhypnosisconference.com/item/ngh-certification-conference/
+    - generic [ref=e395]:
+      - generic [ref=e396]:
+        - generic [ref=e397]: Offer stack
+        - heading "Premium certification pricing with a clear reason to act early." [level=2] [ref=e398]
+        - paragraph [ref=e399]: Certification, conference access, and practice guidance in one premium package.
+        - generic [ref=e400]:
+          - generic [ref=e401]:
+            - generic [ref=e402]: NGH Certified Training
+            - strong [ref=e403]: Included
+          - generic [ref=e404]:
+            - generic [ref=e405]: Mitchell Institute of Professional Hypnosis certificate
+            - strong [ref=e406]: Included
+          - generic [ref=e407]:
+            - generic [ref=e408]: 3-Day Heartland Conference
+            - strong [ref=e409]: $580 value
+          - generic [ref=e410]:
+            - generic [ref=e411]: Business-building framework
+            - strong [ref=e412]: Included
+          - generic [ref=e413]:
+            - generic [ref=e414]: Practice and legal guidance
+            - strong [ref=e415]: Included
+      - generic [ref=e416]:
+        - paragraph [ref=e417]: Secure the early bird investment
+        - generic [ref=e418]:
+          - generic [ref=e419]:
+            - generic [ref=e420]: Early bird
+            - strong [ref=e421]: $1,895
+          - generic [ref=e422]:
+            - generic [ref=e423]: Regular
+            - strong [ref=e424]: $2,995
+        - generic [ref=e425]: Save $1,100
+        - paragraph [ref=e426]: Includes the 3-Day Heartland Conference valued at $580, plus the live certification track and practice-building instruction.
+        - generic [ref=e427]:
+          - link "Submit Application" [ref=e428] [cursor=pointer]:
+            - /url: https://heartlandhypnosisconference.com/ngh-application/
+          - link "Register Now" [ref=e429] [cursor=pointer]:
+            - /url: https://heartlandhypnosisconference.com/item/ngh-certification-conference/
+        - paragraph [ref=e430]: Register early for the promotional rate shown on the live certification page.
+    - generic [ref=e432]:
+      - generic [ref=e433]:
+        - generic [ref=e434]: Simple 3-step process
+        - heading "Clear next steps from initial interest to certification." [level=2] [ref=e435]
+        - paragraph [ref=e436]: "The conversion path stays simple: apply, register, attend. The layout makes that progression visible at a glance on desktop and mobile."
+      - generic [ref=e437]:
+        - generic [ref=e438]:
+          - generic [ref=e439]: "01"
+          - img [ref=e441]
+          - heading "Submit Your Application" [level=3] [ref=e444]
+          - paragraph [ref=e445]: Start with a straightforward application so the program can align the certification path with your goals and background.
+        - generic [ref=e446]:
+          - generic [ref=e447]: "02"
+          - img [ref=e449]
+          - heading "Register for the Class" [level=3] [ref=e451]
+          - paragraph [ref=e452]: Secure your seat at the early bird rate and lock in the full April 20-23, 2026 training experience before standard pricing applies.
+        - generic [ref=e453]:
+          - generic [ref=e454]: "03"
+          - img [ref=e456]
+          - heading "Attend and Get Certified" [level=3] [ref=e458]
+          - paragraph [ref=e459]: Complete the live training, receive your certificates, and leave with a professional framework for ethical, confidence-led practice.
+    - generic [ref=e461]:
+      - generic [ref=e462]:
+        - generic [ref=e463]: April 20-23, 2026 • Live NGH Certification
+        - heading "Step into certification with the authority to be taken seriously." [level=2] [ref=e464]
+        - paragraph [ref=e465]: Credible training, ethical structure, and a certification you can use immediately.
+        - list [ref=e466]:
+          - listitem [ref=e467]: NGH + Mitchell Institute certificates
+          - listitem [ref=e468]: April 20-23, 2026 live training
+          - listitem [ref=e469]: Ethical practice framing and business guidance
+      - generic [ref=e470]:
+        - generic "Pricing summary" [ref=e471]:
+          - generic [ref=e472]:
+            - generic [ref=e473]: Early Bird
+            - strong [ref=e474]: $1,895
+          - generic [ref=e475]:
+            - generic [ref=e476]: Regular
+            - strong [ref=e477]: $2,995
+        - paragraph [ref=e478]: Save $1,100 and secure the official Heartland registration.
+        - generic [ref=e479]:
+          - link "Submit Application" [ref=e480] [cursor=pointer]:
+            - /url: https://heartlandhypnosisconference.com/ngh-application/
+          - link "Register Now" [ref=e481] [cursor=pointer]:
+            - /url: https://heartlandhypnosisconference.com/item/ngh-certification-conference/
+  - complementary "Pinned registration panel" [ref=e482]:
+    - generic [ref=e483]:
+      - generic [ref=e484]: NGH Certified Training
+      - strong [ref=e485]: Early Bird $1,895
+      - paragraph [ref=e486]: Dual certification, conference access, and practice-ready training.
+      - generic [ref=e487]:
+        - link "Apply" [ref=e488] [cursor=pointer]:
+          - /url: https://heartlandhypnosisconference.com/ngh-application/
+        - link "Register" [ref=e489] [cursor=pointer]:
+          - /url: https://heartlandhypnosisconference.com/item/ngh-certification-conference/

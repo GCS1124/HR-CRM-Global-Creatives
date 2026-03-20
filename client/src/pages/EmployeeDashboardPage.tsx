@@ -1,14 +1,17 @@
 import { useCallback, useMemo, useState } from "react";
 import { CalendarClock, CircleDollarSign, Clock3 } from "lucide-react";
+import { NewUserSetupModal } from "../components/NewUserSetupModal";
 import { PageHeader } from "../components/PageHeader";
 import { SectionCard } from "../components/SectionCard";
 import { StatCard } from "../components/StatCard";
 import { StatusBadge } from "../components/StatusBadge";
 import { useApi } from "../hooks/useApi";
-import { hrService } from "../services/hrService";
+import { useAuthSession } from "../hooks/useAuthSession";
+import { hrService, isNewUserEmployeeSetupError } from "../services/hrService";
 import { formatCurrency, formatDate, formatPercent } from "../utils/formatters";
 
 export function EmployeeDashboardPage() {
+  const { profile } = useAuthSession();
   const employeeHook = useApi(useCallback(() => hrService.getCurrentEmployee(), []));
   const attendanceHook = useApi(useCallback(() => hrService.getMyAttendanceSummary(), []));
   const todayAttendanceHook = useApi(useCallback(() => hrService.getMyTodayAttendance(), []));
@@ -71,6 +74,10 @@ export function EmployeeDashboardPage() {
 
   if (employeeHook.loading) {
     return <p className="text-sm font-semibold text-slate-600">Loading employee workspace...</p>;
+  }
+
+  if (isNewUserEmployeeSetupError(employeeHook.error)) {
+    return <NewUserSetupModal email={profile?.email} />;
   }
 
   if (employeeHook.error || !employeeHook.data) {

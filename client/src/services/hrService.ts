@@ -130,6 +130,18 @@ let currentEmployeePromise: Promise<Employee> | null = null;
 let currentEmployeePromiseUserId: string | null = null;
 let notificationsTableCache: "notifications" | "alerts" | null = null;
 
+export const NEW_USER_EMPLOYEE_SETUP_MESSAGE =
+  "New user detected. Ask an admin to add you as an employee before continuing.";
+
+export function isNewUserEmployeeSetupError(message: string | null | undefined): boolean {
+  const value = message?.toLowerCase() ?? "";
+  return (
+    value.includes(NEW_USER_EMPLOYEE_SETUP_MESSAGE.toLowerCase()) ||
+    value.includes('row-level security policy for table "employees"') ||
+    value.includes("employee auto-provision failed")
+  );
+}
+
 function assertSupabase() {
   if (!supabase) {
     throw new Error("Supabase is not configured. Add VITE_SUPABASE_URL and VITE_SUPABASE_ANON_KEY.");
@@ -301,6 +313,19 @@ function isDuplicateError(error: { message: string; code?: string } | null): boo
   return message.includes("duplicate") || message.includes("unique");
 }
 
+function isRowLevelSecurityError(error: { message: string; code?: string } | null): boolean {
+  if (!error) {
+    return false;
+  }
+
+  if (error.code === "42501") {
+    return true;
+  }
+
+  const message = error.message.toLowerCase();
+  return message.includes("row-level security") || message.includes("violates row-level security policy");
+}
+
 function createId(prefix: string): string {
   const time = Date.now().toString().slice(-7);
   const random = Math.floor(Math.random() * 90 + 10);
@@ -357,6 +382,7 @@ async function linkEmployeeToUser(employeeId: string, userId: string): Promise<v
 
 async function createEmployeeRecordForUser(user: CurrentUserAuth): Promise<Employee | null> {
   const client = assertSupabase();
+  let requiresAdminEmployeeSetup = false;
 
   if (!user.email) {
     return null;
@@ -389,12 +415,12 @@ async function createEmployeeRecordForUser(user: CurrentUserAuth): Promise<Emplo
 
     if (hasMissingUserIdColumn(insertWithLink.error)) {
       employeesUserIdState = "missing";
+    } else if (isRowLevelSecurityError(insertWithLink.error)) {
+      requiresAdminEmployeeSetup = true;
     } else {
-      const duplicateEmail = insertWithLink.error?.message.toLowerCase().includes("duplicate");
-      const duplicateKey = insertWithLink.error?.message.toLowerCase().includes("unique");
       const permissionDenied = insertWithLink.error?.message.toLowerCase().includes("permission");
 
-      if (!duplicateEmail && !duplicateKey && !permissionDenied) {
+      if (!isDuplicateError(insertWithLink.error) && !permissionDenied) {
         throwIfError(insertWithLink.error, "employee auto-provision");
       }
     }
@@ -406,13 +432,11 @@ async function createEmployeeRecordForUser(user: CurrentUserAuth): Promise<Emplo
     return toEmployee(insertWithoutLink.data as EmployeeRow);
   }
 
-  const duplicateEmail =
-    insertWithoutLink.error?.message.toLowerCase().includes("duplicate") ||
-    insertWithoutLink.error?.message.toLowerCase().includes("unique");
-
   const permissionDenied = insertWithoutLink.error?.message.toLowerCase().includes("permission");
 
-  if (!duplicateEmail && !permissionDenied) {
+  if (isRowLevelSecurityError(insertWithoutLink.error)) {
+    requiresAdminEmployeeSetup = true;
+  } else if (!isDuplicateError(insertWithoutLink.error) && !permissionDenied) {
     throwIfError(insertWithoutLink.error, "employee auto-provision fallback");
   }
 
@@ -421,6 +445,10 @@ async function createEmployeeRecordForUser(user: CurrentUserAuth): Promise<Emplo
 
   if (existing.data) {
     return toEmployee(existing.data as EmployeeRow);
+  }
+
+  if (requiresAdminEmployeeSetup) {
+    throw new Error(NEW_USER_EMPLOYEE_SETUP_MESSAGE);
   }
 
   return null;

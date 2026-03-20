@@ -12,12 +12,14 @@ import {
 import { DataTable } from "../components/DataTable";
 import type { TableColumn } from "../components/DataTable";
 import { ModuleHero } from "../components/ModuleHero";
+import { NewUserSetupModal } from "../components/NewUserSetupModal";
 import { PageHeader } from "../components/PageHeader";
 import { SectionCard } from "../components/SectionCard";
 import { StatCard } from "../components/StatCard";
 import { StatusBadge } from "../components/StatusBadge";
 import { useApi } from "../hooks/useApi";
-import { hrService } from "../services/hrService";
+import { useAuthSession } from "../hooks/useAuthSession";
+import { hrService, isNewUserEmployeeSetupError } from "../services/hrService";
 import type { LeaveRequest, NewLeaveRequestPayload } from "../types/hr";
 import { formatDate } from "../utils/formatters";
 
@@ -29,6 +31,7 @@ const initialForm: NewLeaveRequestPayload = {
 };
 
 export function EmployeeLeavePage() {
+  const { profile } = useAuthSession();
   const leaveHook = useApi(useCallback(() => hrService.getMyLeaveRequests(), []));
   const [formState, setFormState] = useState<NewLeaveRequestPayload>(initialForm);
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -46,6 +49,10 @@ export function EmployeeLeavePage() {
   }, [leaveHook.data]);
 
   const latestLeave = leaveHook.data?.[0] ?? null;
+
+  if (isNewUserEmployeeSetupError(leaveHook.error)) {
+    return <NewUserSetupModal email={profile?.email} />;
+  }
 
   const columns: Array<TableColumn<LeaveRequest>> = [
     { key: "type", header: "Type", render: (row) => row.leaveType.toUpperCase() },

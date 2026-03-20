@@ -1,20 +1,27 @@
 import { useCallback } from "react";
 import { Building2, CalendarClock, MapPin, ShieldCheck, Sparkles, UserRound } from "lucide-react";
 import { ModuleHero } from "../components/ModuleHero";
+import { NewUserSetupModal } from "../components/NewUserSetupModal";
 import { PageHeader } from "../components/PageHeader";
 import { SectionCard } from "../components/SectionCard";
 import { StatCard } from "../components/StatCard";
 import { StatusBadge } from "../components/StatusBadge";
 import { useApi } from "../hooks/useApi";
-import { hrService } from "../services/hrService";
+import { useAuthSession } from "../hooks/useAuthSession";
+import { hrService, isNewUserEmployeeSetupError } from "../services/hrService";
 import { formatDate } from "../utils/formatters";
 
 export function EmployeeProfilePage() {
+  const { profile } = useAuthSession();
   const employeeHook = useApi(useCallback(() => hrService.getCurrentEmployee(), []));
   const settingsHook = useApi(useCallback(() => hrService.getSettings(), []));
 
   if (employeeHook.loading) {
     return <p className="text-sm font-semibold text-brand-700">Loading profile...</p>;
+  }
+
+  if (isNewUserEmployeeSetupError(employeeHook.error)) {
+    return <NewUserSetupModal email={profile?.email} />;
   }
 
   if (employeeHook.error || !employeeHook.data) {
