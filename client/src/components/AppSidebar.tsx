@@ -1,7 +1,7 @@
 import clsx from "clsx";
-import { Sparkles } from "lucide-react";
 import { NavLink } from "react-router-dom";
 import type { NavItem } from "../types/navigation";
+import { BrandLogo } from "./BrandLogo";
 
 interface AppSidebarProps {
   items: NavItem[];
@@ -11,20 +11,22 @@ interface AppSidebarProps {
 export function AppSidebar({ items, workspaceLabel }: AppSidebarProps) {
   const navItems = items.filter((item) => !item.footerOnly);
   return (
-    <aside className="hidden w-[240px] shrink-0 border-r border-slate-200 bg-white/95 lg:flex lg:flex-col">
-      <div className="border-b border-slate-200 px-5 py-5">
-        <div className="flex items-center gap-3">
-          <span className="flex h-9 w-9 items-center justify-center rounded-lg bg-brand-900 text-white shadow-[0_10px_24px_rgba(26,42,105,0.25)]">
-            <Sparkles className="h-4 w-4" />
-          </span>
-          <div>
-            <p className="text-xs font-semibold uppercase tracking-[0.2em] text-slate-600">Workspace</p>
-            <p className="text-lg font-semibold text-slate-900">{workspaceLabel}</p>
+    <aside className="relative hidden w-[248px] shrink-0 overflow-hidden border-r border-brand-200/60 bg-[linear-gradient(180deg,rgba(0,86,143,0.98)_0%,rgba(0,149,255,0.97)_38%,rgba(214,241,255,0.96)_100%)] shadow-[18px_0_60px_rgba(0,149,255,0.16)] lg:flex lg:flex-col">
+      <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_top_left,rgba(255,255,255,0.26),transparent_34%)]" />
+
+      <div className="relative border-b border-white/18 px-5 py-5">
+        <div className="space-y-4">
+          <div className="rounded-[24px] border border-white/18 bg-white/10 px-4 py-3 shadow-[0_18px_45px_rgba(0,86,143,0.16)] backdrop-blur-sm">
+            <BrandLogo size="md" variant="plain" />
+          </div>
+          <div className="px-1">
+            <p className="text-xs font-bold uppercase tracking-[0.2em] text-white/78">Workspace</p>
+            <p className="text-lg font-bold text-white/78">{workspaceLabel}</p>
           </div>
         </div>
       </div>
 
-      <div className="px-4 py-4">
+      <div className="relative px-4 py-4">
         <nav className="mt-3 space-y-1">
           {navItems.map((item) => (
             <NavLink
@@ -32,8 +34,10 @@ export function AppSidebar({ items, workspaceLabel }: AppSidebarProps) {
               to={item.path}
               className={({ isActive }) =>
                 clsx(
-                  "group relative flex items-center gap-3 rounded-lg px-3 py-2 text-sm font-semibold transition",
-                  isActive ? "bg-brand-50 text-brand-900" : "text-slate-700 hover:bg-slate-100",
+                  "group relative flex items-center gap-3 rounded-xl px-3 py-2.5 text-sm font-bold transition",
+                  isActive
+                    ? "bg-white text-brand-950 shadow-[0_18px_36px_rgba(0,86,143,0.18)]"
+                    : "text-white/95 hover:bg-white/14 hover:text-white",
                 )
               }
             >
@@ -41,13 +45,15 @@ export function AppSidebar({ items, workspaceLabel }: AppSidebarProps) {
                 <>
                   <span
                     className={clsx(
-                      "flex h-8 w-8 items-center justify-center rounded-md transition",
-                      isActive ? "bg-brand-100 text-brand-900" : "bg-slate-100 text-slate-700 group-hover:bg-slate-200",
+                      "flex h-9 w-9 items-center justify-center rounded-xl transition",
+                      isActive
+                        ? "bg-brand-100 text-brand-950"
+                        : "bg-white/12 text-white group-hover:bg-white/22 group-hover:text-white",
                     )}
                   >
                     <item.icon className="h-4 w-4" />
                   </span>
-                  <span className="truncate">{item.label}</span>
+                  <span className={clsx("truncate", isActive ? "!text-brand-950" : "!text-white")}>{item.label}</span>
                 </>
               )}
             </NavLink>

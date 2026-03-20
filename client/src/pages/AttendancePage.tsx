@@ -147,18 +147,6 @@ export function AttendancePage() {
       .slice(0, 6);
   }, [filteredRecords]);
 
-  const dailyTrend = useMemo(() => {
-    return dateWindow.map((date) => {
-      const dayRecords = filteredRecords.filter((record) => record.date === date);
-      return {
-        date,
-        total: dayRecords.length,
-        present: dayRecords.filter((record) => record.status === "present" || record.status === "remote").length,
-        exceptions: dayRecords.filter((record) => isExceptionRecord(record)).length,
-      };
-    });
-  }, [dateWindow, filteredRecords]);
-
   const selectedRecord = useMemo(
     () =>
       filteredRecords.find((record) => record.id === selectedRecordId) ??
@@ -571,24 +559,7 @@ export function AttendancePage() {
         </div>
       </div>
 
-      <SectionCard title="Attendance pattern" subtitle="See whether the current date window is stable or drifting toward exceptions">
-        <div className="grid gap-3 md:grid-cols-2 xl:grid-cols-7">
-          {dailyTrend.map((day) => {
-            const coverage = Math.round((day.present / Math.max(day.total, 1)) * 100);
-            return (
-              <div key={day.date} className="rounded-xl border border-slate-200 bg-slate-50 px-4 py-4">
-                <p className="text-[0.68rem] font-black uppercase tracking-[0.14em] text-slate-500">{formatDate(day.date)}</p>
-                <p className="mt-3 text-2xl font-extrabold tracking-tight text-slate-950">{day.total}</p>
-                <p className="mt-1 text-sm text-slate-600">{day.exceptions} exceptions</p>
-                <div className="mt-3 h-2 rounded-full bg-white">
-                  <div className="h-full rounded-full bg-brand-700" style={{ width: `${Math.max(coverage, day.total > 0 ? 10 : 0)}%` }} />
-                </div>
-                <p className="mt-2 text-xs font-semibold text-slate-500">{coverage}% stable attendance</p>
-              </div>
-            );
-          })}
-        </div>
-      </SectionCard>
+      
     </div>
   );
 }

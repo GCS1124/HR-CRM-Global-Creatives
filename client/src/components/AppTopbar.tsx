@@ -35,10 +35,12 @@ export function AppTopbar({
   return (
     <header className="sticky top-0 z-20 border-b border-slate-200 bg-white/90 backdrop-blur">
       <div className="flex items-center justify-between gap-3 px-4 py-3 md:px-6 lg:px-8">
-        <div className="min-w-0">
-          <p className="text-[0.65rem] font-black uppercase tracking-[0.18em] text-brand-800">Global Creative HR</p>
-          <p className="truncate text-base font-semibold text-slate-950">{workspaceLabel}</p>
-          <p className="truncate text-sm font-medium text-slate-700">{currentTitle}</p>
+        <div className="flex min-w-0 items-center gap-3">
+          <div className="min-w-0">
+            <p className="text-[0.65rem] font-black uppercase tracking-[0.18em] text-brand-800">HR CRM Workspace</p>
+            <p className="truncate text-base font-semibold text-slate-950">{workspaceLabel}</p>
+            <p className="truncate text-sm font-medium text-slate-700">{currentTitle}</p>
+          </div>
         </div>
         <div className="flex items-center gap-2">
           <button

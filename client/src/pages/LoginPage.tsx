@@ -8,13 +8,13 @@ import {
   Github,
   LockKeyhole,
   ShieldCheck,
-  Sparkles,
   Stars,
   UserCheck2,
   UserPlus,
   WandSparkles,
 } from "lucide-react";
 import type { AuthResult } from "../hooks/useAuthSession";
+import { BrandLogo } from "../components/BrandLogo";
 
 interface LoginPageProps {
   onLogin: (email: string, password: string) => Promise<AuthResult>;
@@ -150,9 +150,10 @@ export function LoginPage({
           <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_top_left,rgba(255,255,255,0.12),transparent_30%)]" />
 
           <div className="relative max-w-xl">
-            <p className="inline-flex items-center gap-2 rounded-full border border-white/16 bg-white/10 px-3 py-1 text-[0.68rem] font-black uppercase tracking-[0.22em] text-brand-100">
+            <BrandLogo variant="plain" size="xl" />
+            <p className="mt-5 inline-flex items-center gap-2 rounded-full border border-white/16 bg-white/10 px-3 py-1 text-[0.68rem] font-black uppercase tracking-[0.22em] text-brand-100">
               <Stars className="h-3.5 w-3.5" />
-              Global Creative Services
+              Global Creative Services HR CRM
             </p>
             <h1 className="mt-6 font-display text-5xl font-extrabold leading-[1.02] text-white">
               Premium HR CRM access with a sharper operational shell.
@@ -224,9 +225,7 @@ export function LoginPage({
         <section className="bg-[linear-gradient(180deg,rgba(248,251,255,0.96),rgba(234,242,252,0.94))] p-5 sm:p-8 lg:p-10">
           <div className="mx-auto max-w-xl rounded-[32px] border border-white/80 bg-white/84 p-5 shadow-[0_28px_80px_-46px_rgba(8,17,38,0.55)] backdrop-blur-xl sm:p-7">
             <div className="mb-6 text-center lg:text-left">
-              <span className="mx-auto inline-flex rounded-2xl bg-brand-gradient p-3 text-white shadow-lg lg:mx-0">
-                <Sparkles className="h-5 w-5" />
-              </span>
+              <BrandLogo size="lg" containerClassName="mx-auto rounded-[24px] px-4 py-3 lg:mx-0" />
               <p className="mt-4 text-[0.68rem] font-black uppercase tracking-[0.22em] text-brand-700">Global Creative Services</p>
               <h2 className="mt-3 font-display text-3xl font-extrabold tracking-tight text-brand-950 sm:text-[2.4rem]">
                 {mode === "login" ? "Access your workspace" : "Create your workspace account"}
