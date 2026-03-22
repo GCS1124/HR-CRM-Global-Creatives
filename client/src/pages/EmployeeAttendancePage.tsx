@@ -168,7 +168,7 @@ export function EmployeeAttendancePage() {
         subtitle="Check in from office or remote, then close the day with a check out stamp"
       >
         <div className="grid gap-4 xl:grid-cols-[1.25fr_0.75fr]">
-          <div className="relative overflow-hidden rounded-[28px] border border-brand-200 bg-[linear-gradient(135deg,rgba(0,120,219,0.98),rgba(0,149,255,0.95),rgba(103,196,255,0.9))] p-5 text-white shadow-[0_24px_60px_rgba(0,149,255,0.24)]">
+          <div className="accent-panel relative overflow-hidden rounded-[28px] border p-5 text-white">
             <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_top_right,rgba(255,255,255,0.2),transparent_34%),radial-gradient(circle_at_bottom_left,rgba(255,255,255,0.12),transparent_28%)]" />
             <div className="relative flex flex-wrap items-start justify-between gap-4">
               <div>

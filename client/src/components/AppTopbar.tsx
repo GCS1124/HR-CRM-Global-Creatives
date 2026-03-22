@@ -2,6 +2,7 @@ import { Bell, Clock3, Command, LogOut, Search } from "lucide-react";
 import { useEffect, useMemo, useState } from "react";
 import { useLocation } from "react-router-dom";
 import type { NavItem } from "../types/navigation";
+import { ThemeToggle } from "./ThemeToggle";
 
 interface AppTopbarProps {
   onSignOut: () => void;
@@ -60,7 +61,7 @@ export function AppTopbar({
   }, []);
 
   return (
-    <header className="sticky top-0 z-20 border-b border-white/35 bg-white/64 backdrop-blur-xl">
+    <header className="app-topbar sticky top-0 z-20 border-b backdrop-blur-xl">
       <div className="flex flex-wrap items-center justify-between gap-3 px-4 py-3 md:px-6 lg:px-8">
         <div className="flex min-w-0 items-center gap-3">
           <div className="min-w-0">
@@ -74,6 +75,7 @@ export function AppTopbar({
             <Clock3 className="h-4 w-4 text-brand-700" />
             {timeLabel}
           </div>
+          <ThemeToggle className="hidden sm:inline-flex" />
           <button
             type="button"
             onClick={() => onOpenCommandPalette?.()}

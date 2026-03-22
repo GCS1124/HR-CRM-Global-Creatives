@@ -130,7 +130,7 @@ export function EmployeeDashboardPage() {
         <AnnouncementStrip announcements={announcementsHook.data ?? []} loading={announcementsHook.loading} />
       ) : null}
 
-      <section className="relative overflow-hidden rounded-[32px] border border-white/45 bg-[linear-gradient(135deg,rgba(15,23,42,0.78)_0%,rgba(42,123,155,0.82)_46%,rgba(87,197,199,0.72)_100%)] p-6 text-white shadow-[0_30px_90px_rgba(15,23,42,0.18)]">
+      <section className="hero-panel relative overflow-hidden rounded-[32px] border p-6 text-white">
         <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_left,rgba(255,255,255,0.14),transparent_28%),radial-gradient(circle_at_bottom_right,rgba(255,157,0,0.18),transparent_24%)]" />
         <div className="relative grid gap-5 xl:grid-cols-[1.35fr_1fr]">
           <div>
@@ -273,13 +273,8 @@ export function EmployeeDashboardPage() {
                 {(command?.activeTasks ?? []).length > 0 ? (
                   (command?.activeTasks ?? []).map((task) => (
                     <div key={task.id} className="rounded-2xl border border-slate-200/80 bg-slate-50/80 p-3">
-                      <div className="flex items-start justify-between gap-3">
-                        <div>
-                          <p className="text-sm font-semibold text-slate-950">{task.title}</p>
-                          <p className="mt-1 text-sm text-slate-600">{task.description ?? "No description provided."}</p>
-                        </div>
-                        <StatusBadge value={task.status} />
-                      </div>
+                      <p className="text-sm font-semibold text-slate-950">{task.title}</p>
+                      <p className="mt-1 text-sm text-slate-600">{task.description ?? "No description provided."}</p>
                     </div>
                   ))
                 ) : (

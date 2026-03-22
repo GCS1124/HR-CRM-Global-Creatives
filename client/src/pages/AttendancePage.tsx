@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import {
   AlarmClock,
   CalendarDays,
@@ -69,6 +69,7 @@ export function AttendancePage() {
   const [updateMessage, setUpdateMessage] = useState<string | null>(null);
   const [bulkUpdating, setBulkUpdating] = useState(false);
   const [bulkError, setBulkError] = useState<string | null>(null);
+  const didAutoSetDate = useRef(false);
 
   const employeeDepartmentMap = useMemo(
     () =>
@@ -107,6 +108,26 @@ export function AttendancePage() {
     const visibleIds = new Set(filteredRecords.map((record) => record.id));
     setSelectedIds((current) => current.filter((id) => visibleIds.has(id)));
   }, [filteredRecords]);
+
+  useEffect(() => {
+    if (didAutoSetDate.current) {
+      return;
+    }
+
+    const rows = recordsHook.data ?? [];
+    if (rows.length === 0 || rangeMode !== "day" || dateFilter !== getLocalDateKey()) {
+      return;
+    }
+
+    const hasToday = rows.some((row) => row.date === dateFilter);
+    if (!hasToday) {
+      const latestDate = rows[0]?.date;
+      if (latestDate) {
+        setDateFilter(latestDate);
+      }
+    }
+    didAutoSetDate.current = true;
+  }, [dateFilter, rangeMode, recordsHook.data]);
 
   const summary = useMemo(() => {
     return filteredRecords.reduce(

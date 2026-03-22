@@ -103,7 +103,7 @@ export function EmployeeLeavePage() {
       </div>
 
       <div className="grid gap-4 xl:grid-cols-[1.05fr_0.95fr]">
-        <section className="relative overflow-hidden rounded-[32px] border border-brand-200 bg-[linear-gradient(135deg,rgba(0,120,219,0.98),rgba(0,149,255,0.95),rgba(103,196,255,0.9))] p-6 text-white shadow-soft">
+        <section className="accent-panel relative overflow-hidden rounded-[32px] border p-6 text-white">
           <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_top_left,rgba(255,255,255,0.2),transparent_36%),radial-gradient(circle_at_bottom_right,rgba(255,255,255,0.12),transparent_30%)]" />
           <div className="relative">
             <p className="inline-flex items-center gap-2 rounded-full border border-white/15 bg-white/10 px-3 py-1 text-[0.68rem] font-bold uppercase tracking-[0.18em] text-white/90">

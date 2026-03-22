@@ -11,7 +11,7 @@ export function markLoginBroadcastStart(): void {
   } catch {
     // Ignore storage failures (private mode, blocked storage, etc.).
   }
-}
+} 
 
 export function clearLoginBroadcastStart(): void {
   if (typeof window === "undefined") {

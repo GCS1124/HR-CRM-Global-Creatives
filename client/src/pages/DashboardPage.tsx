@@ -93,7 +93,7 @@ export function DashboardPage() {
         <AnnouncementStrip announcements={announcementsHook.data ?? []} loading={announcementsHook.loading} />
       ) : null}
 
-      <section className="relative overflow-hidden rounded-[32px] border border-white/45 bg-[linear-gradient(130deg,rgba(15,23,42,0.82)_0%,rgba(42,123,155,0.82)_42%,rgba(87,197,199,0.78)_100%)] p-6 text-white shadow-[0_30px_90px_rgba(15,23,42,0.2)]">
+      <section className="hero-panel relative overflow-hidden rounded-[32px] border p-6 text-white">
         <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_left,rgba(255,255,255,0.16),transparent_28%),radial-gradient(circle_at_bottom_right,rgba(255,157,0,0.2),transparent_24%)]" />
         <div className="relative grid gap-5 xl:grid-cols-[1.45fr_1fr]">
           <div>

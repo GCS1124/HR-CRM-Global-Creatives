@@ -23,7 +23,7 @@ const formatTimestamp = (value: string) => {
 
 export function NotificationsPanel({ notifications, loading, error, unreadCount, onMarkAllRead }: NotificationsPanelProps) {
   return (
-    <section className="relative mt-6 overflow-hidden rounded-[32px] border border-white/20 bg-[linear-gradient(118deg,rgba(0,120,219,0.98)_0%,rgba(0,149,255,0.96)_58%,rgba(103,196,255,0.9)_100%)] p-6 shadow-[0_28px_70px_rgba(0,149,255,0.28)]">
+    <section className="accent-panel relative mt-6 overflow-hidden rounded-[32px] border p-6">
       <div className="absolute inset-0 bg-[radial-gradient(circle_at_top,rgba(255,255,255,0.22),transparent_55%),radial-gradient(circle_at_bottom,rgba(255,255,255,0.08),transparent_60%)]" />
       <div className="absolute inset-x-0 top-0 h-1 bg-[linear-gradient(90deg,#ffffff,#0095ff,#ffffff)]" />
       <div className="relative flex flex-wrap items-center justify-between gap-3">

@@ -30,8 +30,8 @@ export function AnnouncementStrip({ announcements, loading = false }: Announceme
   return (
     <section className="mt-6 rounded-[32px] border border-white/45 bg-white/68 p-5 shadow-[0_24px_60px_rgba(15,23,42,0.12)] backdrop-blur">
       <div className="flex items-center gap-3">
-        <span className="flex h-10 w-10 items-center justify-center rounded-2xl bg-slate-950 text-white shadow-[0_14px_34px_rgba(15,23,42,0.18)]">
-          <Megaphone className="h-4 w-4" />
+        <span className="flex h-10 w-10 items-center justify-center rounded-2xl bg-slate-950 text-slate-100 shadow-[0_14px_34px_rgba(15,23,42,0.18)]">
+          <Megaphone className="h-4 w-4 text-slate-100" />
         </span>
         <div>
           <p className="text-[0.68rem] font-black uppercase tracking-[0.2em] text-brand-800">Workspace Broadcasts</p>

@@ -884,12 +884,13 @@ export const hrService = {
   getDashboardOverview: async (): Promise<DashboardOverview> => {
     const client = assertSupabase();
 
-    const [employeesResult, leaveResult, candidatesResult, attendanceResult, payrollResult] = await Promise.all([
-      client.from("employees").select("id, status"),
+    const [employeesResult, leaveResult, candidatesResult, attendanceResult, payrollResult, tasksResult] = await Promise.all([
+      client.from("employees").select("id, status, join_date"),
       client.from("leave_requests").select("id, status"),
-      client.from("candidates").select("id, stage"),
+      client.from("candidates").select("id, stage, interview_date"),
       client.from("attendance_records").select("id, status"),
       client.from("payroll_records").select("id, net_pay"),
+      client.from("tasks").select("id, status, title, due_date"),
     ]);
 
     throwIfError(employeesResult.error, "employees fetch");
@@ -897,17 +898,54 @@ export const hrService = {
     throwIfError(candidatesResult.error, "candidates fetch");
     throwIfError(attendanceResult.error, "attendance fetch");
     throwIfError(payrollResult.error, "payroll fetch");
+    throwIfError(tasksResult.error, "tasks fetch");
 
     const employees = employeesResult.data ?? [];
     const leaves = leaveResult.data ?? [];
     const candidates = candidatesResult.data ?? [];
     const attendance = attendanceResult.data ?? [];
     const payroll = payrollResult.data ?? [];
+    const tasks = tasksResult.data ?? [];
+
+    const todayKey = getLocalDateKey();
+    const today = new Date(`${todayKey}T00:00:00`);
+    const monthStart = new Date(today.getFullYear(), today.getMonth(), 1);
+    const monthEnd = new Date(today.getFullYear(), today.getMonth() + 1, 0);
+    const monthStartKey = getLocalDateKey(monthStart);
+    const monthEndKey = getLocalDateKey(monthEnd);
+    const toDateKey = (value?: string | null): string | null => {
+      if (!value) {
+        return null;
+      }
+      const parsed = new Date(value);
+      if (!Number.isNaN(parsed.valueOf())) {
+        return getLocalDateKey(parsed);
+      }
+      if (value.length >= 10) {
+        return value.slice(0, 10);
+      }
+      return null;
+    };
 
     const presentCount = attendance.filter(
       (record) => record.status === "present" || record.status === "remote",
     ).length;
     const payrollTotal = payroll.reduce((sum, row) => sum + Number(row.net_pay ?? 0), 0);
+
+    const newHires = employees.filter((employee) => {
+      const joinKey = toDateKey(employee.join_date);
+      return Boolean(joinKey && joinKey >= monthStartKey && joinKey <= monthEndKey);
+    }).length;
+    const interviewsScheduled = candidates.filter((candidate) => {
+      const interviewKey = toDateKey(candidate.interview_date);
+      return Boolean(
+        candidate.stage === "interview" &&
+          interviewKey &&
+          interviewKey >= todayKey &&
+          interviewKey <= monthEndKey,
+      );
+    }).length;
+    const performanceReviewsDue = tasks.length;
 
     return {
       metrics: {
@@ -919,9 +957,9 @@ export const hrService = {
         payrollTotal,
       },
       highlights: [
-        { title: "New hires this month", value: 3 },
-        { title: "Interviews scheduled", value: 7 },
-        { title: "Performance reviews due", value: 5 },
+        { title: "New hires this month", value: newHires },
+        { title: "Interviews scheduled", value: interviewsScheduled },
+        { title: "tasks scheduled", value: performanceReviewsDue },
       ],
     };
   },

@@ -11,12 +11,12 @@ interface AppSidebarProps {
 export function AppSidebar({ items, workspaceLabel }: AppSidebarProps) {
   const navItems = items.filter((item) => !item.footerOnly);
   return (
-    <aside className="relative hidden w-[248px] shrink-0 overflow-hidden border-r border-brand-200/60 bg-[linear-gradient(180deg,rgba(0,86,143,0.98)_0%,rgba(0,149,255,0.97)_38%,rgba(214,241,255,0.96)_100%)] shadow-[18px_0_60px_rgba(0,149,255,0.16)] lg:flex lg:flex-col">
+    <aside className="app-sidebar relative hidden w-[248px] shrink-0 overflow-hidden border-r lg:flex lg:flex-col">
       <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_top_left,rgba(255,255,255,0.26),transparent_34%)]" />
 
       <div className="relative border-b border-white/18 px-5 py-5">
         <div className="space-y-4">
-          <div className="rounded-[24px] border border-white/18 bg-white/12 px-4 py-3 shadow-[0_18px_45px_rgba(42,123,155,0.2)] backdrop-blur-sm">
+          <div className="sidebar-brand-pill rounded-[24px] border px-4 py-3 backdrop-blur-sm">
             <BrandLogo size="md" variant="plain" />
           </div>
           <div className="px-1">
