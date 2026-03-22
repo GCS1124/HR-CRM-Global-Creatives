@@ -227,7 +227,7 @@ export function LoginPage({
             <div className="mb-6 text-center lg:text-left">
               <BrandLogo
                 size="lg"
-                containerClassName="mx-auto rounded-full border border-brand-900/50 bg-[linear-gradient(90deg,var(--brand-900)_0%,var(--brand-800)_32%,var(--brand-700)_60%,var(--brand-500)_82%,var(--brand-200)_100%)] px-6 py-3 shadow-[0_18px_45px_-30px_rgba(0,90,168,0.65)] lg:mx-0"
+                containerClassName="mx-auto rounded-full border border-brand-900/50 bg-[linear-gradient(90deg,var(--brand-900)_0%,var(--brand-800)_32%,var(--brand-700)_60%,var(--brand-500)_82%,var(--brand-200)_100%)]  px-6 py-3 shadow-[0_18px_45px_-30px_rgba(0,90,168,0.65)] lg:mx-0"
               />
               <p className="mt-4 text-[0.68rem] font-black uppercase tracking-[0.22em] text-brand-700">Global Creative Services</p>
               <h2 className="mt-3 font-display text-3xl font-extrabold tracking-tight text-brand-950 sm:text-[2.4rem]">
