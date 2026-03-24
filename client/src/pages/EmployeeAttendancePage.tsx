@@ -28,7 +28,7 @@ import type { AttendanceRecord } from "../types/hr";
 import { formatDate, formatPercent, getLocalDateKey } from "../utils/formatters";
 
 export function EmployeeAttendancePage() {
-  const { profile } = useAuthSession();
+  const { profile, signOut } = useAuthSession();
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [actionError, setActionError] = useState<string | null>(null);
   const [actionMessage, setActionMessage] = useState<string | null>(null);
@@ -96,7 +96,7 @@ export function EmployeeAttendancePage() {
   ];
 
   if (isNewUserEmployeeSetupError(summaryHook.error) || isNewUserEmployeeSetupError(recordsHook.error)) {
-    return <NewUserSetupModal email={profile?.email} />;
+    return <NewUserSetupModal email={profile?.email} onSignOut={() => void signOut()} />;
   }
 
   const handleCheckIn = async (mode: "office" | "remote") => {

@@ -31,7 +31,7 @@ const initialForm: NewLeaveRequestPayload = {
 };
 
 export function EmployeeLeavePage() {
-  const { profile } = useAuthSession();
+  const { profile, signOut } = useAuthSession();
   const leaveHook = useApi(useCallback(() => hrService.getMyLeaveRequests(), []));
   const [formState, setFormState] = useState<NewLeaveRequestPayload>(initialForm);
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -51,7 +51,7 @@ export function EmployeeLeavePage() {
   const latestLeave = leaveHook.data?.[0] ?? null;
 
   if (isNewUserEmployeeSetupError(leaveHook.error)) {
-    return <NewUserSetupModal email={profile?.email} />;
+    return <NewUserSetupModal email={profile?.email} onSignOut={() => void signOut()} />;
   }
 
   const columns: Array<TableColumn<LeaveRequest>> = [

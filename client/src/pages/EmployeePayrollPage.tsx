@@ -15,7 +15,7 @@ import type { PayrollRecord } from "../types/hr";
 import { formatCurrency, formatDate } from "../utils/formatters";
 
 export function EmployeePayrollPage() {
-  const { profile } = useAuthSession();
+  const { profile, signOut } = useAuthSession();
   const payrollHook = useApi(useCallback(() => hrService.getMyPayrollRecords(), []));
 
   const summary = useMemo(() => {
@@ -31,7 +31,7 @@ export function EmployeePayrollPage() {
   const latestPayroll = payrollHook.data?.[0] ?? null;
 
   if (isNewUserEmployeeSetupError(payrollHook.error)) {
-    return <NewUserSetupModal email={profile?.email} />;
+    return <NewUserSetupModal email={profile?.email} onSignOut={() => void signOut()} />;
   }
 
   const columns: Array<TableColumn<PayrollRecord>> = [

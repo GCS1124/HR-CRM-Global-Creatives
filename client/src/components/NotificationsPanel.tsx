@@ -6,6 +6,7 @@ interface NotificationsPanelProps {
   error: string | null;
   unreadCount: number;
   onMarkAllRead: () => void;
+  onClose: () => void;
 }
 
 const formatTimestamp = (value: string) => {
@@ -21,7 +22,14 @@ const formatTimestamp = (value: string) => {
   }).format(date);
 };
 
-export function NotificationsPanel({ notifications, loading, error, unreadCount, onMarkAllRead }: NotificationsPanelProps) {
+export function NotificationsPanel({
+  notifications,
+  loading,
+  error,
+  unreadCount,
+  onMarkAllRead,
+  onClose,
+}: NotificationsPanelProps) {
   return (
     <section className="accent-panel relative mt-6 overflow-hidden rounded-[32px] border p-6">
       <div className="absolute inset-0 bg-[radial-gradient(circle_at_top,rgba(255,255,255,0.22),transparent_55%),radial-gradient(circle_at_bottom,rgba(255,255,255,0.08),transparent_60%)]" />
@@ -31,14 +39,24 @@ export function NotificationsPanel({ notifications, loading, error, unreadCount,
           <h3 className="text-lg font-semibold text-white">Notifications</h3>
           <p className="mt-1 text-sm font-medium text-white/88">Stay on top of leave, payroll, and task updates.</p>
         </div>
-        <button
-          type="button"
-          onClick={onMarkAllRead}
-          disabled={unreadCount === 0}
-          className="rounded-full border border-white/20 bg-white/10 px-4 py-2 text-xs font-semibold uppercase tracking-[0.3em] text-white transition hover:bg-white/16 disabled:cursor-not-allowed disabled:opacity-60"
-        >
-          Mark all read
-        </button>
+        <div className="flex flex-wrap items-center gap-2">
+          <button
+            type="button"
+            onClick={onMarkAllRead}
+            disabled={unreadCount === 0}
+            className="rounded-full border border-white/20 bg-white/10 px-4 py-2 text-xs font-semibold uppercase tracking-[0.3em] text-white transition hover:bg-white/16 disabled:cursor-not-allowed disabled:opacity-60"
+          >
+            Mark all read
+          </button>
+          <button
+            type="button"
+            onClick={onClose}
+            className="rounded-full border border-white/20 bg-white/10 px-4 py-2 text-xs font-semibold uppercase tracking-[0.3em] text-white transition hover:bg-white/16"
+            aria-label="Close notifications"
+          >
+            Close
+          </button>
+        </div>
       </div>
 
       <div className="relative mt-5 grid gap-3">

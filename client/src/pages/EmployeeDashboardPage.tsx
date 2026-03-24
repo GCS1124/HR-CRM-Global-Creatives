@@ -21,7 +21,7 @@ const focusTone: Record<string, string> = {
 };
 
 export function EmployeeDashboardPage() {
-  const { profile } = useAuthSession();
+  const { profile, signOut } = useAuthSession();
   const employeeHook = useApi(useCallback(() => hrService.getCurrentEmployee(), []));
   const attendanceHook = useApi(useCallback(() => hrService.getMyAttendanceSummary(), []));
   const todayAttendanceHook = useApi(useCallback(() => hrService.getMyTodayAttendance(), []));
@@ -103,7 +103,7 @@ export function EmployeeDashboardPage() {
   }
 
   if (isNewUserEmployeeSetupError(employeeHook.error)) {
-    return <NewUserSetupModal email={profile?.email} />;
+    return <NewUserSetupModal email={profile?.email} onSignOut={() => void signOut()} />;
   }
 
   if (employeeHook.error || !employeeHook.data) {

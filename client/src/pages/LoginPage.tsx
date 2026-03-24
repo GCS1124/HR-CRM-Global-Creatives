@@ -171,8 +171,8 @@ export function LoginPage({
         <section className="relative hidden overflow-hidden px-8 py-10 text-white lg:block xl:px-10">
           <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_top_left,rgba(255,255,255,0.12),transparent_30%)]" />
 
-          <div className="relative max-w-xl">
-            <BrandLogo variant="plain" size="xl" />
+          <div className="relative max-w-4xl">
+            <BrandLogo variant="plain" size="4xl" />
             <p className="mt-5 inline-flex items-center gap-2 rounded-full border border-white/16 bg-white/10 px-3 py-1 text-[0.68rem] font-black uppercase tracking-[0.22em] text-brand-100">
               <Stars className="h-3.5 w-3.5" />
               Global Creative Services HR CRM

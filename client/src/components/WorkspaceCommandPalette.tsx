@@ -1,4 +1,4 @@
-import { Bell, CornerDownLeft, Search } from "lucide-react";
+import { Bell, CornerDownLeft, Search, X } from "lucide-react";
 import { useDeferredValue, useEffect, useMemo, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import type { NavItem } from "../types/navigation";
@@ -126,6 +126,14 @@ export function WorkspaceCommandPalette({
             <span className="rounded-full border border-slate-200 px-2 py-1 text-[0.65rem] font-bold uppercase tracking-[0.18em] text-slate-500">
               Esc
             </span>
+            <button
+              type="button"
+              onClick={onClose}
+              className="rounded-full border border-slate-200 bg-white p-1 text-slate-500 transition hover:text-slate-700"
+              aria-label="Close search"
+            >
+              <X className="h-3.5 w-3.5" />
+            </button>
           </div>
         </div>
 

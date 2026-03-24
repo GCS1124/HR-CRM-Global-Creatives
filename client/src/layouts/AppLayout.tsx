@@ -1,5 +1,5 @@
-import { Outlet } from "react-router-dom";
-import { useCallback, useEffect, useMemo, useState } from "react";
+import { Outlet, useLocation, useNavigate } from "react-router-dom";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { AppMobileNav } from "../components/AppMobileNav";
 import { AppSidebar } from "../components/AppSidebar";
 import { AppTopbar } from "../components/AppTopbar";
@@ -25,6 +25,8 @@ interface AppLayoutProps {
 }
 
 export function AppLayout({ onSignOut, items, workspaceLabel, userRole }: AppLayoutProps) {
+  const location = useLocation();
+  const navigate = useNavigate();
   const [notifications, setNotifications] = useState<Notification[]>([]);
   const [notificationsLoading, setNotificationsLoading] = useState(false);
   const [notificationsError, setNotificationsError] = useState<string | null>(null);
@@ -36,6 +38,8 @@ export function AppLayout({ onSignOut, items, workspaceLabel, userRole }: AppLay
   const [profilePromptLoading, setProfilePromptLoading] = useState(false);
   const [profilePromptError, setProfilePromptError] = useState<string | null>(null);
   const [profilePromptMessage, setProfilePromptMessage] = useState<string | null>(null);
+  const [profilePromptDismissed, setProfilePromptDismissed] = useState(false);
+  const previousPathRef = useRef(location.pathname);
 
   const unreadCount = useMemo(
     () => notifications.filter((item) => !item.read).length,
@@ -45,7 +49,8 @@ export function AppLayout({ onSignOut, items, workspaceLabel, userRole }: AppLay
     userRole === "employee" &&
     !profilePromptLoading &&
     currentEmployee !== null &&
-    !hasCompleteEmployeeProfileDetails(currentEmployee);
+    !hasCompleteEmployeeProfileDetails(currentEmployee) &&
+    !profilePromptDismissed;
 
   const loadNotifications = useCallback(async () => {
     setNotificationsLoading(true);
@@ -92,8 +97,23 @@ export function AppLayout({ onSignOut, items, workspaceLabel, userRole }: AppLay
   }, [loadNotifications]);
 
   useEffect(() => {
+    if (previousPathRef.current !== location.pathname) {
+      previousPathRef.current = location.pathname;
+      if (showNotifications) {
+        setShowNotifications(false);
+      }
+      setNotificationsError(null);
+      setNotificationsLoading(false);
+    }
+  }, [location.pathname, showNotifications]);
+
+  useEffect(() => {
     void loadCurrentEmployee();
   }, [loadCurrentEmployee]);
+
+  useEffect(() => {
+    setProfilePromptDismissed(false);
+  }, [userRole, currentEmployee?.id]);
 
   useEffect(() => {
     const handleKeyDown = (event: KeyboardEvent) => {
@@ -107,6 +127,11 @@ export function AppLayout({ onSignOut, items, workspaceLabel, userRole }: AppLay
     return () => window.removeEventListener("keydown", handleKeyDown);
   }, []);
 
+  const handleOpenNotifications = () => {
+    setShowNotifications(true);
+    void loadNotifications();
+  };
+
   const handleToggleNotifications = () => {
     setShowNotifications((previous) => {
       const next = !previous;
@@ -116,6 +141,54 @@ export function AppLayout({ onSignOut, items, workspaceLabel, userRole }: AppLay
       return next;
     });
   };
+
+  const shortcutItems = useMemo(
+    () => {
+      const navItems = items.filter((item) => !item.footerOnly);
+      return [
+        {
+          id: "alerts",
+          perform: () => handleOpenNotifications(),
+        },
+        ...navItems.map((item) => ({
+          id: item.path,
+          perform: () => {
+            navigate(item.path);
+          },
+        })),
+      ];
+    },
+    [handleOpenNotifications, items, navigate],
+  );
+
+  useEffect(() => {
+    const handleShortcut = (event: KeyboardEvent) => {
+      if (!event.ctrlKey || event.metaKey || event.altKey) {
+        return;
+      }
+
+      const target = event.target as HTMLElement | null;
+      if (target?.isContentEditable || target?.closest("input, textarea, select")) {
+        return;
+      }
+
+      if (!/^[1-9]$/.test(event.key)) {
+        return;
+      }
+
+      const index = Number(event.key) - 1;
+      const action = shortcutItems[index];
+      if (!action) {
+        return;
+      }
+
+      event.preventDefault();
+      action.perform();
+    };
+
+    window.addEventListener("keydown", handleShortcut);
+    return () => window.removeEventListener("keydown", handleShortcut);
+  }, [shortcutItems]);
 
   const handleMarkAllRead = async () => {
     if (unreadCount === 0) {
@@ -165,15 +238,15 @@ export function AppLayout({ onSignOut, items, workspaceLabel, userRole }: AppLay
       <div className="flex min-h-screen">
         <AppSidebar items={items} workspaceLabel={workspaceLabel} />
         <div className="min-w-0 flex-1">
-          <AppTopbar
-            onSignOut={onSignOut}
-            items={items}
-            workspaceLabel={workspaceLabel}
-            onToggleNotifications={handleToggleNotifications}
-            onOpenCommandPalette={() => setCommandPaletteOpen(true)}
-            unreadNotifications={unreadCount}
-            notificationsOpen={showNotifications}
-          />
+            <AppTopbar
+              onSignOut={onSignOut}
+              items={items}
+              workspaceLabel={workspaceLabel}
+              onToggleNotifications={handleToggleNotifications}
+              onOpenCommandPalette={() => setCommandPaletteOpen(true)}
+              unreadNotifications={unreadCount}
+              notificationsOpen={showNotifications}
+            />
           <main className="px-4 py-5 pb-24 md:px-6 md:py-6 lg:px-8 lg:pb-8">
             <div className="mx-auto w-full max-w-[1440px]">
               {showNotifications ? (
@@ -183,6 +256,7 @@ export function AppLayout({ onSignOut, items, workspaceLabel, userRole }: AppLay
                   error={notificationsError}
                   unreadCount={unreadCount}
                   onMarkAllRead={handleMarkAllRead}
+                  onClose={() => setShowNotifications(false)}
                 />
               ) : null}
               <Outlet />
@@ -197,22 +271,31 @@ export function AppLayout({ onSignOut, items, workspaceLabel, userRole }: AppLay
         items={items}
         workspaceLabel={workspaceLabel}
         onClose={() => setCommandPaletteOpen(false)}
-        onOpenNotifications={handleToggleNotifications}
+        onOpenNotifications={handleOpenNotifications}
       />
       {requiresProfileCompletion ? (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-950/55 px-4 py-6 backdrop-blur-sm">
           <div className="w-full max-w-3xl rounded-[32px] border border-brand-200 bg-white p-6 shadow-[0_28px_80px_rgba(15,23,42,0.22)]">
-            <div className="rounded-2xl border border-brand-200 bg-brand-50 px-4 py-3">
-              <p className="text-[0.68rem] font-black uppercase tracking-[0.18em] text-brand-700">
-                First Login Setup
-              </p>
-              <h2 className="mt-2 font-display text-2xl font-extrabold text-brand-950">
-                Complete your payroll and compliance details
-              </h2>
-              <p className="mt-2 text-sm text-slate-600">
-                Add PAN, address, mobile, bank name, and account number before continuing. These
-                details are used in your employee profile and salary slips.
-              </p>
+            <div className="flex items-start justify-between gap-3 rounded-2xl border border-brand-200 bg-brand-50 px-4 py-3">
+              <div>
+                <p className="text-[0.68rem] font-black uppercase tracking-[0.18em] text-brand-700">
+                  First Login Setup
+                </p>
+                <h2 className="mt-2 font-display text-2xl font-extrabold text-brand-950">
+                  Complete your payroll and compliance details
+                </h2>
+                <p className="mt-2 text-sm text-slate-600">
+                  Add PAN, address, mobile, bank name, and account number before continuing. These
+                  details are used in your employee profile and salary slips.
+                </p>
+              </div>
+              <button
+                type="button"
+                onClick={() => setProfilePromptDismissed(true)}
+                className="rounded-full border border-brand-200 bg-white px-3 py-1 text-xs font-semibold uppercase tracking-[0.25em] text-brand-700 transition hover:bg-white/90"
+              >
+                Close
+              </button>
             </div>
 
             <div className="mt-5 rounded-2xl border border-slate-200 bg-white p-4">

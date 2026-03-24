@@ -19,7 +19,7 @@ import {
 } from "../utils/employeeProfile";
 
 export function EmployeeProfilePage() {
-  const { profile } = useAuthSession();
+  const { profile, signOut } = useAuthSession();
   const employeeHook = useApi(useCallback(() => hrService.getCurrentEmployee(), []));
   const settingsHook = useApi(useCallback(() => hrService.getSettings(), []));
   const [detailsDraft, setDetailsDraft] = useState<EmployeeProfileDetailsPayload>(emptyEmployeeProfileDetails);
@@ -40,7 +40,7 @@ export function EmployeeProfilePage() {
   }
 
   if (isNewUserEmployeeSetupError(employeeHook.error)) {
-    return <NewUserSetupModal email={profile?.email} />;
+    return <NewUserSetupModal email={profile?.email} onSignOut={() => void signOut()} />;
   }
 
   if (employeeHook.error || !employeeHook.data) {
