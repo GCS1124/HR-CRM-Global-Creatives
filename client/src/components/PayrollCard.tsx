@@ -1,4 +1,4 @@
-import { CalendarDays, MinusCircle } from "lucide-react";
+import { CalendarDays, Landmark, MinusCircle } from "lucide-react";
 import { calculatePayroll } from "../utils/payroll";
 import type { PayrollInput } from "../utils/payroll";
 

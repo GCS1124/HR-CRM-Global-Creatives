@@ -47,11 +47,6 @@ export function EmployeeAttendancePage() {
     return () => window.clearInterval(interval);
   }, [recordsHook]);
 
-  const todayRecord = useMemo(
-    () => (recordsHook.data ?? []).find((row) => row.date === todayKey) ?? null,
-    [recordsHook.data, todayKey],
-  );
-
   const breakThresholdMinutes = 60;
   const breakPolicies = [
     { id: "freshen", label: "Freshen Up", limit: 15, max: 15, match: ["fresh", "bio", "wash"] },
