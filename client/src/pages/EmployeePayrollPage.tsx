@@ -175,7 +175,7 @@ export function EmployeePayrollPage() {
         paidHolidays={paidHolidays}
         attendanceDays={attendanceDays}
       />
-        <SectionCard title="Compensation Readout" subtitle="How your current payroll history breaks down">
+        <SectionCard title="Compensation Readout" showAccent={false}>
           <div className="space-y-3">
             <div className="rounded-2xl border border-brand-200 bg-brand-50 p-4">
               <p className="inline-flex items-center gap-2 text-xs font-bold uppercase tracking-[0.12em] text-brand-700">
