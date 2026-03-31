@@ -564,11 +564,11 @@ export function EmployeeDashboardPage() {
                   <div className="flex items-start justify-between gap-4">
                     <div className="min-w-0 pr-3">
                       <p className="text-xs font-semibold text-slate-900 dark:text-slate-100">{item.title}</p>
-                      <div className="mt-3 min-h-[2.6rem]">
-                        <p className="text-[1.55rem] font-semibold leading-[1.1] text-slate-950 dark:text-white">
-                          {item.value}
-                        </p>
-                      </div>
+                        <div className="mt-3 min-h-[2.6rem]">
+                          <p className="text-[1.35rem] font-semibold leading-[1.15] text-slate-950 dark:text-white">
+                            {item.value}
+                          </p>
+                        </div>
                     </div>
                     <div className="relative h-[128px] w-[128px] shrink-0">
                       <svg viewBox={`0 0 ${ringSize} ${ringSize}`} className="h-[128px] w-[128px]">

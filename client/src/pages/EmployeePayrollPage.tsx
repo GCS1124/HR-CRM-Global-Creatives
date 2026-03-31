@@ -161,8 +161,8 @@ export function EmployeePayrollPage() {
     <div className="animate-page-enter space-y-6">
       <PageHeader
         title="My Payroll"
-        subtitle="View your completed salary records and payout breakdown"
-        eyebrow="Employee Payroll"
+        subtitle=""     
+         eyebrow="Employee Payroll"
       />
 
       <div className="grid gap-4 lg:grid-cols-[1.35fr_0.65fr]">
