@@ -1,7 +1,6 @@
 import { useCallback, useEffect, useState } from "react";
-import { Building2, CalendarClock, Landmark, MapPin, Phone, ShieldCheck, Sparkles, UserRound } from "lucide-react";
+import { Building2, CalendarClock, Landmark, MapPin, Phone, ShieldCheck, UserRound } from "lucide-react";
 import { EmployeePrivateDetailsForm } from "../components/EmployeePrivateDetailsForm";
-import { ModuleHero } from "../components/ModuleHero";
 import { NewUserSetupModal } from "../components/NewUserSetupModal";
 import { PageHeader } from "../components/PageHeader";
 import { SectionCard } from "../components/SectionCard";
@@ -78,19 +77,7 @@ export function EmployeeProfilePage() {
 
   return (
     <div className="animate-page-enter space-y-6">
-      <PageHeader
-        title="My Profile"
-        subtitle="Review your HR profile details, reporting line, and policy defaults"
-        eyebrow="Employee Profile"
-      />
-
-      <ModuleHero
-        icon={UserRound}
-        title="Your Core Employment Details"
-        subtitle="Keep profile information aligned with HR records and understand current policy settings through a cleaner profile view."
-        chips={["Employment info", "Manager visibility", "Policy context"]}
-        spotlight={employee.department}
-      />
+      <PageHeader title="My Profile" eyebrow="Employee Profile" />
 
       <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-4">
         <StatCard title="Department" value={employee.department} icon={Building2} />
@@ -102,16 +89,14 @@ export function EmployeeProfilePage() {
       <div className="grid gap-4 xl:grid-cols-[1.1fr_0.9fr]">
         <section className="hero-panel relative overflow-hidden rounded-[32px] border p-6">
           <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_top_right,rgba(59,130,246,0.12),transparent_36%)]" />
-          <div className="relative">
-            <p className="inline-flex items-center gap-2 rounded-full border border-brand-200 bg-white/80 px-3 py-1 text-[0.68rem] font-bold uppercase tracking-[0.18em] text-brand-700">
-              <Sparkles className="h-3.5 w-3.5" />
-              Identity Snapshot
-            </p>
-            <div className="mt-4 flex flex-wrap items-start justify-between gap-4">
-              <div>
-                <h2 className="font-display text-3xl font-extrabold text-brand-950">{employee.name}</h2>
-                <p className="mt-1 text-sm text-brand-700">{employee.email}</p>
-              </div>
+            <div className="relative">
+              <div className="flex flex-wrap items-start justify-between gap-4">
+                <div>
+                  <h2 className="font-display text-3xl font-extrabold text-brand-950">{employee.name}</h2>
+                  <p className="mt-2 inline-flex rounded-full bg-white/85 px-3 py-1 text-sm font-semibold text-brand-900 shadow-sm ring-1 ring-brand-200/80">
+                    {employee.email}
+                  </p>
+                </div>
               <StatusBadge value={employee.status} />
             </div>
 
@@ -136,7 +121,7 @@ export function EmployeeProfilePage() {
           </div>
         </section>
 
-        <SectionCard title="Policy Defaults" subtitle="Current global settings inherited in your workspace">
+        <SectionCard title="Policy Defaults">
           {settingsHook.loading ? <p className="text-sm font-semibold text-brand-700">Loading policy defaults...</p> : null}
           {settingsHook.error ? <p className="text-sm font-semibold text-rose-700">{settingsHook.error}</p> : null}
 
@@ -162,7 +147,6 @@ export function EmployeeProfilePage() {
       <div className="grid gap-4 xl:grid-cols-[1.1fr_0.9fr]">
         <SectionCard
           title="Private Details"
-          subtitle="Maintain payroll, banking, and compliance information used on salary slips"
           rightSlot={
             <span
               className={`rounded-full px-3 py-1.5 text-xs font-bold uppercase tracking-[0.14em] ${
@@ -184,7 +168,7 @@ export function EmployeeProfilePage() {
           />
         </SectionCard>
 
-        <SectionCard title="Verification Snapshot" subtitle="Values currently stored against your employee record">
+        <SectionCard title="Verification Snapshot">
           <div className="grid gap-3 sm:grid-cols-2">
             <div className="rounded-2xl border border-brand-200 bg-brand-50 p-4">
               <p className="inline-flex items-center gap-2 text-xs font-bold uppercase tracking-[0.12em] text-brand-700">
@@ -215,7 +199,7 @@ export function EmployeeProfilePage() {
         </SectionCard>
       </div>
 
-      <SectionCard title="Profile Card" subtitle="Current employee record">
+      <SectionCard title="Profile Card">
         <div className="grid gap-3 md:grid-cols-2 xl:grid-cols-4">
           <div className="rounded-2xl border border-brand-200 bg-brand-50 p-4">
             <p className="text-xs font-bold uppercase tracking-[0.12em] text-brand-700">Department</p>
