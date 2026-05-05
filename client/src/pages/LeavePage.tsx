@@ -349,7 +349,11 @@ export function LeavePage() {
         </SectionCard>
 
         <div className="space-y-4">
-          <SectionCard title="Request detail" subtitle="Full context for the selected request">
+          <SectionCard
+            title="Request detail"
+            subtitle="Full context for the selected request"
+            collapsed={!selectedLeave}
+          >
             {selectedLeave ? (
               <div className="space-y-3 text-sm text-slate-600">
                 <div className="rounded-xl border border-slate-200 bg-slate-50 px-4 py-4">
@@ -454,7 +458,7 @@ export function LeavePage() {
             )}
           </SectionCard>
 
-          <SectionCard title="Policy Guardrails" subtitle="Approval checklist for team leads">
+          <SectionCard title="Policy Guardrails" subtitle="Approval checklist for team leads" collapsible defaultCollapsed>
             <div className="space-y-3 text-sm font-medium text-brand-700">
               <div className="rounded-lg border border-brand-200 bg-brand-50 p-3">
                 <p className="inline-flex items-center gap-2 font-semibold text-brand-900">

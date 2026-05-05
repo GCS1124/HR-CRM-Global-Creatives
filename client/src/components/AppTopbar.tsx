@@ -19,11 +19,13 @@ import { TimeDisplay } from "./topbar/TimeDisplay";
 import { NotificationBell } from "./topbar/NotificationBell";
 import { AttendanceControls } from "./topbar/AttendanceControls";
 import { TimeTracker } from "./topbar/TimeTracker";
+import type { UserRole } from "../types/auth";
 
 interface AppTopbarProps {
   onSignOut: () => void;
   items: NavItem[];
   workspaceLabel: string;
+  userRole: UserRole;
   onToggleNotifications?: () => void;
   onCloseNotifications?: () => void;
   notifications?: Notification[];
@@ -68,6 +70,7 @@ const writeLiveBreak = (payload: { key: BreakKey; startedAt: number } | null) =>
 
 export function AppTopbar({
   onSignOut,
+  userRole,
   onToggleNotifications,
   onCloseNotifications,
   notifications = [],
@@ -81,6 +84,7 @@ export function AppTopbar({
   const checkInRef = useRef<HTMLDivElement | null>(null);
   const alertsRef = useRef<HTMLDivElement | null>(null);
   const lastProgressSyncRef = useRef(0);
+  const showAttendanceControls = userRole !== "admin";
 
   const [trackerOpen, setTrackerOpen] = useState(false);
   const [checkInAt, setCheckInAt] = useState<number | null>(null);
@@ -218,6 +222,15 @@ export function AppTopbar({
   );
 
   useEffect(() => {
+    if (!showAttendanceControls) {
+      setAttendanceRecord(null);
+      setCheckInAt(null);
+      setActiveBreak(null);
+      setBreaks(createInitialBreaks());
+      setBreakSessions([]);
+      return;
+    }
+
     const load = async () => {
       try {
         const record = await hrService.getMyTodayAttendance();
@@ -227,19 +240,19 @@ export function AppTopbar({
       }
     };
     void load();
-  }, [applyAttendanceRecord]);
+  }, [applyAttendanceRecord, showAttendanceControls]);
 
   useEffect(() => {
-    if (!checkInAt || !attendanceRecord || attendanceRecord.checkOut !== "--") return;
+    if (!showAttendanceControls || !checkInAt || !attendanceRecord || attendanceRecord.checkOut !== "--") return;
     const interval = window.setInterval(() => {
       const snapshot = buildBreakSnapshot(breaks, breakSessions, Date.now());
       void persistAttendanceProgress(snapshot);
     }, 60_000);
     return () => window.clearInterval(interval);
-  }, [attendanceRecord, breaks, breakSessions, buildBreakSnapshot, checkInAt, persistAttendanceProgress]);
+  }, [attendanceRecord, breaks, breakSessions, buildBreakSnapshot, checkInAt, persistAttendanceProgress, showAttendanceControls]);
 
   const handleCheckIn = async (mode: AttendanceCheckInMode) => {
-    if (attendanceBusy) return;
+    if (!showAttendanceControls || attendanceBusy) return;
     setAttendanceBusy(true);
     setCheckInMenuOpen(false);
     try {
@@ -254,7 +267,7 @@ export function AppTopbar({
   };
 
   const handleCheckOut = async () => {
-    if (attendanceBusy || !checkInAt) return;
+    if (!showAttendanceControls || attendanceBusy || !checkInAt) return;
     setAttendanceBusy(true);
     const now = Date.now();
     try {
@@ -279,7 +292,7 @@ export function AppTopbar({
   };
 
   const handleToggleBreak = (key: BreakKey) => {
-    if (!checkInAt) return;
+    if (!showAttendanceControls || !checkInAt) return;
     const now = Date.now();
     const isEnding = activeBreak === key;
     const nextActive = isEnding ? null : key;
@@ -326,31 +339,35 @@ export function AppTopbar({
         </div>
 
         <div className="flex items-center gap-2 sm:gap-3">
-          <div ref={checkInRef}>
-            <AttendanceControls
-              checkInAt={checkInAt}
-              checkedOut={Boolean(attendanceRecord && attendanceRecord.checkOut !== "--")}
-              attendanceBusy={attendanceBusy}
-              menuOpen={checkInMenuOpen}
-              onToggleMenu={() => setCheckInMenuOpen(!checkInMenuOpen)}
-              onCheckIn={handleCheckIn}
-              onCheckOut={handleCheckOut}
-            />
-          </div>
+          {showAttendanceControls ? (
+            <>
+              <div ref={checkInRef}>
+                <AttendanceControls
+                  checkInAt={checkInAt}
+                  checkedOut={Boolean(attendanceRecord && attendanceRecord.checkOut !== "--")}
+                  attendanceBusy={attendanceBusy}
+                  menuOpen={checkInMenuOpen}
+                  onToggleMenu={() => setCheckInMenuOpen(!checkInMenuOpen)}
+                  onCheckIn={handleCheckIn}
+                  onCheckOut={handleCheckOut}
+                />
+              </div>
 
-          <div ref={trackerRef}>
-            <TimeTracker
-              checkInAt={checkInAt}
-              activeBreak={activeBreak}
-              breaks={breaks}
-              breakSessionCounts={breakSessionCounts}
-              onToggleBreak={handleToggleBreak}
-              isOpen={trackerOpen}
-              onToggleOpen={() => setTrackerOpen(!trackerOpen)}
-              onClose={() => setTrackerOpen(false)}
-              error={attendanceError}
-            />
-          </div>
+              <div ref={trackerRef}>
+                <TimeTracker
+                  checkInAt={checkInAt}
+                  activeBreak={activeBreak}
+                  breaks={breaks}
+                  breakSessionCounts={breakSessionCounts}
+                  onToggleBreak={handleToggleBreak}
+                  isOpen={trackerOpen}
+                  onToggleOpen={() => setTrackerOpen(!trackerOpen)}
+                  onClose={() => setTrackerOpen(false)}
+                  error={attendanceError}
+                />
+              </div>
+            </>
+          ) : null}
 
           <div ref={alertsRef}>
             <NotificationBell

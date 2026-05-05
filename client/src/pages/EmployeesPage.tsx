@@ -97,6 +97,7 @@ export function EmployeesPage() {
   const [actionLoading, setActionLoading] = useState<"archive" | "delete" | "status" | null>(null);
   const [showAddModal, setShowAddModal] = useState(false);
   const [showStats, setShowStats] = useState(false);
+  const [showAdvancedFilters, setShowAdvancedFilters] = useState(false);
 
   const { data, loading, refetch } = useApi(useCallback(() => hrService.getEmployees(), []));
 
@@ -413,46 +414,55 @@ export function EmployeesPage() {
               className="input-surface w-full pl-10 h-10"
             />
           </div>
-          <select value={department} onChange={(e) => setDepartment(e.target.value)} className="input-surface h-10 text-xs font-bold" title="Filter by Department">
-            <option value="">All Departments</option>
-            {departments.map((d) => <option key={d} value={d}>{d}</option>)}
-          </select>
-          <select value={status} onChange={(e) => setStatus(e.target.value)} className="input-surface h-10 text-xs font-bold" title="Filter by Status">
-            <option value="">All Statuses</option>
-            <option value="active">Active</option>
-            <option value="on_leave">On Leave</option>
-            <option value="inactive">Inactive</option>
-          </select>
           <select value={sortMode} onChange={(e) => setSortMode(e.target.value as SortMode)} className="input-surface h-10 text-xs font-bold" title="Sort order">
             <option value="recent">Sort: Newest</option>
             <option value="performance">Sort: Performance</option>
             <option value="name">Sort: A-Z</option>
             <option value="manager">Sort: Manager</option>
           </select>
+          <button
+            type="button"
+            onClick={() => setShowAdvancedFilters((current) => !current)}
+            className="btn-secondary h-10 px-3"
+          >
+            {showAdvancedFilters ? "Less filters" : "More filters"}
+          </button>
           {hasActiveFilters && (
             <button onClick={() => { setSearch(""); setDepartment(""); setStatus(""); setViewPreset("all"); setManagerFocus(""); setSortMode("recent"); }} className="btn-secondary h-10 px-3" title="Reset Filters">
               <RotateCcw className="h-4 w-4" />
             </button>
           )}
         </div>
-        <div className="mt-3 flex flex-wrap items-center gap-2">
-          {[
-            { id: "all", label: "All People" },
-            { id: "high_performers", label: "High Performers" },
-            { id: "attention", label: "Needs Attention" },
-            { id: "new_joiners", label: "Recent Joiners" },
-          ].map((p) => (
-            <button
-              key={p.id}
-              onClick={() => setViewPreset(p.id as ViewPreset)}
-              className={`rounded-full px-3 py-1 text-[0.65rem] font-black uppercase tracking-wider transition ${
-                viewPreset === p.id ? "bg-brand-700 text-white shadow-sm" : "bg-slate-100 text-slate-500 hover:bg-slate-200"
-              }`}
-            >
-              {p.label}
-            </button>
-          ))}
-        </div>
+        {showAdvancedFilters ? (
+          <div className="mt-3 flex flex-wrap items-center gap-2">
+            <select value={department} onChange={(e) => setDepartment(e.target.value)} className="input-surface h-10 text-xs font-bold" title="Filter by Department">
+              <option value="">All Departments</option>
+              {departments.map((d) => <option key={d} value={d}>{d}</option>)}
+            </select>
+            <select value={status} onChange={(e) => setStatus(e.target.value)} className="input-surface h-10 text-xs font-bold" title="Filter by Status">
+              <option value="">All Statuses</option>
+              <option value="active">Active</option>
+              <option value="on_leave">On Leave</option>
+              <option value="inactive">Inactive</option>
+            </select>
+            {[
+              { id: "all", label: "All People" },
+              { id: "high_performers", label: "High Performers" },
+              { id: "attention", label: "Needs Attention" },
+              { id: "new_joiners", label: "Recent Joiners" },
+            ].map((p) => (
+              <button
+                key={p.id}
+                onClick={() => setViewPreset(p.id as ViewPreset)}
+                className={`rounded-full px-3 py-1 text-[0.65rem] font-black uppercase tracking-wider transition ${
+                  viewPreset === p.id ? "bg-brand-700 text-white shadow-sm" : "bg-slate-100 text-slate-500 hover:bg-slate-200"
+                }`}
+              >
+                {p.label}
+              </button>
+            ))}
+          </div>
+        ) : null}
       </div>
 
       <div className={`grid gap-6 transition-all duration-300 ${selectedEmployeeId ? 'lg:grid-cols-[1fr_400px]' : 'grid-cols-1'}`}>

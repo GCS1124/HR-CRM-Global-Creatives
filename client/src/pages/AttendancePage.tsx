@@ -62,6 +62,7 @@ export function AttendancePage() {
   const [dateFilter, setDateFilter] = useState(getLocalDateKey());
   const [rangeMode, setRangeMode] = useState<RangeMode>("day");
   const [focusMode, setFocusMode] = useState<FocusMode>("all");
+  const [showAdvancedFilters, setShowAdvancedFilters] = useState(false);
   const [selectedRecordId, setSelectedRecordId] = useState<string | null>(null);
   const [selectedIds, setSelectedIds] = useState<string[]>([]);
   const [editState, setEditState] = useState<UpdateAttendanceRecordPayload>(initialEditForm);
@@ -254,16 +255,25 @@ export function AttendancePage() {
               <RotateCcw className="h-4 w-4" />
             </button>
           )}
+          <button
+            type="button"
+            onClick={() => setShowAdvancedFilters((current) => !current)}
+            className="btn-secondary h-10 px-3"
+          >
+            {showAdvancedFilters ? "Less filters" : "More filters"}
+          </button>
         </div>
-        <div className="mt-3 flex flex-wrap items-center gap-2">
-           {[ { id: "day", label: "Single Day" }, { id: "week", label: "7-Day Window" } ].map(item => (
-             <button key={item.id} onClick={() => setRangeMode(item.id as RangeMode)} className={`rounded-full px-3 py-1 text-[0.65rem] font-black uppercase tracking-wider transition ${rangeMode === item.id ? 'bg-brand-700 text-white shadow-sm' : 'bg-slate-100 text-slate-500 hover:bg-slate-200'}`}>{item.label}</button>
-           ))}
-           <div className="h-4 w-px bg-slate-200 mx-1" />
-           {[ { id: "all", label: "All Logs" }, { id: "exceptions", label: "Exceptions Only" }, { id: "remote", label: "Remote Only" } ].map(item => (
-             <button key={item.id} onClick={() => setFocusMode(item.id as FocusMode)} className={`rounded-full px-3 py-1 text-[0.65rem] font-black uppercase tracking-wider transition ${focusMode === item.id ? 'bg-brand-900 text-white shadow-sm' : 'bg-slate-100 text-slate-500 hover:bg-slate-200'}`}>{item.label}</button>
-           ))}
-        </div>
+        {showAdvancedFilters ? (
+          <div className="mt-3 flex flex-wrap items-center gap-2">
+            {[{ id: "day", label: "Single Day" }, { id: "week", label: "7-Day Window" }].map((item) => (
+              <button key={item.id} onClick={() => setRangeMode(item.id as RangeMode)} className={`rounded-full px-3 py-1 text-[0.65rem] font-black uppercase tracking-wider transition ${rangeMode === item.id ? 'bg-brand-700 text-white shadow-sm' : 'bg-slate-100 text-slate-500 hover:bg-slate-200'}`}>{item.label}</button>
+            ))}
+            <div className="h-4 w-px bg-slate-200 mx-1" />
+            {[{ id: "all", label: "All Logs" }, { id: "exceptions", label: "Exceptions Only" }, { id: "remote", label: "Remote Only" }].map((item) => (
+              <button key={item.id} onClick={() => setFocusMode(item.id as FocusMode)} className={`rounded-full px-3 py-1 text-[0.65rem] font-black uppercase tracking-wider transition ${focusMode === item.id ? 'bg-brand-900 text-white shadow-sm' : 'bg-slate-100 text-slate-500 hover:bg-slate-200'}`}>{item.label}</button>
+            ))}
+          </div>
+        ) : null}
       </div>
 
       <SectionCard 

@@ -831,7 +831,12 @@ export function PayrollPage() {
         <StatCard title="Deduction rate" value={`${deductionRate.toFixed(1)}%`} hint="Of gross visible payout" icon={ReceiptText} accent />
       </div>
 
-      <SectionCard title="Payroll controls" subtitle="Move between period review, payout state, and deduction-focused analysis without leaving the register">
+      <SectionCard
+        title="Payroll controls"
+        subtitle="Move between period review, payout state, and deduction-focused analysis without leaving the register"
+        collapsible
+        defaultCollapsed
+      >
         <div className="grid gap-3 xl:grid-cols-[1.1fr_0.9fr_0.9fr_0.9fr]">
           <input type="search" value={search} onChange={(event) => setSearch(event.target.value)} placeholder="Search employee, department, or month" className="input-surface" />
           <select value={department} onChange={(event) => setDepartment(event.target.value)} className="input-surface">
@@ -935,6 +940,8 @@ export function PayrollPage() {
                 Clear adjustments
               </button>
             }
+            collapsible
+            defaultCollapsed
           >
             <form onSubmit={handleCreatePayroll} className="space-y-3">
               <select value={formState.employeeId ?? ""} onChange={(event) => handleEmployeeSelect(event.target.value)} className="input-surface w-full">

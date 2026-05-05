@@ -40,15 +40,15 @@ const AuthCallbackPage = lazy(() => import("./pages/AuthCallbackPage").then(m =>
 const NotFoundPage = lazy(() => import("./pages/NotFoundPage").then(m => ({ default: m.NotFoundPage })));
 
 const adminNavItems: NavItem[] = [
-  { label: "Dashboard", path: "/admin", icon: Gauge },
-  { label: "Employees", path: "/admin/employees", icon: Users },
-  { label: "Attendance", path: "/admin/attendance", icon: UserCheck },
-  { label: "Requests", path: "/admin/requests", icon: ClipboardCheck },
-  { label: "Tasks", path: "/admin/tasks", icon: ClipboardList },
-  { label: "Leave", path: "/admin/leave", icon: CalendarClock },
-  { label: "Recruitment", path: "/admin/recruitment", icon: UserRound },
-  { label: "Payroll", path: "/admin/payroll", icon: CircleDollarSign },
-  { label: "Settings", path: "/admin/settings", icon: Settings },
+  { label: "Dashboard", path: "/admin", icon: Gauge, group: "Overview" },
+  { label: "Employees", path: "/admin/employees", icon: Users, group: "People" },
+  { label: "Attendance", path: "/admin/attendance", icon: UserCheck, group: "Operations" },
+  { label: "Requests", path: "/admin/requests", icon: ClipboardCheck, group: "Operations" },
+  { label: "Tasks", path: "/admin/tasks", icon: ClipboardList, group: "Operations" },
+  { label: "Leave", path: "/admin/leave", icon: CalendarClock, group: "Operations" },
+  { label: "Recruitment", path: "/admin/recruitment", icon: UserRound, group: "Operations" },
+  { label: "Payroll", path: "/admin/payroll", icon: CircleDollarSign, group: "Finance" },
+  { label: "Settings", path: "/admin/settings", icon: Settings, group: "Configuration" },
 ];
 
 const employeeNavItems: NavItem[] = [
@@ -143,11 +143,12 @@ export default function App() {
             <Route
               path="/admin"
               element={
-                <AppLayout
+              <AppLayout
                   onSignOut={() => void signOut()}
                   items={adminNavItems}
                   workspaceLabel="Admin Command Center"
                   userRole={role ?? "admin"}
+                  showQuickLinksFooter={false}
                 />
               }
             >

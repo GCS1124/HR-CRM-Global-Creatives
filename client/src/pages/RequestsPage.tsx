@@ -155,66 +155,72 @@ export function RequestsPage() {
         eyebrow="Operations Control"
       />
 
-      <div className="grid gap-6 lg:grid-cols-[1fr_320px]">
-        <div className="space-y-6">
-          <div className="flex flex-wrap items-center gap-3 bg-white/50 p-2 rounded-2xl border border-slate-200/60 backdrop-blur-sm">
-             <div className="relative flex-1 min-w-[200px]">
-                <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-slate-400" />
-                <input value={search} onChange={e => setSearch(e.target.value)} placeholder="Search employee..." className="input-surface w-full pl-10 h-10" />
-             </div>
-             <select value={typeFilter} onChange={e => setTypeFilter(e.target.value as any)} className="input-surface h-10 text-xs font-bold" title="Request Type">
-                <option value="">All Types</option>
-                <option value="attendance_correction">Correction</option>
-                <option value="profile_update">Profile</option>
-             </select>
-             <select value={statusFilter} onChange={e => setStatusFilter(e.target.value as any)} className="input-surface h-10 text-xs font-bold" title="Status">
-                <option value="pending">Pending Only</option>
-                <option value="approved">Approved</option>
-                <option value="rejected">Rejected</option>
-                <option value="">All Status</option>
-             </select>
-             {(search || typeFilter || statusFilter !== 'pending') && (
-               <button
-                 onClick={() => {
-                   setSearch("");
-                   setTypeFilter("");
-                   setStatusFilter("pending");
-                 }}
-                 className="p-2.5 bg-slate-100 rounded-xl hover:bg-slate-200 transition"
-                 title="Reset filters"
-                 aria-label="Reset filters"
-               >
-                 <RotateCcw className="h-4 w-4 text-slate-600" />
-               </button>
-             )}
+      <div className="space-y-6">
+        <div className="flex flex-wrap items-center gap-3 bg-white/50 p-2 rounded-2xl border border-slate-200/60 backdrop-blur-sm">
+          <div className="relative flex-1 min-w-[200px]">
+            <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-slate-400" />
+            <input value={search} onChange={e => setSearch(e.target.value)} placeholder="Search employee..." className="input-surface w-full pl-10 h-10" />
           </div>
-
-          <SectionCard title="Active Requests" rightSlot={<span className="insight-pill">{filteredRequests.length} queue items</span>}>
-             <DataTable columns={columns} rows={filteredRequests} rowKey={(r) => r.id} exportFileName="requests-data" />
-          </SectionCard>
+          <select
+            value={typeFilter}
+            onChange={(event) => setTypeFilter(event.currentTarget.value as AdminRequestType | "")}
+            className="input-surface h-10 text-xs font-bold"
+            title="Request Type"
+          >
+            <option value="">All Types</option>
+            <option value="attendance_correction">Correction</option>
+            <option value="profile_update">Profile</option>
+          </select>
+          <select
+            value={statusFilter}
+            onChange={(event) => setStatusFilter(event.currentTarget.value as AdminRequestStatus | "")}
+            className="input-surface h-10 text-xs font-bold"
+            title="Status"
+          >
+            <option value="pending">Pending Only</option>
+            <option value="approved">Approved</option>
+            <option value="rejected">Rejected</option>
+            <option value="">All Status</option>
+          </select>
+          {(search || typeFilter || statusFilter !== 'pending') && (
+            <button
+              onClick={() => {
+                setSearch("");
+                setTypeFilter("");
+                setStatusFilter("pending");
+              }}
+              className="p-2.5 bg-slate-100 rounded-xl hover:bg-slate-200 transition"
+              title="Reset filters"
+              aria-label="Reset filters"
+            >
+              <RotateCcw className="h-4 w-4 text-slate-600" />
+            </button>
+          )}
         </div>
 
-        <aside className="space-y-6">
-           <SectionCard title="Resolution Note" subtitle="Add context to your decision">
-              <div className="space-y-4">
-                 <div className="relative">
-                    <MessageSquare className="absolute left-3 top-3 h-4 w-4 text-slate-400" />
-                    <textarea 
-                       value={adminComment}
-                       onChange={e => setAdminComment(e.target.value)}
-                       placeholder="Explain why approved or rejected..." 
-                       className="input-surface w-full min-h-[120px] pl-10 pt-3"
-                    />
-                 </div>
-                 <div className="p-3 rounded-xl bg-slate-50 border border-slate-100 flex gap-3">
-                    <ClipboardCheck className="h-4 w-4 text-slate-400 shrink-0 mt-0.5" />
-                    <p className="text-[0.7rem] font-bold text-slate-500 leading-relaxed">
-                      Approving an attendance correction will automatically update the corresponding registry record.
-                    </p>
-                 </div>
-              </div>
-           </SectionCard>
-        </aside>
+        <SectionCard title="Active Requests" rightSlot={<span className="insight-pill">{filteredRequests.length} queue items</span>}>
+          <DataTable columns={columns} rows={filteredRequests} rowKey={(r) => r.id} exportFileName="requests-data" />
+        </SectionCard>
+
+        <SectionCard title="Resolution Note" subtitle="Add context to your decision">
+          <div className="space-y-4">
+            <div className="relative">
+              <MessageSquare className="absolute left-3 top-3 h-4 w-4 text-slate-400" />
+              <textarea
+                value={adminComment}
+                onChange={e => setAdminComment(e.target.value)}
+                placeholder="Explain why approved or rejected..."
+                className="input-surface w-full min-h-[120px] pl-10 pt-3"
+              />
+            </div>
+            <div className="p-3 rounded-xl bg-slate-50 border border-slate-100 flex gap-3">
+              <ClipboardCheck className="h-4 w-4 text-slate-400 shrink-0 mt-0.5" />
+              <p className="text-[0.7rem] font-bold text-slate-500 leading-relaxed">
+                Approving an attendance correction will automatically update the corresponding registry record.
+              </p>
+            </div>
+          </div>
+        </SectionCard>
       </div>
     </div>
   );

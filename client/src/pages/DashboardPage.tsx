@@ -45,17 +45,16 @@ export function DashboardPage() {
       return { overview, command };
     }, []),
   );
-  
+
   const announcementsHook = useApi(useCallback(() => hrService.getAnnouncements("admin"), []));
   const [showBroadcasts, setShowBroadcasts] = useState(() => getLoginBroadcastRemainingMs() > 0);
 
   useEffect(() => {
     const remaining = getLoginBroadcastRemainingMs();
     if (remaining <= 0) {
-      setShowBroadcasts(false);
       return;
     }
-    setShowBroadcasts(true);
+
     const timer = window.setTimeout(() => setShowBroadcasts(false), remaining);
     return () => window.clearTimeout(timer);
   }, []);
@@ -89,7 +88,12 @@ export function DashboardPage() {
       </div>
 
       <div className="grid gap-6 xl:grid-cols-[1fr_360px]">
-        <SectionCard title="Department Health" subtitle="Headcount, payroll, and performance distribution">
+        <SectionCard
+          title="Department Health"
+          subtitle="Headcount, payroll, and performance distribution"
+          collapsible
+          defaultCollapsed
+        >
           <div className="grid gap-4 md:grid-cols-2">
             {command.departmentSnapshots.map((d) => {
               const rate = d.headcount ? Math.round((d.activeCount / d.headcount) * 100) : 0;
@@ -130,7 +134,12 @@ export function DashboardPage() {
       </div>
 
       <div className="grid gap-6 lg:grid-cols-2">
-        <SectionCard title="Execution Velocity" subtitle="Task pressure and recruiting cadence">
+        <SectionCard
+          title="Execution Velocity"
+          subtitle="Task pressure and recruiting cadence"
+          collapsible
+          defaultCollapsed
+        >
            <div className="grid gap-4 sm:grid-cols-3">
               {[
                 { l: "To do", v: command.taskSummary.todo, i: Layers3 },
@@ -163,7 +172,12 @@ export function DashboardPage() {
            </div>
         </SectionCard>
 
-        <SectionCard title="System Resilience" subtitle="Workforce attendance and payroll readiness">
+        <SectionCard
+          title="System Resilience"
+          subtitle="Workforce attendance and payroll readiness"
+          collapsible
+          defaultCollapsed
+        >
            <div className="grid gap-6 sm:grid-cols-2">
               <div className="space-y-4">
                 <p className="text-[0.65rem] font-black uppercase text-slate-400 tracking-wider">Attendance Mix</p>
