@@ -287,7 +287,13 @@ export function RecruitmentPage() {
         </div>
 
         <aside className="space-y-6">
-          <SectionCard title="Interviews" subtitle="Upcoming next 14 days" rightSlot={<Calendar className="h-4 w-4 text-slate-300" />}>
+          <SectionCard
+            title="Interviews"
+            subtitle="Upcoming next 14 days"
+            rightSlot={<Calendar className="h-4 w-4 text-slate-300" />}
+            collapsible
+            defaultCollapsed
+          >
             <div className="space-y-3">
               {upcomingInterviews.map((c) => (
                 <div key={c.id} className="p-3 rounded-xl border border-slate-100 bg-slate-50/50 hover:bg-white hover:border-slate-200 transition-all cursor-default">
@@ -303,7 +309,7 @@ export function RecruitmentPage() {
             </div>
           </SectionCard>
 
-          <SectionCard title="Funnel Velocity">
+          <SectionCard title="Funnel Velocity" collapsible defaultCollapsed>
              <div className="space-y-3">
                 {stageOptions.map((s) => (
                   <div key={s} className="flex items-center justify-between">

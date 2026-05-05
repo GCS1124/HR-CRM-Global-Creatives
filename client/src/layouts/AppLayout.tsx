@@ -21,9 +21,16 @@ interface AppLayoutProps {
   items: NavItem[];
   workspaceLabel: string;
   userRole: UserRole;
+  showQuickLinksFooter?: boolean;
 }
 
-export function AppLayout({ onSignOut, items, workspaceLabel, userRole }: AppLayoutProps) {
+export function AppLayout({
+  onSignOut,
+  items,
+  workspaceLabel,
+  userRole,
+  showQuickLinksFooter = true,
+}: AppLayoutProps) {
   const location = useLocation();
   const navigate = useNavigate();
   const [notifications, setNotifications] = useState<Notification[]>([]);
@@ -126,10 +133,10 @@ export function AppLayout({ onSignOut, items, workspaceLabel, userRole }: AppLay
     return () => window.removeEventListener("keydown", handleKeyDown);
   }, []);
 
-  const handleOpenNotifications = () => {
+  const handleOpenNotifications = useCallback(() => {
     setShowNotifications(true);
     void loadNotifications();
-  };
+  }, [loadNotifications]);
 
   const handleToggleNotifications = () => {
     setShowNotifications((previous) => {
@@ -251,6 +258,7 @@ export function AppLayout({ onSignOut, items, workspaceLabel, userRole }: AppLay
               onSignOut={onSignOut}
               items={items}
               workspaceLabel={workspaceLabel}
+              userRole={userRole}
               onToggleNotifications={handleToggleNotifications}
               onCloseNotifications={handleCloseNotifications}
               notifications={notifications}
@@ -263,13 +271,14 @@ export function AppLayout({ onSignOut, items, workspaceLabel, userRole }: AppLay
           <main className="px-4 py-5 pb-24 md:px-6 md:py-6 lg:px-8 lg:pb-8">
             <div className="mx-auto w-full max-w-[1440px]">
               <Outlet />
-              <QuickLinksFooter items={items} />
+              {showQuickLinksFooter ? <QuickLinksFooter items={items} /> : null}
             </div>
           </main>
         </div>
       </div>
       <AppMobileNav items={items} />
       <WorkspaceCommandPalette
+        key={commandPaletteOpen ? "command-palette-open" : "command-palette-closed"}
         isOpen={commandPaletteOpen}
         items={items}
         workspaceLabel={workspaceLabel}

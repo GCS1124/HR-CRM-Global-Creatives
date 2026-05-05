@@ -1,7 +1,8 @@
 import { Bell, CornerDownLeft, Search, X } from "lucide-react";
 import { useDeferredValue, useEffect, useMemo, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import type { NavItem } from "../types/navigation";
+import type { NavGroup, NavItem } from "../types/navigation";
+import { groupItems } from "../utils/navigationGroups";
 
 interface WorkspaceCommandPaletteProps {
   isOpen: boolean;
@@ -18,6 +19,7 @@ interface PaletteItem {
   keywords: string;
   perform: () => void;
   icon: NavItem["icon"];
+  group?: NavGroup;
 }
 
 export function WorkspaceCommandPalette({
@@ -78,9 +80,10 @@ export function WorkspaceCommandPalette({
     );
   }, [deferredQuery, paletteItems]);
 
+  const groupedItems = useMemo(() => groupItems(filteredItems), [filteredItems]);
+
   useEffect(() => {
     if (!isOpen) {
-      setQuery("");
       return;
     }
 
@@ -157,26 +160,34 @@ export function WorkspaceCommandPalette({
               </div>
             ) : null}
 
-            {filteredItems.map((item, index) => (
-              <button
-                key={item.id}
-                type="button"
-                onClick={item.perform}
-                className="flex w-full items-center justify-between gap-3 rounded-2xl border border-slate-200/80 bg-white px-4 py-3 text-left transition hover:-translate-y-0.5 hover:border-brand-200 hover:shadow-[0_14px_34px_rgba(15,23,42,0.08)]"
-              >
-                <div className="flex min-w-0 items-center gap-3">
-                  <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl bg-brand-50 text-brand-700">
-                    <item.icon className="h-4 w-4" />
-                  </span>
-                  <div className="min-w-0">
-                    <p className="truncate text-sm font-semibold text-slate-950">{item.label}</p>
-                    <p className="truncate text-sm text-slate-500">{item.description}</p>
-                  </div>
+            {groupedItems.map((section) => (
+              <div key={section.group ?? "default"} className="space-y-2">
+                {section.group ? (
+                  <p className="px-2 text-[0.62rem] font-black uppercase tracking-[0.22em] text-slate-400">
+                    {section.group}
+                  </p>
+                ) : null}
+                <div className="grid gap-2">
+                  {section.items.map((item) => (
+                    <button
+                      key={item.id}
+                      type="button"
+                      onClick={item.perform}
+                      className="flex w-full items-center justify-between gap-3 rounded-2xl border border-slate-200/80 bg-white px-4 py-3 text-left transition hover:-translate-y-0.5 hover:border-brand-200 hover:shadow-[0_14px_34px_rgba(15,23,42,0.08)]"
+                    >
+                      <div className="flex min-w-0 items-center gap-3">
+                        <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl bg-brand-50 text-brand-700">
+                          <item.icon className="h-4 w-4" />
+                        </span>
+                        <div className="min-w-0">
+                          <p className="truncate text-sm font-semibold text-slate-950">{item.label}</p>
+                          <p className="truncate text-sm text-slate-500">{item.description}</p>
+                        </div>
+                      </div>
+                    </button>
+                  ))}
                 </div>
-                <span className="hidden rounded-full border border-slate-200 px-2 py-1 text-[0.65rem] font-bold uppercase tracking-[0.18em] text-slate-400 sm:inline-flex">
-                  {index + 1}
-                </span>
-              </button>
+              </div>
             ))}
           </div>
         </div>

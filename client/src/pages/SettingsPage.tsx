@@ -410,6 +410,8 @@ export function SettingsPage() {
           title="Change center"
           subtitle="Dirty-state tracking, status messaging, and the exact fields that will change on save"
           rightSlot={<StatusBadge value={isDirty ? "pending" : "approved"} />}
+          collapsible
+          defaultCollapsed
         >
           <div className="space-y-3">
             <div className="rounded-xl border border-slate-200 bg-slate-50 px-4 py-4">
@@ -437,7 +439,12 @@ export function SettingsPage() {
       </div>
 
       <div className="grid gap-4 xl:grid-cols-[1.1fr_0.9fr]">
-        <SectionCard title="Workweek designer" subtitle="Toggle the operating week and keep the draft aligned to a real staffing model">
+        <SectionCard
+          title="Workweek designer"
+          subtitle="Toggle the operating week and keep the draft aligned to a real staffing model"
+          collapsible
+          defaultCollapsed
+        >
           <div className="grid gap-3 md:grid-cols-7">
             {weekDays.map((day) => {
               const enabled = draft.workingDays.includes(day);
@@ -471,7 +478,12 @@ export function SettingsPage() {
           </div>
         </SectionCard>
 
-        <SectionCard title="Policy simulator" subtitle="Live impact preview driven by the current draft values">
+        <SectionCard
+          title="Policy simulator"
+          subtitle="Live impact preview driven by the current draft values"
+          collapsible
+          defaultCollapsed
+        >
           <div className="grid gap-3 sm:grid-cols-2">
             <div className="rounded-xl border border-slate-200 bg-slate-50 px-4 py-4">
               <p className="text-[0.68rem] font-black uppercase tracking-[0.14em] text-slate-500">Payroll frequency</p>
@@ -498,7 +510,12 @@ export function SettingsPage() {
       </div>
 
       <div className="grid gap-4 xl:grid-cols-[1fr_1fr]">
-        <SectionCard title="Leave policy editor" subtitle="Adjust each leave bucket and review the total allocation immediately">
+        <SectionCard
+          title="Leave policy editor"
+          subtitle="Adjust each leave bucket and review the total allocation immediately"
+          collapsible
+          defaultCollapsed
+        >
           <div className="grid gap-3 md:grid-cols-3">
             {([
               { key: "annual", label: "Annual", tone: "border-brand-200 bg-brand-50" },
@@ -524,7 +541,12 @@ export function SettingsPage() {
           </div>
         </SectionCard>
 
-        <SectionCard title="Risk radar" subtitle="Policy combinations that deserve admin attention before you save">
+        <SectionCard
+          title="Risk radar"
+          subtitle="Policy combinations that deserve admin attention before you save"
+          collapsible
+          defaultCollapsed
+        >
           {riskFlags.length > 0 ? (
             <div className="space-y-3">
               {riskFlags.map((flag) => (
@@ -549,7 +571,12 @@ export function SettingsPage() {
       </div>
 
       <div className="grid gap-4 xl:grid-cols-[0.95fr_1.05fr]">
-        <SectionCard title="Governance checklist" subtitle="Track readiness items that usually block policy rollout">
+        <SectionCard
+          title="Governance checklist"
+          subtitle="Track readiness items that usually block policy rollout"
+          collapsible
+          defaultCollapsed
+        >
           <div className="mb-4 rounded-xl border border-slate-200 bg-slate-50 px-4 py-4">
             <p className="text-sm font-semibold text-slate-950">Checklist completion</p>
             <p className="mt-2 text-3xl font-extrabold tracking-tight text-slate-950">{checklistCompletion}%</p>
@@ -591,6 +618,8 @@ export function SettingsPage() {
               Copy text
             </button>
           }
+          collapsible
+          defaultCollapsed
         >
           <div className="rounded-xl border border-slate-200 bg-slate-50 px-4 py-4">
             <p className="inline-flex items-center gap-2 text-sm font-semibold text-slate-950">

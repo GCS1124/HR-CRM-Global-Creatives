@@ -191,11 +191,9 @@ export function EmployeeDashboardPage() {
   useEffect(() => {
     const remaining = getLoginBroadcastRemainingMs();
     if (remaining <= 0) {
-      setShowBroadcasts(false);
       return;
     }
 
-    setShowBroadcasts(true);
     const timer = window.setTimeout(() => setShowBroadcasts(false), remaining);
     return () => window.clearTimeout(timer);
   }, []);

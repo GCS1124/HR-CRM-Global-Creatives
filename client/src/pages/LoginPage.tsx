@@ -1,4 +1,4 @@
-import type { FormEvent } from "react";
+import type { CSSProperties, FormEvent } from "react";
 import { useMemo, useState } from "react";
 import { Github, ShieldCheck, Fingerprint } from "lucide-react";
 import type { AuthResult } from "../hooks/useAuthSession";
@@ -13,6 +13,11 @@ interface LoginPageProps {
 }
 
 type AuthMode = "login" | "signup";
+
+const darkInputStyle: CSSProperties & Record<string, string> = {
+  "--input-bg": "#0f172a",
+  "--input-text": "#fff",
+};
 
 function getPasswordStrength(value: string): { label: string; score: number; tone: string } {
   const lengthScore = Math.min(value.length / 12, 1);
@@ -137,21 +142,21 @@ export function LoginPage({ onLogin, onSignup, onGithubSignIn, onGoogleSignIn, i
             {mode === "signup" && (
               <div className="space-y-1">
                 <label className="text-[0.65rem] font-black uppercase text-slate-500 ml-1">Full Name</label>
-                <input required value={signupName} onChange={(e) => setSignupName(e.target.value)} className="input-surface w-full h-11 bg-slate-900 border-white/10 text-white placeholder:text-slate-600" style={{'--input-bg': '#0f172a', '--input-text': '#fff'} as any} placeholder="John Doe" />
+                <input required value={signupName} onChange={(e) => setSignupName(e.target.value)} className="input-surface w-full h-11 bg-slate-900 border-white/10 text-white placeholder:text-slate-600" style={darkInputStyle} placeholder="John Doe" />
               </div>
             )}
             <div className="space-y-1">
               <label className="text-[0.65rem] font-black uppercase text-slate-500 ml-1">Work Email</label>
-              <input required type="email" value={mode === 'login' ? loginEmail : signupEmail} onChange={(e) => mode === 'login' ? setLoginEmail(e.target.value) : setSignupEmail(e.target.value)} className="input-surface w-full h-11 bg-slate-900 border-white/10 text-white placeholder:text-slate-600" style={{'--input-bg': '#0f172a', '--input-text': '#fff'} as any} placeholder="name@company.com" />
+              <input required type="email" value={mode === 'login' ? loginEmail : signupEmail} onChange={(e) => mode === 'login' ? setLoginEmail(e.target.value) : setSignupEmail(e.target.value)} className="input-surface w-full h-11 bg-slate-900 border-white/10 text-white placeholder:text-slate-600" style={darkInputStyle} placeholder="name@company.com" />
             </div>
             <div className="space-y-1">
               <label className="text-[0.65rem] font-black uppercase text-slate-500 ml-1">Password</label>
-              <input required type="password" value={mode === 'login' ? loginPassword : signupPassword} onChange={(e) => mode === 'login' ? setLoginPassword(e.target.value) : setSignupPassword(e.target.value)} className="input-surface w-full h-11 bg-slate-900 border-white/10 text-white placeholder:text-slate-600" style={{'--input-bg': '#0f172a', '--input-text': '#fff'} as any} placeholder="••••••••" />
+              <input required type="password" value={mode === 'login' ? loginPassword : signupPassword} onChange={(e) => mode === 'login' ? setLoginPassword(e.target.value) : setSignupPassword(e.target.value)} className="input-surface w-full h-11 bg-slate-900 border-white/10 text-white placeholder:text-slate-600" style={darkInputStyle} placeholder="••••••••" />
             </div>
             {mode === "signup" && (
               <div className="space-y-1">
                 <label className="text-[0.65rem] font-black uppercase text-slate-500 ml-1">Confirm Password</label>
-                <input required type="password" value={signupConfirmPassword} onChange={(e) => setSignupConfirmPassword(e.target.value)} className="input-surface w-full h-11 bg-slate-900 border-white/10 text-white placeholder:text-slate-600" style={{'--input-bg': '#0f172a', '--input-text': '#fff'} as any} placeholder="••••••••" />
+                <input required type="password" value={signupConfirmPassword} onChange={(e) => setSignupConfirmPassword(e.target.value)} className="input-surface w-full h-11 bg-slate-900 border-white/10 text-white placeholder:text-slate-600" style={darkInputStyle} placeholder="••••••••" />
                 <div className="mt-3 h-1 w-full bg-white/5 rounded-full overflow-hidden">
                    <div className={`h-full ${passwordStrength.tone} transition-all duration-500`} style={{ width: `${passwordStrength.score * 100}%` }} />
                 </div>

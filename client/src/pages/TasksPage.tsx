@@ -200,7 +200,7 @@ export function TasksPage() {
       />
 
       <div className="grid gap-4 xl:grid-cols-[1.2fr_1.8fr]">
-        <SectionCard title="Create Task">
+        <SectionCard title="Create Task" collapsible defaultCollapsed>
           <div className="space-y-3">
             {employeesHook.error ? (
               <p className="rounded-lg bg-rose-50 px-3 py-2 text-sm font-semibold text-rose-700">
