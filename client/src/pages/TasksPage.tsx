@@ -260,29 +260,29 @@ export function TasksPage() {
 
       <div className="grid gap-4 xl:grid-cols-[360px_minmax(0,1fr)]">
         <SectionCard title="Create Task" showAccent={false}>
-          <div className="space-y-2.5">
+          <div className="space-y-3 px-0.5 pt-1">
             {employeesHook.error ? <p className="rounded-lg bg-rose-50 px-3 py-2 text-sm font-semibold text-rose-700">{employeesHook.error}</p> : null}
             <input
               value={formState.title}
               onChange={(event) => handleChange("title", event.target.value)}
               placeholder="Task title"
-              className="input-surface w-full"
+              className="input-surface h-11 w-full"
             />
             <textarea
               value={formState.description ?? ""}
               onChange={(event) => handleChange("description", event.target.value)}
               placeholder="Describe the task"
-              className="input-surface min-h-[96px] w-full"
+              className="input-surface min-h-[90px] w-full"
             />
-            <div className="grid gap-2.5 md:grid-cols-2 xl:grid-cols-1 2xl:grid-cols-2">
-              <select value={formState.priority} onChange={(event) => handleChange("priority", event.target.value)} className="input-surface w-full">
+            <div className="grid gap-3 md:grid-cols-2 xl:grid-cols-1 2xl:grid-cols-2">
+              <select value={formState.priority} onChange={(event) => handleChange("priority", event.target.value)} className="input-surface h-11 w-full">
                 {priorityOptions.map((priority) => (
                   <option key={priority} value={priority}>
                     {priority.replace(/_/g, " ")}
                   </option>
                 ))}
               </select>
-              <select value={formState.status} onChange={(event) => handleChange("status", event.target.value)} className="input-surface w-full">
+              <select value={formState.status} onChange={(event) => handleChange("status", event.target.value)} className="input-surface h-11 w-full">
                 {statusOptions.map((status) => (
                   <option key={status} value={status}>
                     {status.replace(/_/g, " ")}
@@ -290,18 +290,18 @@ export function TasksPage() {
                 ))}
               </select>
             </div>
-            <div className="grid gap-2.5 md:grid-cols-2">
+            <div className="grid gap-3 md:grid-cols-2">
               <input
                 type="date"
                 value={formState.dueDate ?? ""}
                 onChange={(event) => handleChange("dueDate", event.target.value)}
-                className="input-surface w-full"
+                className="input-surface h-11 w-full"
               />
               <select
                 value={formState.assigneeId ?? ""}
                 onChange={(event) => handleAssigneeChange(event.target.value)}
                 disabled={!canAssign}
-                className="input-surface w-full disabled:cursor-not-allowed"
+                className="input-surface h-11 w-full disabled:cursor-not-allowed"
               >
                 <option value="">Assign to</option>
                 {(employeesHook.data ?? []).map((employee: Employee) => (
