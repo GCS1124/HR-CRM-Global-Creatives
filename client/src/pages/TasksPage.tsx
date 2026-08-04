@@ -243,7 +243,7 @@ export function TasksPage() {
     <div className="animate-page-enter space-y-4">
       <PageHeader title="Task Command" subtitle="" eyebrow="Task Center" />
 
-      <div className="grid gap-4 xl:grid-cols-[360px_minmax(0,1fr)]">
+      <div className="grid gap-4 2xl:grid-cols-[360px_minmax(0,1fr)]">
         <SectionCard title="Create Task" showAccent={false}>
           <div className="space-y-3 px-0.5 pt-1">
             {employeesHook.error ? <p className="rounded-lg bg-rose-50 px-3 py-2 text-sm font-semibold text-rose-700">{employeesHook.error}</p> : null}
@@ -338,10 +338,10 @@ export function TasksPage() {
                   <thead className="border-b border-slate-200 bg-white">
                     <tr className="h-10">
                       <th className="w-[18%] px-3 text-left text-[12px] font-normal uppercase tracking-[0.14em] text-slate-500">Assigned Date</th>
-                      <th className="w-[34%] px-3 text-left text-[12px] font-normal uppercase tracking-[0.14em] text-slate-500">Task</th>
+                      <th className="w-[40%] px-3 text-left text-[12px] font-normal uppercase tracking-[0.14em] text-slate-500">Task</th>
                       <th className="w-[12%] px-3 text-left text-[12px] font-normal uppercase tracking-[0.14em] text-slate-500">Due</th>
                       <th className="w-[12%] px-3 text-left text-[12px] font-normal uppercase tracking-[0.14em] text-slate-500">Priority</th>
-                      <th className="w-[14%] px-3 text-left text-[12px] font-normal uppercase tracking-[0.14em] text-slate-500">Status</th>
+                      <th className="w-[18%] px-3 text-left text-[12px] font-normal uppercase tracking-[0.14em] text-slate-500">Status</th>
                     </tr>
                   </thead>
                   <tbody>
@@ -358,7 +358,7 @@ export function TasksPage() {
                             <td className="px-3 py-0.5 align-middle text-[13px] leading-tight text-slate-900" title={task.createdAt}>
                               {formatDate(task.createdAt)}
                             </td>
-                            <td className="px-3 py-0.5 align-middle">
+                            <td className="min-w-0 px-3 py-0.5 align-middle">
                               <button type="button" onClick={() => setSelectedTask(task)} className="min-w-0 text-left" title={task.title}>
                                 <p className="truncate text-[13px] font-medium leading-tight text-slate-900">{task.title}</p>
                               </button>

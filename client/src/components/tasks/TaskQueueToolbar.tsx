@@ -20,9 +20,9 @@ export function TaskQueueToolbar({
 }: TaskQueueToolbarProps) {
   return (
     <div className="flex flex-wrap items-center justify-between gap-3 rounded-xl border border-slate-200 bg-white px-3 py-2 shadow-sm">
-      <div className="flex items-center gap-2">
+      <div className="flex flex-1 flex-wrap items-center gap-2">
         <span className="insight-pill">{taskCount} tasks</span>
-        <label className="flex h-9 min-w-[220px] items-center gap-2 rounded-lg border border-slate-200 bg-white px-3 text-sm text-slate-500">
+        <label className="flex h-9 min-w-[180px] flex-1 items-center gap-2 rounded-lg border border-slate-200 bg-white px-3 text-sm text-slate-500">
           <Search className="h-4 w-4 text-slate-400" />
           <input
             value={search}
