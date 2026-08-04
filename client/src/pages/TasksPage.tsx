@@ -338,16 +338,17 @@ export function TasksPage() {
                   <thead className="border-b border-slate-200 bg-white">
                     <tr className="h-10">
                       <th className="w-[18%] px-3 text-left text-[12px] font-normal uppercase tracking-[0.14em] text-slate-500">Assigned Date</th>
-                      <th className="w-[40%] px-3 text-left text-[12px] font-normal uppercase tracking-[0.14em] text-slate-500">Task</th>
+                      <th className="w-[28%] px-3 text-left text-[12px] font-normal uppercase tracking-[0.14em] text-slate-500">Task</th>
+                      <th className="w-[18%] px-3 text-left text-[12px] font-normal uppercase tracking-[0.14em] text-slate-500">Assignee</th>
                       <th className="w-[12%] px-3 text-left text-[12px] font-normal uppercase tracking-[0.14em] text-slate-500">Due</th>
-                      <th className="w-[12%] px-3 text-left text-[12px] font-normal uppercase tracking-[0.14em] text-slate-500">Priority</th>
-                      <th className="w-[18%] px-3 text-left text-[12px] font-normal uppercase tracking-[0.14em] text-slate-500">Status</th>
+                      <th className="w-[10%] px-3 text-left text-[12px] font-normal uppercase tracking-[0.14em] text-slate-500">Priority</th>
+                      <th className="w-[14%] px-3 text-left text-[12px] font-normal uppercase tracking-[0.14em] text-slate-500">Status</th>
                     </tr>
                   </thead>
                   <tbody>
                     {pagedTasks.length === 0 ? (
                       <tr>
-                        <td colSpan={5} className="px-4 py-10 text-center text-sm font-medium text-slate-500">
+                        <td colSpan={6} className="px-4 py-10 text-center text-sm font-medium text-slate-500">
                           No tasks found
                         </td>
                       </tr>
@@ -362,6 +363,11 @@ export function TasksPage() {
                               <button type="button" onClick={() => setSelectedTask(task)} className="min-w-0 text-left" title={task.title}>
                                 <p className="truncate text-[13px] font-medium leading-tight text-slate-900">{task.title}</p>
                               </button>
+                            </td>
+                            <td className="px-3 py-0.5 align-middle">
+                              <p className="truncate text-[13px] leading-tight text-slate-900" title={resolveAssigneeLabel(task)}>
+                                {resolveAssigneeLabel(task)}
+                              </p>
                             </td>
                             <td
                               className={`px-3 py-0.5 align-middle text-[13px] leading-tight ${isOverdue(task) ? "font-semibold text-rose-700" : "text-slate-900"}`}
