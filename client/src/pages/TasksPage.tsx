@@ -337,8 +337,8 @@ export function TasksPage() {
                 <table className="min-w-full table-fixed border-collapse">
                   <thead className="border-b border-slate-200 bg-white">
                     <tr className="h-10">
-                      <th className="w-[34%] px-3 text-left text-[12px] font-normal uppercase tracking-[0.14em] text-slate-500">Task</th>
                       <th className="w-[18%] px-3 text-left text-[12px] font-normal uppercase tracking-[0.14em] text-slate-500">Assigned Date</th>
+                      <th className="w-[34%] px-3 text-left text-[12px] font-normal uppercase tracking-[0.14em] text-slate-500">Task</th>
                       <th className="w-[12%] px-3 text-left text-[12px] font-normal uppercase tracking-[0.14em] text-slate-500">Due</th>
                       <th className="w-[12%] px-3 text-left text-[12px] font-normal uppercase tracking-[0.14em] text-slate-500">Priority</th>
                       <th className="w-[14%] px-3 text-left text-[12px] font-normal uppercase tracking-[0.14em] text-slate-500">Status</th>
@@ -354,27 +354,27 @@ export function TasksPage() {
                     ) : (
                       pagedTasks.map((task) => {
                         return (
-                          <tr key={task.id} className="h-[42px] border-b border-slate-200 last:border-0 bg-white hover:bg-slate-50">
-                            <td className="px-3 py-1 align-middle">
+                          <tr key={task.id} className="h-[40px] border-b border-slate-200 last:border-0 bg-white hover:bg-slate-50">
+                            <td className="px-3 py-0.5 align-middle text-[13px] leading-tight text-slate-900" title={task.createdAt}>
+                              {formatDate(task.createdAt)}
+                            </td>
+                            <td className="px-3 py-0.5 align-middle">
                               <button type="button" onClick={() => setSelectedTask(task)} className="min-w-0 text-left" title={task.title}>
                                 <p className="truncate text-[13px] font-medium leading-tight text-slate-900">{task.title}</p>
                               </button>
                             </td>
-                            <td className="px-3 py-1 align-middle text-[13px] leading-tight text-slate-900" title={task.createdAt}>
-                              {formatDate(task.createdAt)}
-                            </td>
                             <td
-                              className={`px-3 py-1 align-middle text-[13px] leading-tight ${isOverdue(task) ? "font-semibold text-rose-700" : "text-slate-900"}`}
+                              className={`px-3 py-0.5 align-middle text-[13px] leading-tight ${isOverdue(task) ? "font-semibold text-rose-700" : "text-slate-900"}`}
                               title={task.dueDate ?? "No due date"}
                             >
                               {formatTaskDue(task)}
                             </td>
-                            <td className="px-3 py-1 align-middle">
+                            <td className="px-3 py-0.5 align-middle">
                               <span className={`inline-flex items-center rounded-full border px-2.5 py-0.5 text-[11px] font-semibold ${priorityTone(task.priority)}`}>
                                 {formatPriorityLabel(task.priority)}
                               </span>
                             </td>
-                            <td className="px-3 py-1 align-middle">
+                            <td className="px-3 py-0.5 align-middle">
                               <select
                                 value={task.status}
                                 onChange={(event) => void handleStatusChange(task.id, event.target.value as TaskStatus)}
