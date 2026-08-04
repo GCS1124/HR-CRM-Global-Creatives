@@ -113,7 +113,6 @@ export function TasksPage() {
   const [search, setSearch] = useState("");
   const [statusFilter, setStatusFilter] = useState<TaskStatus | "">("");
   const [page, setPage] = useState(1);
-  const [selectedIds, setSelectedIds] = useState<Set<string>>(new Set());
   const [selectedTask, setSelectedTask] = useState<Task | null>(null);
 
   const employeesById = useMemo(
@@ -155,8 +154,6 @@ export function TasksPage() {
     return filteredTasks.slice(start, start + PAGE_SIZE);
   }, [filteredTasks, page]);
 
-  const selectedPageIds = useMemo(() => pagedTasks.map((task) => task.id), [pagedTasks]);
-  const allPageSelected = selectedPageIds.length > 0 && selectedPageIds.every((id) => selectedIds.has(id));
   const selectedTaskResolved = selectedTask ? (tasksHook.data ?? []).find((task) => task.id === selectedTask.id) ?? selectedTask : null;
 
   if (
@@ -340,51 +337,31 @@ export function TasksPage() {
                 <table className="min-w-full table-fixed border-collapse">
                   <thead className="border-b border-slate-200 bg-white">
                     <tr className="h-10">
-                      <th className="w-[40%] px-3 text-left text-[12px] font-normal uppercase tracking-[0.14em] text-slate-500">Task</th>
-                      <th className="w-[20%] px-3 text-left text-[12px] font-normal uppercase tracking-[0.14em] text-slate-500">Due</th>
+                      <th className="w-[34%] px-3 text-left text-[12px] font-normal uppercase tracking-[0.14em] text-slate-500">Task</th>
+                      <th className="w-[18%] px-3 text-left text-[12px] font-normal uppercase tracking-[0.14em] text-slate-500">Assigned Date</th>
+                      <th className="w-[12%] px-3 text-left text-[12px] font-normal uppercase tracking-[0.14em] text-slate-500">Due</th>
                       <th className="w-[12%] px-3 text-left text-[12px] font-normal uppercase tracking-[0.14em] text-slate-500">Priority</th>
-                      <th className="w-[15%] px-3 text-left text-[12px] font-normal uppercase tracking-[0.14em] text-slate-500">Status</th>
+                      <th className="w-[14%] px-3 text-left text-[12px] font-normal uppercase tracking-[0.14em] text-slate-500">Status</th>
                     </tr>
                   </thead>
                   <tbody>
                     {pagedTasks.length === 0 ? (
                       <tr>
-                        <td colSpan={4} className="px-4 py-10 text-center text-sm font-medium text-slate-500">
+                        <td colSpan={5} className="px-4 py-10 text-center text-sm font-medium text-slate-500">
                           No tasks found
                         </td>
                       </tr>
                     ) : (
                       pagedTasks.map((task) => {
-                        const selected = selectedIds.has(task.id);
                         return (
-                          <tr
-                            key={task.id}
-                            className={`h-[42px] border-b border-slate-200 last:border-0 hover:bg-slate-50 ${selected ? "bg-slate-50/70" : "bg-white"}`}
-                          >
+                          <tr key={task.id} className="h-[42px] border-b border-slate-200 last:border-0 bg-white hover:bg-slate-50">
                             <td className="px-3 py-1 align-middle">
-                              <div className="flex min-w-0 items-center gap-2">
-                                <input
-                                  type="checkbox"
-                                  checked={selected}
-                                  onChange={(event) => {
-                                    setSelectedIds((current) => {
-                                      const next = new Set(current);
-                                      if (event.target.checked) next.add(task.id);
-                                      else next.delete(task.id);
-                                      return next;
-                                    });
-                                  }}
-                                  className="h-3.5 w-3.5 shrink-0 rounded border-slate-300 text-slate-900"
-                                />
-                                <button
-                                  type="button"
-                                  onClick={() => setSelectedTask(task)}
-                                  className="min-w-0 text-left"
-                                  title={task.title}
-                                >
-                                  <p className="truncate text-[13px] font-medium leading-tight text-slate-900">{task.title}</p>
-                                </button>
-                              </div>
+                              <button type="button" onClick={() => setSelectedTask(task)} className="min-w-0 text-left" title={task.title}>
+                                <p className="truncate text-[13px] font-medium leading-tight text-slate-900">{task.title}</p>
+                              </button>
+                            </td>
+                            <td className="px-3 py-1 align-middle text-[13px] leading-tight text-slate-900" title={task.createdAt}>
+                              {formatDate(task.createdAt)}
                             </td>
                             <td
                               className={`px-3 py-1 align-middle text-[13px] leading-tight ${isOverdue(task) ? "font-semibold text-rose-700" : "text-slate-900"}`}
@@ -429,33 +406,6 @@ export function TasksPage() {
             </div>
           </div>
         </SectionCard>
-      </div>
-
-      <div className="flex items-center gap-3">
-        <button
-          type="button"
-          onClick={() => setSelectedIds(new Set())}
-          className="rounded-lg border border-slate-200 bg-white px-3 py-2 text-xs font-semibold text-slate-700"
-        >
-          Clear selection
-        </button>
-        <button
-          type="button"
-          onClick={() => {
-            setSelectedIds((current) => {
-              const next = new Set(current);
-              for (const id of selectedPageIds) {
-                if (allPageSelected) next.delete(id);
-                else next.add(id);
-              }
-              return next;
-            });
-          }}
-          className="rounded-lg border border-slate-200 bg-white px-3 py-2 text-xs font-semibold text-slate-700"
-        >
-          {allPageSelected ? "Unselect page" : "Select page"}
-        </button>
-        <span className="text-xs font-semibold text-slate-500">{selectedIds.size} selected</span>
       </div>
 
       {selectedTaskResolved ? (
