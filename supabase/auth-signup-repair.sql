@@ -1,5 +1,25 @@
--- Repair auth signup/profile provisioning for project: uldhztmiguapppbcjyxa
--- Safe to run against the shared Supabase project used by multiple frontends.
+-- One-shot auth signup repair for project: uldhztmiguapppbcjyxa
+-- Use this if new-user signup is blocked by an auth trigger or stale provisioning function.
+-- Safe to rerun. It intentionally removes the old trigger/function and recreates the current version.
+
+create extension if not exists pgcrypto;
+
+do $$
+begin
+  if exists (
+    select 1
+    from information_schema.triggers
+    where trigger_schema = 'auth'
+      and event_object_table = 'users'
+      and trigger_name = 'on_auth_user_created'
+  ) then
+    execute 'drop trigger if exists on_auth_user_created on auth.users';
+  end if;
+end
+$$;
+
+drop function if exists public.handle_new_auth_user_compat();
+drop function if exists public.admin_emails();
 
 create or replace function public.admin_emails()
 returns text[]
@@ -27,20 +47,20 @@ declare
   );
   v_role text := case
     when lower(coalesce(new.raw_user_meta_data ->> 'role', 'employee')) = 'admin' then 'admin'
-    when exists (
-      select 1
-      from pg_proc p
-      join pg_namespace n on n.oid = p.pronamespace
-      where n.nspname = 'public'
-        and p.proname = 'admin_emails'
-        and p.pronargs = 0
-    ) and v_email = any(public.admin_emails()) then 'admin'
+    when v_email = any(public.admin_emails()) then 'admin'
     else 'employee'
   end;
+  v_existing_profile_id uuid;
   v_has_profiles_name boolean;
   v_has_employees_user_id boolean;
   v_has_employees_email boolean;
 begin
+  select p.id
+  into v_existing_profile_id
+  from public.profiles p
+  where lower(p.email) = v_email
+  limit 1;
+
   select exists (
     select 1
     from information_schema.columns
@@ -69,7 +89,14 @@ begin
   into v_has_employees_email;
 
   begin
-    if v_has_profiles_name then
+    if v_existing_profile_id is not null and v_existing_profile_id <> new.id then
+      update public.profiles
+      set id = new.id,
+          email = new.email,
+          full_name = coalesce(full_name, v_full_name),
+          role = v_role
+      where id = v_existing_profile_id;
+    elsif v_has_profiles_name then
       execute $sql$
         insert into public.profiles (id, email, full_name, name, role)
         values ($1, $2, $3, $3, $4)
@@ -93,7 +120,6 @@ begin
     end if;
   exception
     when unique_violation then
-      -- Do not block auth signup if a profile row already exists for the same email.
       null;
     when undefined_table or undefined_column then
       null;
@@ -115,10 +141,46 @@ begin
 end;
 $$;
 
-drop trigger if exists on_auth_user_created on auth.users;
 create trigger on_auth_user_created
 after insert on auth.users
 for each row
 execute function public.handle_new_auth_user_compat();
 
 grant execute on function public.admin_emails() to authenticated;
+
+do $$
+begin
+  if exists (select 1 from information_schema.tables where table_schema = 'public' and table_name = 'profiles') then
+    insert into public.profiles (id, email, full_name, role)
+    select
+      u.id,
+      u.email,
+      coalesce(nullif(btrim(u.raw_user_meta_data ->> 'full_name'), ''), nullif(split_part(u.email, '@', 1), ''), 'User'),
+      case
+        when lower(u.email) = any(public.admin_emails()) then 'admin'
+        else 'employee'
+      end
+    from auth.users u
+    on conflict (id) do update
+    set
+      email = excluded.email,
+      full_name = coalesce(excluded.full_name, public.profiles.full_name),
+      role = case
+        when lower(excluded.email) = any(public.admin_emails()) then 'admin'
+        else 'employee'
+      end;
+
+    update public.profiles
+    set role = case
+      when lower(email) = any(public.admin_emails()) then 'admin'
+      else 'employee'
+    end;
+  end if;
+end
+$$;
+
+update public.employees e
+set user_id = p.id
+from public.profiles p
+where lower(e.email) = lower(p.email)
+  and e.user_id is null;

@@ -17,8 +17,7 @@ interface ProfileRow {
 }
 
 const ADMIN_EMAIL = "test@crm.co.in";
-const SIGNUP_REPAIR_SQL_PATH =
-  "/Users/mac/Library/CloudStorage/OneDrive-Personal/codes/projects/web/HR CRM Global Creatives/supabase/auth-signup-repair.sql";
+const SIGNUP_REPAIR_SQL_PATH = "supabase/auth-signup-repair.sql";
 let profileSchemaState: "unknown" | "legacy" | "ready" = "unknown";
 let cachedProfile: UserProfile | null = null;
 let cachedProfileUserId: string | null = null;
@@ -110,7 +109,7 @@ function shouldIgnoreProfileProvisionError(message: string | undefined): boolean
 function mapAuthErrorMessage(message: string | undefined): string {
   const fallback = message?.trim() || "Authentication failed.";
   if (fallback.toLowerCase().includes("database error saving new user")) {
-    return `Supabase signup is blocked by the auth trigger. Run \`${SIGNUP_REPAIR_SQL_PATH}\` against project \`uldhztmiguapppbcjyxa\`, then try again.`;
+    return `Supabase signup is blocked by the auth trigger. Run \`${SIGNUP_REPAIR_SQL_PATH}\` in the Supabase SQL Editor for project \`uldhztmiguapppbcjyxa\`, then try again.`;
   }
   return fallback;
 }
