@@ -148,6 +148,20 @@ execute function public.handle_new_auth_user_compat();
 
 grant execute on function public.admin_emails() to authenticated;
 
+-- Reset any older role constraint before the backfill runs.
+do $$
+begin
+  if exists (
+    select 1
+    from information_schema.tables
+    where table_schema = 'public'
+      and table_name = 'profiles'
+  ) then
+    alter table public.profiles drop constraint if exists profiles_role_check;
+  end if;
+end
+$$;
+
 do $$
 begin
   if exists (select 1 from information_schema.tables where table_schema = 'public' and table_name = 'profiles') then
@@ -175,6 +189,21 @@ begin
       when lower(email) = any(public.admin_emails()) then 'admin'
       else 'employee'
     end;
+  end if;
+end
+$$;
+
+do $$
+begin
+  if exists (
+    select 1
+    from information_schema.tables
+    where table_schema = 'public'
+      and table_name = 'profiles'
+  ) then
+    alter table public.profiles
+      add constraint profiles_role_check
+      check (role in ('admin', 'employee'));
   end if;
 end
 $$;
