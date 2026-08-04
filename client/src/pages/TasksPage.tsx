@@ -20,18 +20,6 @@ function resolveAssigneeLabel(task: Task) {
   return task.assigneeName ?? "Unassigned";
 }
 
-function getAssigneeInitials(task: Task) {
-  const value = resolveAssigneeLabel(task).trim();
-  if (!value) return "U";
-  return (
-    value
-      .split(/\s+/)
-      .slice(0, 2)
-      .map((part) => part[0]?.toUpperCase() ?? "")
-      .join("") || "U"
-  );
-}
-
 function formatTaskDue(task: Task) {
   if (!task.dueDate) return "No due date";
   return new Date(task.dueDate).toLocaleDateString([], { month: "short", day: "2-digit" });
@@ -353,8 +341,7 @@ export function TasksPage() {
                   <thead className="border-b border-slate-200 bg-white">
                     <tr className="h-10">
                       <th className="w-[40%] px-3 text-left text-[12px] font-normal uppercase tracking-[0.14em] text-slate-500">Task</th>
-                      <th className="w-[20%] px-3 text-left text-[12px] font-normal uppercase tracking-[0.14em] text-slate-500">Assignee</th>
-                      <th className="w-[13%] px-3 text-left text-[12px] font-normal uppercase tracking-[0.14em] text-slate-500">Due</th>
+                      <th className="w-[20%] px-3 text-left text-[12px] font-normal uppercase tracking-[0.14em] text-slate-500">Due</th>
                       <th className="w-[12%] px-3 text-left text-[12px] font-normal uppercase tracking-[0.14em] text-slate-500">Priority</th>
                       <th className="w-[15%] px-3 text-left text-[12px] font-normal uppercase tracking-[0.14em] text-slate-500">Status</th>
                     </tr>
@@ -362,7 +349,7 @@ export function TasksPage() {
                   <tbody>
                     {pagedTasks.length === 0 ? (
                       <tr>
-                        <td colSpan={5} className="px-4 py-10 text-center text-sm font-medium text-slate-500">
+                        <td colSpan={4} className="px-4 py-10 text-center text-sm font-medium text-slate-500">
                           No tasks found
                         </td>
                       </tr>
@@ -397,16 +384,6 @@ export function TasksPage() {
                                 >
                                   <p className="truncate text-[13px] font-medium leading-tight text-slate-900">{task.title}</p>
                                 </button>
-                              </div>
-                            </td>
-                            <td className="px-3 py-1 align-middle">
-                              <div className="flex min-w-0 items-center gap-2">
-                                <div className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-slate-200 text-[10px] font-black text-slate-600">
-                                  {getAssigneeInitials(task)}
-                                </div>
-                                <p className="min-w-0 truncate text-[13px] leading-tight text-slate-900" title={resolveAssigneeLabel(task)}>
-                                  {resolveAssigneeLabel(task)}
-                                </p>
                               </div>
                             </td>
                             <td
