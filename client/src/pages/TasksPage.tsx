@@ -423,8 +423,9 @@ export function TasksPage() {
                 <table className="min-w-full table-fixed border-collapse">
                   <thead className="border-b border-slate-200 bg-white">
                     <tr className="h-10">
+                      <th className="w-[8%] px-3 text-left text-[12px] font-normal uppercase tracking-[0.14em] text-slate-500">#</th>
                       <th className="w-[18%] px-3 text-left text-[12px] font-normal uppercase tracking-[0.14em] text-slate-500">Assigned Date</th>
-                      <th className="w-[28%] px-3 text-left text-[12px] font-normal uppercase tracking-[0.14em] text-slate-500">Task</th>
+                      <th className="w-[26%] px-3 text-left text-[12px] font-normal uppercase tracking-[0.14em] text-slate-500">Task</th>
                       {isAdminView ? <th className="w-[18%] px-3 text-left text-[12px] font-normal uppercase tracking-[0.14em] text-slate-500">Assignee</th> : null}
                       <th className="w-[12%] px-3 text-left text-[12px] font-normal uppercase tracking-[0.14em] text-slate-500">Due</th>
                       <th className="w-[10%] px-3 text-left text-[12px] font-normal uppercase tracking-[0.14em] text-slate-500">Priority</th>
@@ -435,7 +436,7 @@ export function TasksPage() {
                   <tbody>
                     {pagedTasks.length === 0 ? (
                       <tr>
-                        <td colSpan={isAdminView ? 7 : 5} className="px-4 py-10 text-center text-sm font-medium text-slate-500">
+                        <td colSpan={isAdminView ? 8 : 6} className="px-4 py-10 text-center text-sm font-medium text-slate-500">
                           No tasks found
                         </td>
                       </tr>
@@ -444,12 +445,13 @@ export function TasksPage() {
                         const taskNumber = (page - 1) * PAGE_SIZE + index + 1;
                         return (
                           <tr key={task.id} className="h-[40px] border-b border-slate-200 last:border-0 bg-white hover:bg-slate-50">
+                            <td className="px-3 py-0.5 align-middle text-[13px] font-semibold leading-tight text-slate-900">{taskNumber}</td>
                             <td className="px-3 py-0.5 align-middle text-[13px] leading-tight text-slate-900" title={task.createdAt}>
                               {formatNumericDate(task.createdAt)}
                             </td>
                             <td className="min-w-0 px-3 py-0.5 align-middle">
                               <button type="button" onClick={() => setSelectedTask(task)} className="min-w-0 text-left" title={task.title}>
-                                <p className="truncate text-[13px] font-medium leading-tight text-slate-900">{`Task ${taskNumber}`}</p>
+                                <p className="truncate text-[13px] font-medium leading-tight text-slate-900">{task.title}</p>
                               </button>
                             </td>
                             {isAdminView ? (
