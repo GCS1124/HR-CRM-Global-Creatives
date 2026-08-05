@@ -56,7 +56,7 @@
   --shadow-soft: 0 22px 55px rgba(0, 86, 143, 0.28);
   --shadow-panel: 0 36px 95px rgba(0, 86, 143, 0.34);
 
-  --sidebar-gradient: linear-gradient(180deg, rgba(0, 86, 143, 0.98) 0%, rgba(0, 149, 255, 0.97) 38%, rgba(214, 241, 255, 0.96) 100%);
+  --sidebar-gradient: linear-gradient(180deg, rgba(0, 86, 143, 0.98) 0%, rgba(0, 132, 232, 0.98) 48%, rgba(0, 160, 255, 0.98) 100%);
   --sidebar-border: rgba(0, 149, 255, 0.3);
   --sidebar-shadow: 18px 0 60px rgba(0, 149, 255, 0.16);
   --topbar-bg: rgba(255, 255, 255, 0.86);
