@@ -96,6 +96,7 @@ export function TasksPage() {
   const isClientAssigner = currentEmployee?.department === "Client Success";
   const isAdminEmail = profile?.email ? taskAssignerEmails.includes(profile.email.toLowerCase()) : false;
   const canAssign = role === "admin" || isClientAssigner || isAdminEmail;
+  const isAdminView = role === "admin";
 
   const [formState, setFormState] = useState<NewTaskPayload>({
     title: "",
@@ -405,17 +406,17 @@ export function TasksPage() {
                     <tr className="h-10">
                       <th className="w-[18%] px-3 text-left text-[12px] font-normal uppercase tracking-[0.14em] text-slate-500">Assigned Date</th>
                       <th className="w-[28%] px-3 text-left text-[12px] font-normal uppercase tracking-[0.14em] text-slate-500">Task</th>
-                      <th className="w-[18%] px-3 text-left text-[12px] font-normal uppercase tracking-[0.14em] text-slate-500">Assignee</th>
+                      {isAdminView ? <th className="w-[18%] px-3 text-left text-[12px] font-normal uppercase tracking-[0.14em] text-slate-500">Assignee</th> : null}
                       <th className="w-[12%] px-3 text-left text-[12px] font-normal uppercase tracking-[0.14em] text-slate-500">Due</th>
                       <th className="w-[10%] px-3 text-left text-[12px] font-normal uppercase tracking-[0.14em] text-slate-500">Priority</th>
                       <th className="w-[10%] px-3 text-left text-[12px] font-normal uppercase tracking-[0.14em] text-slate-500">Status</th>
-                      <th className="w-[6%] px-3 text-right text-[12px] font-normal uppercase tracking-[0.14em] text-slate-500">Edit</th>
+                      {isAdminView ? <th className="w-[6%] px-3 text-right text-[12px] font-normal uppercase tracking-[0.14em] text-slate-500">Edit</th> : null}
                     </tr>
                   </thead>
                   <tbody>
                     {pagedTasks.length === 0 ? (
                       <tr>
-                        <td colSpan={7} className="px-4 py-10 text-center text-sm font-medium text-slate-500">
+                        <td colSpan={isAdminView ? 7 : 5} className="px-4 py-10 text-center text-sm font-medium text-slate-500">
                           No tasks found
                         </td>
                       </tr>
@@ -431,11 +432,13 @@ export function TasksPage() {
                                 <p className="truncate text-[13px] font-medium leading-tight text-slate-900">{task.title}</p>
                               </button>
                             </td>
-                            <td className="px-3 py-0.5 align-middle">
-                              <p className="truncate text-[13px] leading-tight text-slate-900" title={resolveAssigneeLabel(task)}>
-                                {resolveAssigneeLabel(task)}
-                              </p>
-                            </td>
+                            {isAdminView ? (
+                              <td className="px-3 py-0.5 align-middle">
+                                <p className="truncate text-[13px] leading-tight text-slate-900" title={resolveAssigneeLabel(task)}>
+                                  {resolveAssigneeLabel(task)}
+                                </p>
+                              </td>
+                            ) : null}
                             <td
                               className={`px-3 py-0.5 align-middle text-[13px] leading-tight ${isOverdue(task) ? "font-semibold text-rose-700" : "text-slate-900"}`}
                               title={task.dueDate ?? "No due date"}
@@ -461,16 +464,18 @@ export function TasksPage() {
                                 ))}
                               </select>
                             </td>
-                            <td className="px-3 py-0.5 align-middle text-right">
-                              <button
-                                type="button"
-                                onClick={() => openEditTask(task)}
-                                className="inline-flex items-center gap-1 rounded-lg border border-slate-200 bg-white px-2.5 py-1 text-[11px] font-semibold text-slate-700 hover:bg-slate-50"
-                              >
-                                <PencilLine className="h-3.5 w-3.5" />
-                                Edit
-                              </button>
-                            </td>
+                            {isAdminView ? (
+                              <td className="px-3 py-0.5 align-middle text-right">
+                                <button
+                                  type="button"
+                                  onClick={() => openEditTask(task)}
+                                  className="inline-flex items-center gap-1 rounded-lg border border-slate-200 bg-white px-2.5 py-1 text-[11px] font-semibold text-slate-700 hover:bg-slate-50"
+                                >
+                                  <PencilLine className="h-3.5 w-3.5" />
+                                  Edit
+                                </button>
+                              </td>
+                            ) : null}
                           </tr>
                         );
                       })
@@ -529,7 +534,7 @@ export function TasksPage() {
         </div>
       ) : null}
 
-      {editingTaskResolved && editFormState ? (
+      {isAdminView && editingTaskResolved && editFormState ? (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-950/40 px-4" onClick={closeEditTask}>
           <div className="w-full max-w-2xl rounded-2xl border border-slate-200 bg-white p-5 shadow-2xl" onClick={(event) => event.stopPropagation()}>
             <div className="flex items-start justify-between gap-4">
