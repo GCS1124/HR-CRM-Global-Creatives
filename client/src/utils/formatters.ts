@@ -14,6 +14,14 @@ export function formatDate(value: string): string {
   }).format(new Date(value));
 }
 
+export function formatNumericDate(value: string): string {
+  const date = new Date(value);
+  const day = `${date.getDate()}`.padStart(2, "0");
+  const month = `${date.getMonth() + 1}`.padStart(2, "0");
+  const year = `${date.getFullYear()}`.slice(-2);
+  return `${day}-${month}-${year}`;
+}
+
 export function formatPercent(value: number): string {
   return `${value.toFixed(1)}%`;
 }

@@ -9,7 +9,7 @@ import { useApi } from "../hooks/useApi";
 import { useAuthSession } from "../hooks/useAuthSession";
 import { hrService, isNewUserEmployeeSetupError } from "../services/hrService";
 import type { Employee, NewTaskPayload, Task, TaskPriority, TaskStatus } from "../types/hr";
-import { formatDate } from "../utils/formatters";
+import { formatDate, formatNumericDate } from "../utils/formatters";
 
 const PAGE_SIZE = 10;
 const statusOptions: TaskStatus[] = ["todo", "in_progress", "blocked", "done"];
@@ -299,7 +299,7 @@ export function TasksPage() {
 
   const handleEditTask = async () => {
     if (!editingTask || !editFormState) return;
-    setEditingSubmitting(true);
+      setEditingSubmitting(true);
     setEditingError(null);
 
     try {
@@ -440,15 +440,16 @@ export function TasksPage() {
                         </td>
                       </tr>
                     ) : (
-                      pagedTasks.map((task) => {
+                      pagedTasks.map((task, index) => {
+                        const taskNumber = (page - 1) * PAGE_SIZE + index + 1;
                         return (
                           <tr key={task.id} className="h-[40px] border-b border-slate-200 last:border-0 bg-white hover:bg-slate-50">
                             <td className="px-3 py-0.5 align-middle text-[13px] leading-tight text-slate-900" title={task.createdAt}>
-                              {formatDate(task.createdAt)}
+                              {formatNumericDate(task.createdAt)}
                             </td>
                             <td className="min-w-0 px-3 py-0.5 align-middle">
                               <button type="button" onClick={() => setSelectedTask(task)} className="min-w-0 text-left" title={task.title}>
-                                <p className="truncate text-[13px] font-medium leading-tight text-slate-900">{task.title}</p>
+                                <p className="truncate text-[13px] font-medium leading-tight text-slate-900">{`Task ${taskNumber}`}</p>
                               </button>
                             </td>
                             {isAdminView ? (
@@ -462,7 +463,7 @@ export function TasksPage() {
                               className={`px-3 py-0.5 align-middle text-[13px] leading-tight ${isOverdue(task) ? "font-semibold text-rose-700" : "text-slate-900"}`}
                               title={task.dueDate ?? "No due date"}
                             >
-                              {formatTaskDue(task)}
+                              {task.dueDate ? formatNumericDate(task.dueDate) : "No due date"}
                             </td>
                             <td className="px-3 py-0.5 align-middle">
                               <span className={`inline-flex items-center rounded-full border px-2.5 py-0.5 text-[11px] font-semibold ${priorityTone(task.priority)}`}>
