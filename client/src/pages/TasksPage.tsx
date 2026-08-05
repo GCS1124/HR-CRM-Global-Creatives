@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useMemo, useState } from "react";
-import { MoreHorizontal, PencilLine, Plus, Trash2, X } from "lucide-react";
+import { MoreVertical, PencilLine, Plus, Trash2, X } from "lucide-react";
 import { NewUserSetupModal } from "../components/NewUserSetupModal";
 import { PageHeader } from "../components/PageHeader";
 import { SectionCard } from "../components/SectionCard";
@@ -429,7 +429,7 @@ export function TasksPage() {
                       <th className="w-[12%] px-3 text-left text-[12px] font-normal uppercase tracking-[0.14em] text-slate-500">Due</th>
                       <th className="w-[10%] px-3 text-left text-[12px] font-normal uppercase tracking-[0.14em] text-slate-500">Priority</th>
                       <th className="w-[10%] px-3 text-left text-[12px] font-normal uppercase tracking-[0.14em] text-slate-500">Status</th>
-                      {isAdminView ? <th className="w-[6%] px-3 text-right text-[12px] font-normal uppercase tracking-[0.14em] text-slate-500">Edit</th> : null}
+                      {isAdminView ? <th className="w-[4%] px-3 text-right text-[12px] font-normal uppercase tracking-[0.14em] text-slate-500" /> : null}
                     </tr>
                   </thead>
                   <tbody>
@@ -488,10 +488,10 @@ export function TasksPage() {
                                 <button
                                   type="button"
                                   onClick={() => setOpenRowMenuId((current) => (current === task.id ? null : task.id))}
-                                  className="inline-flex h-8 w-8 items-center justify-center rounded-lg border border-slate-200 bg-white text-slate-700 hover:bg-slate-50"
+                                  className="inline-flex h-6 w-6 items-center justify-center rounded-none border-0 bg-transparent text-slate-700 hover:text-slate-950"
                                   aria-label="Task actions"
                                 >
-                                  <MoreHorizontal className="h-4 w-4" />
+                                  <MoreVertical className="h-4 w-4" />
                                 </button>
                                 {openRowMenuId === task.id ? (
                                   <div className="absolute right-3 top-10 z-10 w-32 overflow-hidden rounded-xl border border-slate-200 bg-white shadow-lg">
