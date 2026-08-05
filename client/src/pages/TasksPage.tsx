@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useMemo, useState } from "react";
-import { PencilLine, Plus, X } from "lucide-react";
+import { MoreHorizontal, PencilLine, Plus, Trash2, X } from "lucide-react";
 import { NewUserSetupModal } from "../components/NewUserSetupModal";
 import { PageHeader } from "../components/PageHeader";
 import { SectionCard } from "../components/SectionCard";
@@ -119,6 +119,7 @@ export function TasksPage() {
   const [editFormState, setEditFormState] = useState<NewTaskPayload | null>(null);
   const [editingSubmitting, setEditingSubmitting] = useState(false);
   const [editingError, setEditingError] = useState<string | null>(null);
+  const [openRowMenuId, setOpenRowMenuId] = useState<string | null>(null);
 
   const employeesById = useMemo(
     () => new Map((employeesHook.data ?? []).map((employee) => [employee.id, employee])),
@@ -261,6 +262,7 @@ export function TasksPage() {
   const openEditTask = (task: Task) => {
     setEditingTask(task);
     setEditingError(null);
+    setOpenRowMenuId(null);
     setEditFormState({
       title: task.title,
       description: task.description ?? "",
@@ -276,6 +278,23 @@ export function TasksPage() {
     setEditingTask(null);
     setEditFormState(null);
     setEditingError(null);
+  };
+
+  const handleRemoveTask = async (task: Task) => {
+    const confirmed = window.confirm(`Remove task "${task.title}"? This action cannot be undone.`);
+    if (!confirmed) return;
+
+    try {
+      await hrService.deleteTask(task.id);
+      if (selectedTask?.id === task.id) setSelectedTask(null);
+      if (editingTask?.id === task.id) closeEditTask();
+      await tasksHook.refetch();
+    } catch (error) {
+      const message = error instanceof Error ? error.message : "Unable to remove task.";
+      setSubmitError(message);
+    } finally {
+      setOpenRowMenuId(null);
+    }
   };
 
   const handleEditTask = async () => {
@@ -465,15 +484,35 @@ export function TasksPage() {
                               </select>
                             </td>
                             {isAdminView ? (
-                              <td className="px-3 py-0.5 align-middle text-right">
+                              <td className="relative px-3 py-0.5 align-middle text-right">
                                 <button
                                   type="button"
-                                  onClick={() => openEditTask(task)}
-                                  className="inline-flex items-center gap-1 rounded-lg border border-slate-200 bg-white px-2.5 py-1 text-[11px] font-semibold text-slate-700 hover:bg-slate-50"
+                                  onClick={() => setOpenRowMenuId((current) => (current === task.id ? null : task.id))}
+                                  className="inline-flex h-8 w-8 items-center justify-center rounded-lg border border-slate-200 bg-white text-slate-700 hover:bg-slate-50"
+                                  aria-label="Task actions"
                                 >
-                                  <PencilLine className="h-3.5 w-3.5" />
-                                  Edit
+                                  <MoreHorizontal className="h-4 w-4" />
                                 </button>
+                                {openRowMenuId === task.id ? (
+                                  <div className="absolute right-3 top-10 z-10 w-32 overflow-hidden rounded-xl border border-slate-200 bg-white shadow-lg">
+                                    <button
+                                      type="button"
+                                      onClick={() => void handleRemoveTask(task)}
+                                      className="flex w-full items-center gap-2 px-3 py-2 text-left text-sm font-medium text-rose-700 hover:bg-rose-50"
+                                    >
+                                      <Trash2 className="h-3.5 w-3.5" />
+                                      Remove
+                                    </button>
+                                    <button
+                                      type="button"
+                                      onClick={() => openEditTask(task)}
+                                      className="flex w-full items-center gap-2 px-3 py-2 text-left text-sm font-medium text-slate-700 hover:bg-slate-50"
+                                    >
+                                      <PencilLine className="h-3.5 w-3.5" />
+                                      Edit
+                                    </button>
+                                  </div>
+                                ) : null}
                               </td>
                             ) : null}
                           </tr>
