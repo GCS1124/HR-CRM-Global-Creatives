@@ -204,9 +204,22 @@ export interface Announcement {
   title: string;
   message: string;
   tone: InsightTone;
+  graphicUrl: string | null;
+  graphicAlt: string | null;
   ctaLabel: string | null;
   ctaPath: string | null;
   createdAt: string;
+}
+
+export interface NewAnnouncementPayload {
+  audience: AnnouncementAudience;
+  title: string;
+  message: string;
+  tone: InsightTone;
+  graphicUrl?: string | null;
+  graphicAlt?: string | null;
+  ctaLabel?: string | null;
+  ctaPath?: string | null;
 }
 
 export interface PriorityItem {

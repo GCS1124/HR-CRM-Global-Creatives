@@ -1,4 +1,4 @@
-import { ArrowRight, Megaphone } from "lucide-react";
+import { ArrowRight, Image as ImageIcon, Megaphone } from "lucide-react";
 import { Link } from "react-router-dom";
 import type { Announcement } from "../types/hr";
 
@@ -45,11 +45,26 @@ export function AnnouncementStrip({ announcements, loading = false }: Announceme
             key={announcement.id}
             className={`rounded-[24px] border p-4 shadow-[0_12px_30px_rgba(15,23,42,0.06)] ${toneMap[announcement.tone]}`}
           >
+            {announcement.graphicUrl ? (
+              <div className="mb-4 overflow-hidden rounded-[18px] border border-white/60 bg-white/70 shadow-[0_10px_24px_rgba(15,23,42,0.08)]">
+                <img
+                  src={announcement.graphicUrl}
+                  alt={announcement.graphicAlt ?? announcement.title}
+                  className="h-36 w-full object-cover"
+                  loading="lazy"
+                />
+              </div>
+            ) : (
+              <div className="mb-4 inline-flex items-center gap-2 rounded-full border border-white/60 bg-white/55 px-3 py-1.5 text-[0.65rem] font-black uppercase tracking-[0.16em] text-slate-600">
+                <ImageIcon className="h-3.5 w-3.5" />
+                Text update
+              </div>
+            )}
             <p className="text-[0.7rem] font-black uppercase tracking-[0.18em] text-slate-600">
               {announcement.audience === "all" ? "All workspaces" : `${announcement.audience} workspace`}
             </p>
             <h3 className="mt-3 text-base font-semibold text-slate-950">{announcement.title}</h3>
-            <p className="mt-2 text-sm font-medium text-slate-700">{announcement.message}</p>
+            <p className="mt-2 whitespace-pre-wrap text-sm font-medium text-slate-700">{announcement.message}</p>
             {announcement.ctaLabel && announcement.ctaPath ? (
               <Link
                 to={announcement.ctaPath}

@@ -5,7 +5,7 @@ export interface GroupedItems<T> {
   items: T[];
 }
 
-const groupOrder: NavGroup[] = ["Overview", "People", "Operations", "Finance", "Configuration"];
+const groupOrder: NavGroup[] = ["Overview", "People", "Operations", "Finance", "Communication", "Configuration"];
 
 export function groupItems<T extends { group?: NavGroup }>(items: T[]): Array<GroupedItems<T>> {
   const grouped = new Map<NavGroup, T[]>();

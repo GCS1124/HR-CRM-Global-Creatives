@@ -33,6 +33,7 @@ import type {
   Notification,
   NotificationRole,
   PriorityItem,
+  NewAnnouncementPayload,
   ShiftApprovalStatus,
   ShiftCode,
   Task,
@@ -179,6 +180,8 @@ interface AnnouncementRow {
   title: string;
   message: string;
   tone: Announcement["tone"];
+  graphic_url?: string | null;
+  graphic_alt?: string | null;
   cta_label: string | null;
   cta_path: string | null;
   created_at: string;
@@ -219,6 +222,9 @@ let currentEmployeePromise: Promise<Employee> | null = null;
 let currentEmployeePromiseUserId: string | null = null;
 let notificationsTableCache: "notifications" | "alerts" | null = null;
 let announcementsTableAvailable = true;
+let announcementGraphicsAvailable = true;
+let announcementGraphicAltAvailable = true;
+const ANNOUNCEMENT_MEDIA_MARKER = "\n\n__HRCRM_MEDIA__:";
 
 export const NEW_USER_EMPLOYEE_SETUP_MESSAGE =
   "New user detected. Ask an admin to add you as an employee before continuing.";
@@ -243,6 +249,53 @@ function assertSupabase() {
 function isMissingTableError(message: string | undefined): boolean {
   const normalized = message?.toLowerCase() ?? "";
   return normalized.includes("does not exist") || normalized.includes("relation");
+}
+
+function isMissingColumnError(message: string | undefined): boolean {
+  const normalized = message?.toLowerCase() ?? "";
+  return normalized.includes("column") && normalized.includes("does not exist");
+}
+
+function isMissingAnnouncementGraphicAltError(message: string | undefined): boolean {
+  const normalized = message?.toLowerCase() ?? "";
+  return normalized.includes("graphic_alt") && (normalized.includes("schema cache") || normalized.includes("column") || normalized.includes("does not exist"));
+}
+
+function isMissingAnnouncementGraphicUrlError(message: string | undefined): boolean {
+  const normalized = message?.toLowerCase() ?? "";
+  return normalized.includes("graphic_url") && (normalized.includes("schema cache") || normalized.includes("column") || normalized.includes("does not exist"));
+}
+
+function encodeAnnouncementMedia(media: { graphicUrl: string; graphicAlt: string | null }): string {
+  return `${ANNOUNCEMENT_MEDIA_MARKER}${encodeURIComponent(JSON.stringify(media))}`;
+}
+
+function decodeAnnouncementMedia(message: string): { message: string; graphicUrl: string | null; graphicAlt: string | null } {
+  const markerIndex = message.lastIndexOf(ANNOUNCEMENT_MEDIA_MARKER);
+
+  if (markerIndex === -1) {
+    return { message, graphicUrl: null, graphicAlt: null };
+  }
+
+  const visibleMessage = message.slice(0, markerIndex).trimEnd();
+  const encodedPayload = message.slice(markerIndex + ANNOUNCEMENT_MEDIA_MARKER.length).trim();
+
+  if (!encodedPayload) {
+    return { message: visibleMessage || message, graphicUrl: null, graphicAlt: null };
+  }
+
+  try {
+    const payload = JSON.parse(decodeURIComponent(encodedPayload)) as { graphicUrl?: unknown; graphicAlt?: unknown };
+    const graphicUrl = normalizeAnnouncementText(typeof payload.graphicUrl === "string" ? payload.graphicUrl : null);
+    const graphicAlt = normalizeAnnouncementText(typeof payload.graphicAlt === "string" ? payload.graphicAlt : null);
+    return {
+      message: visibleMessage || message,
+      graphicUrl,
+      graphicAlt,
+    };
+  } catch {
+    return { message, graphicUrl: null, graphicAlt: null };
+  }
 }
 
 async function extractFunctionErrorMessage(response: Response | undefined): Promise<string | null> {
@@ -336,15 +389,95 @@ async function fetchAnnouncements(role: AnnouncementAudience): Promise<Announcem
   const client = assertSupabase();
   const { data, error } = await client
     .from("announcements")
-    .select("id, audience, title, message, tone, cta_label, cta_path, created_at")
+    .select("*")
     .in("audience", role === "all" ? ["all"] : ["all", role])
     .order("created_at", { ascending: false });
 
   if (error) {
+    if (announcementGraphicsAvailable && isMissingColumnError(error.message)) {
+      announcementGraphicsAvailable = false;
+      return fetchAnnouncements(role);
+    }
     throw new Error(error.message);
   }
 
-  return (data ?? []).map((row) => toAnnouncement(row as AnnouncementRow));
+  return (data ?? []).map((row: AnnouncementRow) => toAnnouncement(row));
+}
+
+async function fetchAdminAnnouncements(): Promise<Announcement[]> {
+  const client = assertSupabase();
+  const { data, error } = await client.from("announcements").select("*").order("created_at", { ascending: false });
+
+  if (error) {
+    if (announcementGraphicsAvailable && isMissingColumnError(error.message)) {
+      announcementGraphicsAvailable = false;
+      return fetchAdminAnnouncements();
+    }
+    throw new Error(error.message);
+  }
+
+  return (data ?? []).map((row: AnnouncementRow) => toAnnouncement(row));
+}
+
+function normalizeAnnouncementText(value: string | null | undefined): string | null {
+  const trimmed = value?.trim();
+  return trimmed ? trimmed : null;
+}
+
+async function insertAnnouncement(input: NewAnnouncementPayload): Promise<Announcement> {
+  const client = assertSupabase();
+
+  if (!announcementsTableAvailable) {
+    throw new Error("Announcements are not available in Supabase. Run supabase/schema.sql before publishing workspace updates.");
+  }
+
+  const graphicUrl = normalizeAnnouncementText(input.graphicUrl);
+  const graphicAlt = graphicUrl ? normalizeAnnouncementText(input.graphicAlt) : null;
+  const graphicAltForColumn = graphicUrl && announcementGraphicAltAvailable ? graphicAlt : null;
+  const ctaLabel = normalizeAnnouncementText(input.ctaLabel);
+  const ctaPath = normalizeAnnouncementText(input.ctaPath);
+  const includeGraphics = announcementGraphicsAvailable;
+  const message = input.message.trim();
+  const messageWithEmbeddedMedia = graphicUrl ? encodeAnnouncementMedia({ graphicUrl, graphicAlt }) : message;
+
+  const row: Record<string, unknown> = {
+    id: createId("ANN"),
+    audience: input.audience,
+    title: input.title.trim(),
+    message: includeGraphics ? message : messageWithEmbeddedMedia,
+    tone: input.tone,
+    cta_label: ctaLabel,
+    cta_path: ctaPath,
+    created_at: new Date().toISOString(),
+  };
+
+  if (includeGraphics) {
+    row.graphic_url = graphicUrl;
+    if (graphicAltForColumn !== null) {
+      row.graphic_alt = graphicAltForColumn;
+    }
+  }
+
+  const { data, error } = await client.from("announcements")
+    .insert(row)
+    .select("*")
+    .single();
+
+  if (error) {
+    if (includeGraphics && announcementGraphicsAvailable && isMissingAnnouncementGraphicUrlError(error.message)) {
+      announcementGraphicsAvailable = false;
+      return insertAnnouncement(input);
+    }
+
+    if (includeGraphics && announcementGraphicAltAvailable && isMissingAnnouncementGraphicAltError(error.message)) {
+      announcementGraphicAltAvailable = false;
+      return insertAnnouncement(input);
+    }
+
+    throw new Error(error.message);
+  }
+
+  return toAnnouncement(data as AnnouncementRow);
 }
 
 async function sendEmployeeInvite(input: {
@@ -605,12 +738,18 @@ function toNotification(row: NotificationRow): Notification {
 }
 
 function toAnnouncement(row: AnnouncementRow): Announcement {
+  const decodedMessage = decodeAnnouncementMedia(row.message);
+  const graphicUrl = row.graphic_url ?? decodedMessage.graphicUrl ?? null;
+  const graphicAlt = row.graphic_alt ?? decodedMessage.graphicAlt ?? null;
+
   return {
     id: row.id,
     audience: row.audience,
     title: row.title,
-    message: row.message,
+    message: decodedMessage.message,
     tone: row.tone,
+    graphicUrl,
+    graphicAlt,
     ctaLabel: row.cta_label,
     ctaPath: row.cta_path,
     createdAt: row.created_at,
@@ -1023,6 +1162,27 @@ export const hrService = {
       }
       throw error;
     }
+  },
+
+  getAllAnnouncements: async (): Promise<Announcement[]> => {
+    if (!announcementsTableAvailable) {
+      return seedAnnouncements;
+    }
+
+    try {
+      return await fetchAdminAnnouncements();
+    } catch (error) {
+      const message = error instanceof Error ? error.message : String(error);
+      if (isMissingTableError(message)) {
+        announcementsTableAvailable = false;
+        return seedAnnouncements;
+      }
+      throw error;
+    }
+  },
+
+  createAnnouncement: async (payload: NewAnnouncementPayload): Promise<Announcement> => {
+    return insertAnnouncement(payload);
   },
 
   getDashboardOverview: async (): Promise<DashboardOverview> => {

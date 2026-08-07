@@ -1,6 +1,6 @@
 import type { LucideIcon } from "lucide-react";
 
-export type NavGroup = "Overview" | "People" | "Operations" | "Finance" | "Configuration";
+export type NavGroup = "Overview" | "People" | "Operations" | "Finance" | "Communication" | "Configuration";
 
 export interface NavItem {
   label: string;

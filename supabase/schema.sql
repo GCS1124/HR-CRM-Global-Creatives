@@ -178,10 +178,15 @@ create table if not exists public.announcements (
   title text not null,
   message text not null,
   tone text not null check (tone in ('info', 'success', 'warning', 'critical')),
+  graphic_url text,
+  graphic_alt text,
   cta_label text,
   cta_path text,
   created_at timestamptz not null default now()
 );
+
+alter table public.announcements add column if not exists graphic_url text;
+alter table public.announcements add column if not exists graphic_alt text;
 
 do $$
 begin
@@ -845,7 +850,7 @@ create policy notifications_update_policy on public.notifications
 
 create policy announcements_select_policy on public.announcements
   for select to authenticated
-  using (audience = 'all' or audience = public.current_role());
+  using (public.is_admin() or audience = 'all' or audience = public.current_role());
 
 create policy announcements_write_policy on public.announcements
   for all to authenticated

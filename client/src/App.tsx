@@ -4,6 +4,7 @@ import {
   CalendarClock,
   CircleDollarSign,
   Gauge,
+  Megaphone,
   Settings,
   User,
   UserCheck,
@@ -30,6 +31,7 @@ const AttendancePage = lazy(() => import("./pages/AttendancePage").then(m => ({ 
 const TasksPage = lazy(() => import("./pages/TasksPage").then(m => ({ default: m.TasksPage })));
 const LeavePage = lazy(() => import("./pages/LeavePage").then(m => ({ default: m.LeavePage })));
 const PayrollPage = lazy(() => import("./pages/PayrollPage").then(m => ({ default: m.PayrollPage })));
+const AnnouncementsPage = lazy(() => import("./pages/AnnouncementsPage").then(m => ({ default: m.AnnouncementsPage })));
 const SettingsPage = lazy(() => import("./pages/SettingsPage").then(m => ({ default: m.SettingsPage })));
 const EmployeeDashboardPage = lazy(() => import("./pages/EmployeeDashboardPage").then(m => ({ default: m.EmployeeDashboardPage })));
 const EmployeeAttendancePage = lazy(() => import("./pages/EmployeeAttendancePage").then(m => ({ default: m.EmployeeAttendancePage })));
@@ -48,6 +50,7 @@ const adminNavItems: NavItem[] = [
   { label: "Leave", path: "/admin/leave", icon: CalendarClock, group: "Operations" },
   { label: "Recruitment", path: "/admin/recruitment", icon: UserRound, group: "Operations" },
   { label: "Payroll", path: "/admin/payroll", icon: CircleDollarSign, group: "Finance" },
+  { label: "Announcements", path: "/admin/announcements", icon: Megaphone, group: "Communication" },
   { label: "Settings", path: "/admin/settings", icon: Settings, group: "Configuration" },
 ];
 
@@ -137,6 +140,7 @@ export default function App() {
           <Route path="/leave" element={<Navigate to="/admin/leave" replace />} />
           <Route path="/recruitment" element={<Navigate to="/admin/recruitment" replace />} />
           <Route path="/payroll" element={<Navigate to="/admin/payroll" replace />} />
+          <Route path="/announcements" element={<Navigate to="/admin/announcements" replace />} />
           <Route path="/settings" element={<Navigate to="/admin/settings" replace />} />
 
           <Route element={<RoleRoute role={role} allowedRoles={["admin"]} fallbackPath={landingPath} />}>
@@ -160,6 +164,7 @@ export default function App() {
               <Route path="leave" element={<LeavePage />} />
               <Route path="recruitment" element={<RecruitmentPage />} />
               <Route path="payroll" element={<PayrollPage />} />
+              <Route path="announcements" element={<AnnouncementsPage />} />
               <Route path="settings" element={<SettingsPage />} />
               <Route path="*" element={<NotFoundPage />} />
             </Route>
