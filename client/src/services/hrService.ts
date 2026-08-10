@@ -34,6 +34,7 @@ import type {
   NotificationRole,
   PriorityItem,
   NewAnnouncementPayload,
+  UpdateAnnouncementPayload,
   ShiftApprovalStatus,
   ShiftCode,
   Task,
@@ -224,7 +225,8 @@ let notificationsTableCache: "notifications" | "alerts" | null = null;
 let announcementsTableAvailable = true;
 let announcementGraphicsAvailable = true;
 let announcementGraphicAltAvailable = true;
-const ANNOUNCEMENT_MEDIA_MARKER = "\n\n__HRCRM_MEDIA__:";
+const ANNOUNCEMENT_MEDIA_MARKER = "__HRCRM_MEDIA__:";
+const ANNOUNCEMENT_MEDIA_LEGACY_MARKER = "\n\n__HRCRM_MEDIA__:";
 
 export const NEW_USER_EMPLOYEE_SETUP_MESSAGE =
   "New user detected. Ask an admin to add you as an employee before continuing.";
@@ -266,22 +268,27 @@ function isMissingAnnouncementGraphicUrlError(message: string | undefined): bool
   return normalized.includes("graphic_url") && (normalized.includes("schema cache") || normalized.includes("column") || normalized.includes("does not exist"));
 }
 
-function encodeAnnouncementMedia(media: { graphicUrl: string; graphicAlt: string | null }): string {
-  return `${ANNOUNCEMENT_MEDIA_MARKER}${encodeURIComponent(JSON.stringify(media))}`;
+function encodeAnnouncementMedia(message: string, media: { graphicUrl: string; graphicAlt: string | null }): string {
+  return `${message}${ANNOUNCEMENT_MEDIA_LEGACY_MARKER}${encodeURIComponent(JSON.stringify(media))}`;
 }
 
 function decodeAnnouncementMedia(message: string): { message: string; graphicUrl: string | null; graphicAlt: string | null } {
-  const markerIndex = message.lastIndexOf(ANNOUNCEMENT_MEDIA_MARKER);
+  const markerIndex = message.lastIndexOf(ANNOUNCEMENT_MEDIA_LEGACY_MARKER) !== -1
+    ? message.lastIndexOf(ANNOUNCEMENT_MEDIA_LEGACY_MARKER)
+    : message.lastIndexOf(ANNOUNCEMENT_MEDIA_MARKER);
 
   if (markerIndex === -1) {
     return { message, graphicUrl: null, graphicAlt: null };
   }
 
   const visibleMessage = message.slice(0, markerIndex).trimEnd();
-  const encodedPayload = message.slice(markerIndex + ANNOUNCEMENT_MEDIA_MARKER.length).trim();
+  const marker = message.slice(markerIndex, markerIndex + ANNOUNCEMENT_MEDIA_LEGACY_MARKER.length) === ANNOUNCEMENT_MEDIA_LEGACY_MARKER
+    ? ANNOUNCEMENT_MEDIA_LEGACY_MARKER
+    : ANNOUNCEMENT_MEDIA_MARKER;
+  const encodedPayload = message.slice(markerIndex + marker.length).trim();
 
   if (!encodedPayload) {
-    return { message: visibleMessage || message, graphicUrl: null, graphicAlt: null };
+    return { message: visibleMessage, graphicUrl: null, graphicAlt: null };
   }
 
   try {
@@ -289,12 +296,12 @@ function decodeAnnouncementMedia(message: string): { message: string; graphicUrl
     const graphicUrl = normalizeAnnouncementText(typeof payload.graphicUrl === "string" ? payload.graphicUrl : null);
     const graphicAlt = normalizeAnnouncementText(typeof payload.graphicAlt === "string" ? payload.graphicAlt : null);
     return {
-      message: visibleMessage || message,
+      message: visibleMessage,
       graphicUrl,
       graphicAlt,
     };
   } catch {
-    return { message, graphicUrl: null, graphicAlt: null };
+    return { message: visibleMessage, graphicUrl: null, graphicAlt: null };
   }
 }
 
@@ -424,60 +431,143 @@ function normalizeAnnouncementText(value: string | null | undefined): string | n
   return trimmed ? trimmed : null;
 }
 
-async function insertAnnouncement(input: NewAnnouncementPayload): Promise<Announcement> {
+interface PreparedAnnouncementWrite {
+  audience: AnnouncementAudience;
+  title: string;
+  message: string;
+  tone: Announcement["tone"];
+  graphicUrl: string | null;
+  graphicAlt: string | null;
+  ctaLabel: string | null;
+  ctaPath: string | null;
+}
+
+interface AnnouncementPersistenceInput extends PreparedAnnouncementWrite {
+  id: string;
+  createdAt?: string;
+}
+
+function prepareAnnouncementWrite(input: NewAnnouncementPayload | UpdateAnnouncementPayload): PreparedAnnouncementWrite {
+  const graphicUrl = normalizeAnnouncementText(input.graphicUrl);
+  const graphicAlt = graphicUrl ? normalizeAnnouncementText(input.graphicAlt) : null;
+  const ctaLabel = normalizeAnnouncementText(input.ctaLabel);
+  const ctaPath = normalizeAnnouncementText(input.ctaPath);
+
+  return {
+    audience: input.audience,
+    title: input.title.trim(),
+    message: input.message.trim(),
+    tone: input.tone,
+    graphicUrl,
+    graphicAlt,
+    ctaLabel,
+    ctaPath,
+  };
+}
+
+function buildAnnouncementRow(
+  input: AnnouncementPersistenceInput,
+  includeGraphics: boolean,
+  includeGraphicAlt: boolean,
+): Record<string, unknown> {
+  const messageWithEmbeddedMedia = input.graphicUrl ? encodeAnnouncementMedia(input.message, { graphicUrl: input.graphicUrl, graphicAlt: input.graphicAlt }) : input.message;
+
+  const row: Record<string, unknown> = {
+    id: input.id,
+    audience: input.audience,
+    title: input.title,
+    message: includeGraphics ? input.message : messageWithEmbeddedMedia,
+    tone: input.tone,
+    cta_label: input.ctaLabel,
+    cta_path: input.ctaPath,
+  };
+
+  if (input.createdAt) {
+    row.created_at = input.createdAt;
+  }
+
+  if (includeGraphics) {
+    row.graphic_url = input.graphicUrl;
+    if (includeGraphicAlt) {
+      row.graphic_alt = input.graphicUrl ? input.graphicAlt : null;
+    }
+  }
+
+  return row;
+}
+
+async function persistAnnouncement(
+  input: AnnouncementPersistenceInput,
+  mode: "insert" | "update",
+): Promise<Announcement> {
   const client = assertSupabase();
 
   if (!announcementsTableAvailable) {
     throw new Error("Announcements are not available in Supabase. Run supabase/schema.sql before publishing workspace updates.");
   }
 
-  const graphicUrl = normalizeAnnouncementText(input.graphicUrl);
-  const graphicAlt = graphicUrl ? normalizeAnnouncementText(input.graphicAlt) : null;
-  const graphicAltForColumn = graphicUrl && announcementGraphicAltAvailable ? graphicAlt : null;
-  const ctaLabel = normalizeAnnouncementText(input.ctaLabel);
-  const ctaPath = normalizeAnnouncementText(input.ctaPath);
   const includeGraphics = announcementGraphicsAvailable;
-  const message = input.message.trim();
-  const messageWithEmbeddedMedia = graphicUrl ? encodeAnnouncementMedia({ graphicUrl, graphicAlt }) : message;
-
-  const row: Record<string, unknown> = {
-    id: createId("ANN"),
-    audience: input.audience,
-    title: input.title.trim(),
-    message: includeGraphics ? message : messageWithEmbeddedMedia,
-    tone: input.tone,
-    cta_label: ctaLabel,
-    cta_path: ctaPath,
-    created_at: new Date().toISOString(),
-  };
-
-  if (includeGraphics) {
-    row.graphic_url = graphicUrl;
-    if (graphicAltForColumn !== null) {
-      row.graphic_alt = graphicAltForColumn;
-    }
-  }
-
-  const { data, error } = await client.from("announcements")
-    .insert(row)
-    .select("*")
-    .single();
+  const row = buildAnnouncementRow(input, includeGraphics, announcementGraphicAltAvailable);
+  const query =
+    mode === "insert"
+      ? client.from("announcements").insert(row)
+      : client.from("announcements").update(row).eq("id", input.id);
+  const { data, error } = await query.select("*").single();
 
   if (error) {
     if (includeGraphics && announcementGraphicsAvailable && isMissingAnnouncementGraphicUrlError(error.message)) {
       announcementGraphicsAvailable = false;
-      return insertAnnouncement(input);
+      return persistAnnouncement(input, mode);
     }
 
     if (includeGraphics && announcementGraphicAltAvailable && isMissingAnnouncementGraphicAltError(error.message)) {
       announcementGraphicAltAvailable = false;
-      return insertAnnouncement(input);
+      return persistAnnouncement(input, mode);
     }
 
     throw new Error(error.message);
   }
 
   return toAnnouncement(data as AnnouncementRow);
+}
+
+async function insertAnnouncement(input: NewAnnouncementPayload): Promise<Announcement> {
+  return persistAnnouncement(
+    {
+      id: createId("ANN"),
+      ...prepareAnnouncementWrite(input),
+      createdAt: new Date().toISOString(),
+    },
+    "insert",
+  );
+}
+
+async function updateAnnouncement(input: UpdateAnnouncementPayload): Promise<Announcement> {
+  return persistAnnouncement(
+    {
+      id: input.id,
+      ...prepareAnnouncementWrite(input),
+    },
+    "update",
+  );
+}
+
+async function deleteAnnouncement(id: string): Promise<void> {
+  const client = assertSupabase();
+
+  if (!announcementsTableAvailable) {
+    throw new Error("Announcements are not available in Supabase. Run supabase/schema.sql before managing workspace updates.");
+  }
+
+  const { error } = await client.from("announcements").delete().eq("id", id);
+
+  if (error) {
+    if (isMissingTableError(error.message)) {
+      announcementsTableAvailable = false;
+    }
+
+    throw new Error(error.message);
+  }
 }
 
 async function sendEmployeeInvite(input: {
@@ -1183,6 +1273,14 @@ export const hrService = {
 
   createAnnouncement: async (payload: NewAnnouncementPayload): Promise<Announcement> => {
     return insertAnnouncement(payload);
+  },
+
+  updateAnnouncement: async (payload: UpdateAnnouncementPayload): Promise<Announcement> => {
+    return updateAnnouncement(payload);
+  },
+
+  deleteAnnouncement: async (id: string): Promise<void> => {
+    return deleteAnnouncement(id);
   },
 
   getDashboardOverview: async (): Promise<DashboardOverview> => {

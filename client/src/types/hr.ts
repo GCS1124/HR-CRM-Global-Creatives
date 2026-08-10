@@ -222,6 +222,10 @@ export interface NewAnnouncementPayload {
   ctaPath?: string | null;
 }
 
+export interface UpdateAnnouncementPayload extends NewAnnouncementPayload {
+  id: string;
+}
+
 export interface PriorityItem {
   id: string;
   title: string;
