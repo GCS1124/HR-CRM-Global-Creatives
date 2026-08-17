@@ -263,6 +263,19 @@ textarea {
     transition: background-color 9999s ease-in-out 0s;
   }
 
+  .tasks-two-col-grid {
+    display: grid;
+    align-items: start;
+    gap: 1rem;
+    grid-template-columns: minmax(0, 21rem) minmax(0, 1fr);
+  }
+
+  @media (max-width: 1100px) {
+    .tasks-two-col-grid {
+      grid-template-columns: minmax(0, 0.92fr) minmax(0, 1.08fr);
+    }
+  }
+
   .btn-primary {
     @apply inline-flex items-center justify-center gap-2 rounded-lg px-4 py-2 text-sm font-bold text-white transition active:scale-[0.98];
     background: linear-gradient(135deg, var(--btn-primary-start), var(--btn-primary-end));
@@ -408,4 +421,3 @@ textarea {
     transform: translateY(0);
   }
 }
-

@@ -19,10 +19,10 @@ export function TaskQueueToolbar({
   onExport,
 }: TaskQueueToolbarProps) {
   return (
-    <div className="flex flex-wrap items-center justify-between gap-3 rounded-xl border border-slate-200 bg-white px-3 py-2 shadow-sm">
-      <div className="flex flex-1 flex-wrap items-center gap-2">
+    <div className="rounded-xl border border-slate-200 bg-white px-3 py-2 shadow-sm">
+      <div className="flex flex-wrap items-center gap-2">
         <span className="insight-pill">{taskCount} tasks</span>
-        <label className="flex h-9 min-w-[180px] flex-1 items-center gap-2 rounded-lg border border-slate-200 bg-white px-3 text-sm text-slate-500">
+        <label className="flex h-9 min-w-0 flex-1 items-center gap-2 rounded-lg border border-slate-200 bg-white px-3 text-sm text-slate-500">
           <Search className="h-4 w-4 text-slate-400" />
           <input
             value={search}
@@ -34,7 +34,7 @@ export function TaskQueueToolbar({
         <select
           value={statusFilter}
           onChange={(event) => onStatusFilterChange(event.target.value as TaskStatus | "")}
-          className="input-surface h-9 w-[150px] text-sm font-medium"
+          className="input-surface h-9 w-full min-w-[150px] text-sm font-medium sm:w-[150px]"
         >
           <option value="">All statuses</option>
           <option value="todo">To do</option>
@@ -43,10 +43,12 @@ export function TaskQueueToolbar({
           <option value="done">Done</option>
         </select>
       </div>
-      <button type="button" onClick={onExport} className="btn-secondary px-3 py-1.5 text-xs">
-        <Download className="h-3.5 w-3.5" />
-        Export CSV
-      </button>
+      <div className="mt-2 flex justify-end">
+        <button type="button" onClick={onExport} className="btn-secondary w-full px-3 py-1.5 text-xs sm:w-auto">
+          <Download className="h-3.5 w-3.5" />
+          Export CSV
+        </button>
+      </div>
     </div>
   );
 }

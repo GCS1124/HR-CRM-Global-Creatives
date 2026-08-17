@@ -262,19 +262,20 @@ export function EmployeeDashboardPage() {
       ? employee.name.split(" ")[0]
       : "there";
   const attendanceScore = clampScore(presenceRate);
-  const totalTasks = (command?.pendingTasks ?? 0) + (command?.completedTasks ?? 0);
-  const workloadScore = clampScore(totalTasks > 0 ? ((command?.pendingTasks ?? 0) / totalTasks) * 100 : 0);
+  const pendingTasks = command?.pendingTasks ?? 0;
+  const completedTasks = command?.completedTasks ?? 0;
+  const totalTasks = pendingTasks + completedTasks;
+  // Higher attendance and a lighter active workload should both raise the score.
+  const activeWorkloadScore = clampScore(totalTasks > 0 ? (completedTasks / totalTasks) * 100 : 100);
   const approvalsScore = clampScore(100 - (command?.pendingApprovals ?? 0) * 20);
   const payrollScore = clampScore(latestProcessedPayroll ? 100 : latestPayroll ? 50 : 0);
   const performanceAspects = [
     { ...performanceAspectStyles[0], score: attendanceScore },
-    { ...performanceAspectStyles[1], score: workloadScore },
+    { ...performanceAspectStyles[1], score: activeWorkloadScore },
     { ...performanceAspectStyles[2], score: approvalsScore },
     { ...performanceAspectStyles[3], score: payrollScore },
   ];
-  const overallPerformance = clampScore(
-    performanceAspects.reduce((sum, aspect) => sum + aspect.score, 0) / performanceAspects.length,
-  );
+  const overallPerformance = clampScore((attendanceScore + activeWorkloadScore) / 2);
   const gaugeBands = [
     { label: "Below par", from: 0, to: 20, color: "#f87171" },
     { label: "Bad", from: 20, to: 40, color: "#fb923c" },
