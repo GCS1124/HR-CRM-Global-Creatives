@@ -250,7 +250,7 @@ export function AppLayout({
   }, [userRole]);
 
   return (
-    <div className="min-h-screen bg-transparent">
+    <div className="min-h-screen overflow-x-hidden bg-transparent">
       <div className="flex min-h-screen">
         <AppSidebar items={items} workspaceLabel={workspaceLabel} />
         <div className="min-w-0 flex-1">
@@ -268,7 +268,7 @@ export function AppLayout({
               unreadNotifications={unreadCount}
               notificationsOpen={showNotifications}
             />
-          <main className="px-4 py-5 pb-24 md:px-6 md:py-6 lg:px-8 lg:pb-8">
+          <main className="px-3 py-4 pb-28 sm:px-4 sm:py-5 md:px-6 md:py-6 lg:px-8 lg:pb-8">
             <div className="mx-auto w-full max-w-[1440px]">
               <Outlet />
               {showQuickLinksFooter ? <QuickLinksFooter items={items} /> : null}
@@ -287,16 +287,16 @@ export function AppLayout({
       />
       {requiresProfileCompletion ? (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-950/55 px-4 py-6 backdrop-blur-sm">
-          <div className="w-full max-w-3xl rounded-[32px] border border-brand-200 bg-white p-6 shadow-[0_28px_80px_rgba(15,23,42,0.22)]">
-            <div className="flex items-start justify-between gap-3 rounded-2xl border border-brand-200 bg-brand-50 px-4 py-3">
+          <div className="w-full max-w-3xl rounded-[32px] border border-brand-200 bg-white p-6 shadow-[0_28px_80px_rgba(15,23,42,0.22)] dark:border-slate-700/60 dark:bg-slate-950/92 dark:shadow-[0_28px_80px_rgba(2,6,23,0.55)]">
+            <div className="flex items-start justify-between gap-3 rounded-2xl border border-brand-200 bg-brand-50 px-4 py-3 dark:border-slate-700/60 dark:bg-slate-900/70">
               <div>
-                <p className="text-[0.68rem] font-black uppercase tracking-[0.18em] text-brand-700">
+                <p className="text-[0.68rem] font-black uppercase tracking-[0.18em] text-brand-700 dark:text-brand-300">
                   First Login Setup
                 </p>
-                <h2 className="mt-2 font-display text-2xl font-extrabold text-brand-950">
+                <h2 className="mt-2 font-display text-2xl font-extrabold text-brand-950 dark:text-slate-50">
                   Complete your payroll and compliance details
                 </h2>
-                <p className="mt-2 text-sm text-slate-600">
+                <p className="mt-2 text-sm text-slate-600 dark:text-slate-300">
                   Add PAN, address, mobile, bank name, and account number before continuing. These
                   details are used in your employee profile and salary slips.
                 </p>
@@ -304,13 +304,13 @@ export function AppLayout({
               <button
                 type="button"
                 onClick={() => setProfilePromptDismissed(true)}
-                className="rounded-full border border-brand-200 bg-white px-3 py-1 text-xs font-semibold uppercase tracking-[0.25em] text-brand-700 transition hover:bg-white/90"
+                className="rounded-full border border-brand-200 bg-white px-3 py-1 text-xs font-semibold uppercase tracking-[0.25em] text-brand-700 transition hover:bg-white/90 dark:border-slate-700/60 dark:bg-slate-900/80 dark:text-brand-200 dark:hover:bg-slate-800"
               >
                 Close
               </button>
             </div>
 
-            <div className="mt-5 rounded-2xl border border-slate-200 bg-white p-4">
+            <div className="mt-5 rounded-2xl border border-slate-200 bg-white p-4 dark:border-slate-700/60 dark:bg-slate-950/80">
               <EmployeePrivateDetailsForm
                 value={profilePromptDraft}
                 onChange={handleProfileDraftChange}

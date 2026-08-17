@@ -89,14 +89,14 @@ export function EmployeePayrollPage() {
         <div>
           <div className="flex items-start justify-between gap-3">
             <div>
-              <p className="font-semibold text-slate-950">{row.payslipSentAt ? formatDate(row.payslipSentAt) : "Not sent yet"}</p>
-              <p className="text-xs text-slate-500">{row.payslipFileName ?? "Salary slip email pending"}</p>
+              <p className="font-semibold text-slate-950 dark:text-slate-50">{row.payslipSentAt ? formatDate(row.payslipSentAt) : "Not sent yet"}</p>
+              <p className="text-xs text-slate-500 dark:text-slate-400">{row.payslipFileName ?? "Salary slip email pending"}</p>
             </div>
             <button
               type="button"
               onClick={() => void handleDownloadPayslip(row)}
               disabled={downloadingId === row.id || row.status !== "processed"}
-              className="inline-flex h-8 w-8 items-center justify-center rounded-full border border-slate-200 bg-white text-slate-600 transition hover:border-slate-300 hover:bg-slate-50 disabled:cursor-not-allowed disabled:opacity-60"
+              className="inline-flex h-8 w-8 items-center justify-center rounded-full border border-slate-200 bg-white text-slate-600 transition hover:border-slate-300 hover:bg-slate-50 disabled:cursor-not-allowed disabled:opacity-60 dark:border-slate-700/60 dark:bg-slate-900/80 dark:text-slate-200 dark:hover:bg-slate-800"
               title={row.status === "processed" ? "Download payslip" : "Payslip available after completion"}
             >
               <Download className="h-4 w-4" />
@@ -177,8 +177,8 @@ export function EmployeePayrollPage() {
       />
         <SectionCard title="Compensation Readout" showAccent={false}>
           <div className="space-y-3">
-            <div className="rounded-2xl border border-brand-200 bg-brand-50 p-4">
-              <p className="inline-flex items-center gap-2 text-xs font-bold uppercase tracking-[0.12em] text-brand-700">
+            <div className="rounded-2xl border border-brand-200 bg-brand-50 p-4 dark:border-slate-700/60 dark:bg-slate-900/70">
+              <p className="inline-flex items-center gap-2 text-xs font-bold uppercase tracking-[0.12em] text-brand-700 dark:text-brand-300">
                 <CircleDollarSign className="h-3.5 w-3.5" />
                 Current status
               </p>
@@ -186,24 +186,24 @@ export function EmployeePayrollPage() {
                 {latestPayroll ? (
                   <StatusBadge value={latestPayroll.status} />
                 ) : (
-                  <p className="text-lg font-bold text-brand-900">No data yet</p>
+                  <p className="text-lg font-bold text-brand-900 dark:text-brand-100">No data yet</p>
                 )}
               </div>
             </div>
-            <div className="rounded-2xl border border-brand-200 bg-white p-4">
-              <p className="text-xs font-bold uppercase tracking-[0.12em] text-brand-700">Net vs deductions</p>
-              <p className="mt-2 text-sm font-medium text-brand-900">
+            <div className="rounded-2xl border border-brand-200 bg-white p-4 dark:border-slate-700/60 dark:bg-slate-950/80">
+              <p className="text-xs font-bold uppercase tracking-[0.12em] text-brand-700 dark:text-brand-300">Net vs deductions</p>
+              <p className="mt-2 text-sm font-medium text-brand-900 dark:text-slate-100">
                 {latestPayroll
                   ? `${formatCurrency(latestPayroll.netPay)} net after ${formatCurrency(latestPayroll.deductions)} deductions.`
                   : "Payroll numbers will appear here once a statement is completed."}
               </p>
             </div>
-            <div className="rounded-2xl border border-emerald-200 bg-emerald-50 p-4">
-              <p className="inline-flex items-center gap-2 text-xs font-bold uppercase tracking-[0.12em] text-emerald-700">
+            <div className="rounded-2xl border border-emerald-200 bg-emerald-50 p-4 dark:border-emerald-400/20 dark:bg-emerald-500/10">
+              <p className="inline-flex items-center gap-2 text-xs font-bold uppercase tracking-[0.12em] text-emerald-700 dark:text-emerald-200">
                 <ShieldCheck className="h-3.5 w-3.5" />
                 Secure history
               </p>
-              <p className="mt-2 text-sm font-medium text-emerald-900">
+              <p className="mt-2 text-sm font-medium text-emerald-900 dark:text-emerald-100">
                 {latestPayroll?.payslipSentAt
                   ? `Latest salary slip emailed on ${formatDate(latestPayroll.payslipSentAt)}${latestPayroll.payslipFileName ? ` as ${latestPayroll.payslipFileName}.` : "."}`
                   : "Use this space to confirm each completed payout and keep your records aligned."}
@@ -215,11 +215,11 @@ export function EmployeePayrollPage() {
 
       <SectionCard title="Payroll Records" subtitle="Your monthly compensation statements">
         {downloadNotice ? (
-          <p className="mb-3 rounded-lg bg-sky-50 px-3 py-2 text-sm font-semibold text-sky-700">{downloadNotice}</p>
+          <p className="mb-3 rounded-lg bg-sky-50 px-3 py-2 text-sm font-semibold text-sky-700 dark:border dark:border-sky-400/30 dark:bg-sky-400/10 dark:text-sky-200">{downloadNotice}</p>
         ) : null}
-        {downloadError ? <p className="mb-3 rounded-lg bg-rose-50 px-3 py-2 text-sm font-semibold text-rose-700">{downloadError}</p> : null}
-        {payrollHook.loading ? <p className="text-sm font-semibold text-brand-700">Loading payroll records...</p> : null}
-        {payrollHook.error ? <p className="text-sm font-semibold text-rose-700">{payrollHook.error}</p> : null}
+        {downloadError ? <p className="mb-3 rounded-lg bg-rose-50 px-3 py-2 text-sm font-semibold text-rose-700 dark:border dark:border-rose-400/30 dark:bg-rose-400/10 dark:text-rose-200">{downloadError}</p> : null}
+        {payrollHook.loading ? <p className="text-sm font-semibold text-brand-700 dark:text-brand-300">Loading payroll records...</p> : null}
+        {payrollHook.error ? <p className="text-sm font-semibold text-rose-700 dark:text-rose-200">{payrollHook.error}</p> : null}
         <DataTable
           columns={columns}
           rows={payrollHook.data ?? []}

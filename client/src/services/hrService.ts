@@ -47,6 +47,11 @@ import { seedAnnouncements, seedNotifications } from "../data/mockData";
 import { supabase } from "./supabaseClient";
 import { getLocalDateKey, getLocalTimeLabel } from "../utils/formatters";
 import {
+  calculateAttendanceRate,
+  calculateCompletedWorkloadRate,
+  calculateOverallPerformanceScore,
+} from "../utils/performance";
+import {
   DEFAULT_SHIFT_APPROVAL_STATUS,
   DEFAULT_SHIFT_CODE,
   getApprovedShiftDefinition,
@@ -238,6 +243,10 @@ export function isNewUserEmployeeSetupError(message: string | null | undefined):
     value.includes('row-level security policy for table "employees"') ||
     value.includes("employee auto-provision failed")
   );
+}
+
+function invalidateCurrentEmployeeCache() {
+  currentEmployeeCache = null;
 }
 
 function assertSupabase() {
@@ -643,14 +652,88 @@ async function fetchEmployeePrivateDetailsMap(employeeIds: string[]): Promise<Ma
   );
 }
 
+async function fetchEmployeePerformanceMap(employeeIds: string[]): Promise<Map<string, number>> {
+  if (employeeIds.length === 0) {
+    return new Map();
+  }
+
+  const client = assertSupabase();
+  const [attendanceResult, taskResult] = await Promise.all([
+    client.from("attendance_records").select("employee_id, date, status").in("employee_id", employeeIds),
+    client.from("tasks").select("assignee_id, status").in("assignee_id", employeeIds),
+  ]);
+
+  const attendanceRows = attendanceResult.error
+    ? (() => {
+        if (isMissingTableError(attendanceResult.error.message)) {
+          return [] as Array<{ employee_id: string; date: string; status: AttendanceRecord["status"] }>;
+        }
+        throw new Error(attendanceResult.error.message);
+      })()
+    : ((attendanceResult.data ?? []) as Array<{ employee_id: string; date: string; status: AttendanceRecord["status"] }>);
+
+  const taskRows = taskResult.error
+    ? (() => {
+        if (isMissingTableError(taskResult.error.message)) {
+          return [] as Array<{ assignee_id: string | null; status: TaskStatus }>;
+        }
+        throw new Error(taskResult.error.message);
+      })()
+    : ((taskResult.data ?? []) as Array<{ assignee_id: string | null; status: TaskStatus }>);
+
+  const referenceDate = new Date();
+  const attendanceByEmployee = new Map<string, Array<{ date: string; status: AttendanceRecord["status"] }>>();
+  const taskStatsByEmployee = new Map<string, { completed: number; total: number }>();
+
+  for (const row of attendanceRows) {
+    const bucket = attendanceByEmployee.get(row.employee_id) ?? [];
+    bucket.push({ date: row.date, status: row.status });
+    attendanceByEmployee.set(row.employee_id, bucket);
+  }
+
+  for (const row of taskRows) {
+    if (!row.assignee_id) {
+      continue;
+    }
+
+    const current = taskStatsByEmployee.get(row.assignee_id) ?? { completed: 0, total: 0 };
+    current.total += 1;
+    if (row.status === "done") {
+      current.completed += 1;
+    }
+    taskStatsByEmployee.set(row.assignee_id, current);
+  }
+
+  return new Map(
+    employeeIds.flatMap((employeeId) => {
+      const attendanceRowsForEmployee = attendanceByEmployee.get(employeeId) ?? [];
+      const taskStats = taskStatsByEmployee.get(employeeId) ?? { completed: 0, total: 0 };
+
+      if (attendanceRowsForEmployee.length === 0 && taskStats.total === 0) {
+        return [];
+      }
+
+      const attendanceRate =
+        attendanceRowsForEmployee.length > 0 ? calculateAttendanceRate(attendanceRowsForEmployee, referenceDate) : 100;
+      const workloadRate = calculateCompletedWorkloadRate(taskStats.completed, taskStats.total);
+
+      return [[employeeId, calculateOverallPerformanceScore(attendanceRate, workloadRate)]];
+    }),
+  );
+}
+
 async function enrichEmployees(rows: EmployeeRow[]): Promise<Employee[]> {
-  const detailsMap = await fetchEmployeePrivateDetailsMap(rows.map((row) => row.id));
-  return rows.map((row) => toEmployee(row, detailsMap.get(row.id)));
+  const employeeIds = rows.map((row) => row.id);
+  const [detailsMap, performanceMap] = await Promise.all([
+    fetchEmployeePrivateDetailsMap(employeeIds),
+    fetchEmployeePerformanceMap(employeeIds),
+  ]);
+
+  return rows.map((row) => toEmployee(row, detailsMap.get(row.id), performanceMap.get(row.id)));
 }
 
 async function enrichEmployee(row: EmployeeRow): Promise<Employee> {
-  const detailsMap = await fetchEmployeePrivateDetailsMap([row.id]);
-  return toEmployee(row, detailsMap.get(row.id));
+  return (await enrichEmployees([row]))[0] ?? toEmployee(row);
 }
 
 async function fetchEmployeeById(employeeId: string): Promise<Employee | null> {
@@ -678,7 +761,11 @@ async function invokeDocumentDispatch<TBody extends Record<string, unknown>>(
   };
 }
 
-function toEmployee(row: EmployeeRow, details?: EmployeePrivateDetailsRow | null): Employee {
+function toEmployee(
+  row: EmployeeRow,
+  details?: EmployeePrivateDetailsRow | null,
+  performanceScoreOverride?: number,
+): Employee {
   return {
     id: row.id,
     userId: row.user_id,
@@ -690,7 +777,7 @@ function toEmployee(row: EmployeeRow, details?: EmployeePrivateDetailsRow | null
     joinDate: row.join_date,
     manager: row.manager,
     status: row.status,
-    performanceScore: row.performance_score,
+    performanceScore: performanceScoreOverride ?? row.performance_score,
     shiftCode: row.shift_code ?? DEFAULT_SHIFT_CODE,
     shiftApprovalStatus: row.shift_approval_status ?? DEFAULT_SHIFT_APPROVAL_STATUS,
     avgTimeOnSystemMinutes: row.avg_time_on_system_minutes ?? 0,
@@ -1290,7 +1377,7 @@ export const hrService = {
       client.from("employees").select("id, status, join_date"),
       client.from("leave_requests").select("id, status"),
       client.from("candidates").select("id, stage, interview_date"),
-      client.from("attendance_records").select("id, status"),
+      client.from("attendance_records").select("id, status, date"),
       client.from("payroll_records").select("id, net_pay"),
       client.from("tasks").select("id, status, title, due_date"),
     ]);
@@ -1329,9 +1416,8 @@ export const hrService = {
       return null;
     };
 
-    const presentCount = attendance.filter(
-      (record) => record.status === "present" || record.status === "remote",
-    ).length;
+    const todayAttendance = attendance.filter((record) => record.date === todayKey);
+    const presentCount = todayAttendance.filter((record) => record.status === "present" || record.status === "remote").length;
     const payrollTotal = payroll.reduce((sum, row) => sum + Number(row.net_pay ?? 0), 0);
 
     const newHires = employees.filter((employee) => {
@@ -1355,7 +1441,7 @@ export const hrService = {
         activeEmployees: employees.filter((employee) => employee.status === "active").length,
         pendingLeaves: leaves.filter((leave) => leave.status === "pending").length,
         activeOpenings: candidates.filter((candidate) => candidate.stage !== "rejected").length,
-        attendanceRate: Number(((presentCount / Math.max(employees.length, 1)) * 100).toFixed(1)),
+        attendanceRate: Number(((presentCount / Math.max(todayAttendance.length, 1)) * 100).toFixed(1)),
         payrollTotal,
       },
       highlights: [
@@ -1375,6 +1461,8 @@ export const hrService = {
       hrService.getPayrollRecords(),
       hrService.getTasks(),
     ]);
+    const todayKey = getLocalDateKey();
+    const todayAttendanceRecords = attendanceRecords.filter((record) => record.date === todayKey);
 
     const departmentSnapshots = Array.from(
       employees.reduce((map, employee) => {
@@ -1452,7 +1540,7 @@ export const hrService = {
       { todo: 0, inProgress: 0, blocked: 0, done: 0, overdue: 0, critical: 0 },
     );
 
-    const attendanceBreakdown = buildAttendanceSummary(attendanceRecords);
+    const attendanceBreakdown = buildAttendanceSummary(todayAttendanceRecords);
     const candidatePipeline = (["sourced", "interview", "offer", "hired", "rejected"] as const).map((stage) => ({
       stage,
       count: candidates.filter((candidate) => candidate.stage === stage).length,
@@ -1651,6 +1739,7 @@ export const hrService = {
       .single();
 
     throwIfError(error, "employee update");
+    invalidateCurrentEmployeeCache();
     return enrichEmployee(data as EmployeeRow);
   },
 
@@ -1664,6 +1753,7 @@ export const hrService = {
       .single();
 
     throwIfError(error, "employee archive");
+    invalidateCurrentEmployeeCache();
     return enrichEmployee(data as EmployeeRow);
   },
 
@@ -1671,6 +1761,7 @@ export const hrService = {
     const client = assertSupabase();
     const { error } = await client.from("employees").delete().eq("id", id);
     throwIfError(error, "employee delete");
+    invalidateCurrentEmployeeCache();
   },
 
   getAttendanceSummary: async (): Promise<AttendanceSummary> => {
@@ -1730,6 +1821,7 @@ export const hrService = {
       .single();
 
     throwIfError(error, "attendance record update");
+    invalidateCurrentEmployeeCache();
     return toAttendanceRecord(data as AttendanceRow);
   },
 
@@ -1746,6 +1838,7 @@ export const hrService = {
       .select("*");
 
     throwIfError(error, "attendance bulk status update");
+    invalidateCurrentEmployeeCache();
     return (data ?? []).map((row) => toAttendanceRecord(row as AttendanceRow));
   },
 
@@ -1965,6 +2058,7 @@ export const hrService = {
 
     const { data, error } = await client.from("tasks").insert(row).select("*").single();
     throwIfError(error, "task create");
+    invalidateCurrentEmployeeCache();
     return toTask(data as TaskRow);
   },
 
@@ -1978,6 +2072,7 @@ export const hrService = {
       .single();
 
     throwIfError(error, "task status update");
+    invalidateCurrentEmployeeCache();
     return toTask(data as TaskRow);
   },
 
@@ -2020,6 +2115,7 @@ export const hrService = {
       .single();
 
     throwIfError(error, "task update");
+    invalidateCurrentEmployeeCache();
     return toTask(data as TaskRow);
   },
 
@@ -2027,6 +2123,7 @@ export const hrService = {
     const client = assertSupabase();
     const { error } = await client.from("tasks").delete().eq("id", id);
     throwIfError(error, "task delete");
+    invalidateCurrentEmployeeCache();
   },
 
   getSettings: async (): Promise<CRMSettings> => {
@@ -2376,6 +2473,7 @@ export const hrService = {
         });
         throwIfError(insertError, "attendance correction apply");
       }
+      invalidateCurrentEmployeeCache();
     }
 
     const { error } = await client
@@ -2452,8 +2550,8 @@ export const hrService = {
       {
         id: "focus-tasks",
         title: "Completed workload",
-        value: `${pendingTasks} tasks`,
-        meta: `${completedTasks} tasks completed in the current queue.`,
+        value: `${completedTasks} tasks`,
+        meta: `${pendingTasks} tasks remain active in the current queue.`,
         route: "/employee/tasks",
         tone: pendingTasks > 0 ? "warning" : "success",
       },
@@ -2516,12 +2614,13 @@ export const hrService = {
           status: nextStatus,
           check_in: todayRecord.checkIn === "--" ? currentTime : todayRecord.checkIn,
           check_in_at: todayRecord.checkIn === "--" ? currentTimestamp : todayRecord.checkInAt ?? currentTimestamp,
-        })
-        .eq("id", todayRecord.id)
-        .select("*")
-        .single();
+      })
+      .eq("id", todayRecord.id)
+      .select("*")
+      .single();
 
       throwIfError(error, "attendance check-in update");
+      invalidateCurrentEmployeeCache();
       return toAttendanceRecord(data as AttendanceRow);
     }
 
@@ -2558,6 +2657,7 @@ export const hrService = {
     }
 
     throwIfError(error, "attendance check-in create");
+    invalidateCurrentEmployeeCache();
     return toAttendanceRecord(data as AttendanceRow);
   },
 
@@ -2595,6 +2695,7 @@ export const hrService = {
       .single();
 
     throwIfError(error, "attendance progress update");
+    invalidateCurrentEmployeeCache();
     return toAttendanceRecord(data as AttendanceRow);
   },
 
@@ -2635,6 +2736,7 @@ export const hrService = {
       .single();
 
     throwIfError(error, "attendance check-out update");
+    invalidateCurrentEmployeeCache();
     return toAttendanceRecord(data as AttendanceRow);
   },
 };

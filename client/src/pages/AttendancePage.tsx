@@ -113,7 +113,7 @@ export function AttendancePage() {
   }, { present: 0, late: 0, remote: 0, absent: 0, missingCheckout: 0 }), [filteredRecords]);
 
   const total = summary.present + summary.late + summary.remote + summary.absent;
-  const presenceRate = ((summary.present + summary.remote) / Math.max(total, 1)) * 100;
+  const onTimeRate = ((summary.present + summary.remote) / Math.max(total, 1)) * 100;
 
   const exceptionRecords = useMemo(() => filteredRecords.filter(isExceptionRecord), [filteredRecords]);
 
@@ -230,7 +230,7 @@ export function AttendancePage() {
       />
 
       <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
-        <StatCard title="Presence Rate" value={formatPercent(presenceRate)} hint="Present + Remote" icon={UserRoundCheck} accent />
+        <StatCard title="On-Time Rate" value={formatPercent(onTimeRate)} hint="On time + Remote" icon={UserRoundCheck} accent />
         <StatCard title="Active Views" value={String(filteredRecords.length)} hint="Total visible logs" icon={CalendarDays} />
         <StatCard title="Total Exceptions" value={String(exceptionRecords.length)} hint="Late or absent" icon={ClockAlert} />
         <StatCard title="Missing Out" value={String(summary.missingCheckout)} hint="Pending same-day lock" icon={AlarmClock} />

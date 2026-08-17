@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useMemo, useState } from "react";
-import { MoreVertical, PencilLine, Plus, Trash2, X } from "lucide-react";
+import { ChevronDown, MoreVertical, PencilLine, Plus, Trash2, X } from "lucide-react";
 import { NewUserSetupModal } from "../components/NewUserSetupModal";
 import { PageHeader } from "../components/PageHeader";
 import { SectionCard } from "../components/SectionCard";
@@ -36,16 +36,20 @@ function formatPriorityLabel(priority: TaskPriority) {
 }
 
 function priorityTone(priority: TaskPriority) {
-  if (priority === "critical" || priority === "high") return "border-rose-200 bg-rose-50 text-rose-700";
-  if (priority === "medium") return "border-amber-200 bg-amber-50 text-amber-700";
-  return "border-slate-200 bg-slate-100 text-slate-700";
+  if (priority === "critical" || priority === "high") {
+    return "border-rose-200 bg-rose-50 text-rose-700 dark:border-rose-400/30 dark:bg-rose-400/12 dark:text-rose-200";
+  }
+  if (priority === "medium") {
+    return "border-amber-200 bg-amber-50 text-amber-700 dark:border-amber-400/30 dark:bg-amber-400/12 dark:text-amber-200";
+  }
+  return "border-slate-200 bg-slate-100 text-slate-700 dark:border-slate-700/60 dark:bg-slate-900/80 dark:text-slate-200";
 }
 
 function statusTone(status: TaskStatus) {
-  if (status === "done") return "border-emerald-200 bg-emerald-50 text-emerald-700";
-  if (status === "in_progress") return "border-sky-200 bg-sky-50 text-sky-700";
-  if (status === "blocked") return "border-rose-200 bg-rose-50 text-rose-700";
-  return "border-slate-200 bg-slate-100 text-slate-700";
+  if (status === "done") return "border-emerald-200 bg-emerald-50 text-emerald-700 dark:border-emerald-400/30 dark:bg-emerald-500/12 dark:text-emerald-200";
+  if (status === "in_progress") return "border-sky-200 bg-sky-50 text-sky-700 dark:border-sky-400/30 dark:bg-sky-400/12 dark:text-sky-200";
+  if (status === "blocked") return "border-rose-200 bg-rose-50 text-rose-700 dark:border-rose-400/30 dark:bg-rose-400/12 dark:text-rose-200";
+  return "border-slate-200 bg-slate-100 text-slate-700 dark:border-slate-700/60 dark:bg-slate-900/80 dark:text-slate-200";
 }
 
 function formatStatusLabel(status: TaskStatus) {
@@ -383,12 +387,12 @@ export function TasksPage() {
                   ))}
                 </select>
               </div>
-              {submitError ? <p className="rounded-lg bg-rose-50 px-3 py-2 text-sm font-semibold text-rose-700">{submitError}</p> : null}
+              {submitError ? <p className="rounded-lg bg-rose-50 px-3 py-2 text-sm font-semibold text-rose-700 dark:border dark:border-rose-400/30 dark:bg-rose-400/10 dark:text-rose-200">{submitError}</p> : null}
               <button type="button" onClick={() => void handleCreateTask()} disabled={submitting} className="btn-primary w-full">
                 <Plus className="h-4 w-4" />
                 {submitting ? "Creating task..." : "Create task"}
               </button>
-              {!canAssign ? <p className="text-xs font-semibold text-brand-600">You can only create tasks assigned to yourself.</p> : null}
+              {!canAssign ? <p className="text-xs font-semibold text-brand-600 dark:text-brand-300">You can only create tasks assigned to yourself.</p> : null}
             </div>
           </SectionCard>
         </div>
@@ -412,34 +416,34 @@ export function TasksPage() {
               />
 
               {tasksHook.loading ? (
-                <div className="space-y-2 rounded-xl border border-slate-200 bg-white p-3">
+                <div className="space-y-2 rounded-xl border border-slate-200 bg-white p-3 dark:border-slate-700/60 dark:bg-slate-950/80">
                   {Array.from({ length: PAGE_SIZE }).map((_, index) => (
-                    <div key={index} className="h-10 animate-pulse rounded-lg bg-slate-100" />
+                    <div key={index} className="h-10 animate-pulse rounded-lg bg-slate-100 dark:bg-slate-800" />
                   ))}
                 </div>
               ) : null}
 
-              {tasksHook.error ? <p className="text-sm font-semibold text-rose-700">{tasksHook.error}</p> : null}
+              {tasksHook.error ? <p className="text-sm font-semibold text-rose-700 dark:text-rose-200">{tasksHook.error}</p> : null}
 
-              <div className="overflow-hidden rounded-xl border border-slate-200 bg-white">
+              <div className="overflow-hidden rounded-xl border border-slate-200 bg-white dark:border-slate-700/60 dark:bg-slate-950/80">
                 <div className="overflow-x-auto custom-scrollbar">
                   <table className="min-w-full table-fixed border-collapse">
-                    <thead className="border-b border-slate-200 bg-white">
-                      <tr className="h-10">
-                        <th className="w-[8%] px-3 text-left text-[12px] font-normal uppercase tracking-[0.14em] text-slate-500">#</th>
-                        <th className="w-[18%] px-3 text-left text-[12px] font-normal uppercase tracking-[0.14em] text-slate-500">Assigned Date</th>
-                        <th className="w-[26%] px-3 text-left text-[12px] font-normal uppercase tracking-[0.14em] text-slate-500">Task</th>
-                        {isAdminView ? <th className="w-[18%] px-3 text-left text-[12px] font-normal uppercase tracking-[0.14em] text-slate-500">Assignee</th> : null}
-                        <th className="w-[12%] px-3 text-left text-[12px] font-normal uppercase tracking-[0.14em] text-slate-500">Due</th>
-                        <th className="w-[10%] px-3 text-left text-[12px] font-normal uppercase tracking-[0.14em] text-slate-500">Priority</th>
-                        <th className="w-[10%] px-3 text-left text-[12px] font-normal uppercase tracking-[0.14em] text-slate-500">Status</th>
-                        {isAdminView ? <th className="w-[4%] px-3 text-right text-[12px] font-normal uppercase tracking-[0.14em] text-slate-500" /> : null}
-                      </tr>
-                    </thead>
+                      <thead className="border-b border-slate-200 bg-white dark:border-slate-700/60 dark:bg-slate-900/80">
+                        <tr className="h-10">
+                          <th className="w-[3rem] px-2 text-left text-[12px] font-normal uppercase tracking-[0.14em] text-slate-500 dark:text-slate-300">#</th>
+                          <th className="w-[7rem] px-2 text-left text-[12px] font-normal uppercase tracking-[0.14em] text-slate-500 dark:text-slate-300">Assigned Date</th>
+                          <th className="min-w-0 px-2 text-left text-[12px] font-normal uppercase tracking-[0.14em] text-slate-500 dark:text-slate-300">Task</th>
+                          {isAdminView ? <th className="w-[12rem] px-2 text-left text-[12px] font-normal uppercase tracking-[0.14em] text-slate-500 dark:text-slate-300">Assignee</th> : null}
+                          <th className="w-[7rem] px-2 text-left text-[12px] font-normal uppercase tracking-[0.14em] text-slate-500 dark:text-slate-300">Due</th>
+                          <th className="w-[7rem] px-2 text-left text-[12px] font-normal uppercase tracking-[0.14em] text-slate-500 dark:text-slate-300">Priority</th>
+                          <th className="w-[12rem] px-2 text-left text-[12px] font-normal uppercase tracking-[0.14em] text-slate-500 dark:text-slate-300">Status</th>
+                          {isAdminView ? <th className="w-[3rem] px-2 text-right text-[12px] font-normal uppercase tracking-[0.14em] text-slate-500 dark:text-slate-300" /> : null}
+                        </tr>
+                      </thead>
                     <tbody>
                       {pagedTasks.length === 0 ? (
                         <tr>
-                          <td colSpan={isAdminView ? 8 : 6} className="px-4 py-10 text-center text-sm font-medium text-slate-500">
+                          <td colSpan={isAdminView ? 8 : 6} className="px-4 py-10 text-center text-sm font-medium text-slate-500 dark:text-slate-300">
                             No tasks found
                           </td>
                         </tr>
@@ -447,64 +451,67 @@ export function TasksPage() {
                         pagedTasks.map((task, index) => {
                           const taskNumber = (page - 1) * PAGE_SIZE + index + 1;
                           return (
-                            <tr key={task.id} className="h-[40px] border-b border-slate-200 last:border-0 bg-white hover:bg-slate-50">
-                              <td className="px-3 py-0.5 align-middle text-[13px] font-semibold leading-tight text-slate-900">{taskNumber}</td>
-                              <td className="px-3 py-0.5 align-middle text-[13px] leading-tight text-slate-900" title={task.createdAt}>
+                            <tr key={task.id} className="h-[40px] border-b border-slate-200 last:border-0 bg-white hover:bg-slate-50 dark:border-slate-800/80 dark:bg-slate-950/70 dark:hover:bg-slate-900/80">
+                              <td className="px-2 py-0.5 align-middle text-[13px] font-semibold leading-tight text-slate-900 dark:text-slate-100">{taskNumber}</td>
+                              <td className="whitespace-nowrap px-2 py-0.5 align-middle text-[13px] leading-tight text-slate-900 dark:text-slate-100" title={task.createdAt}>
                                 {formatNumericDate(task.createdAt)}
                               </td>
-                              <td className="min-w-0 px-3 py-0.5 align-middle">
+                              <td className="min-w-0 px-2 py-0.5 align-middle">
                                 <button type="button" onClick={() => setSelectedTask(task)} className="min-w-0 text-left" title={task.title}>
-                                  <p className="truncate text-[13px] font-medium leading-tight text-slate-900">{task.title}</p>
+                                  <p className="truncate text-[13px] font-medium leading-tight text-slate-900 dark:text-slate-50">{task.title}</p>
                                 </button>
                               </td>
                               {isAdminView ? (
-                                <td className="px-3 py-0.5 align-middle">
-                                  <p className="truncate text-[13px] leading-tight text-slate-900" title={resolveAssigneeLabel(task)}>
+                                <td className="px-2 py-0.5 align-middle">
+                                  <p className="truncate text-[13px] leading-tight text-slate-900 dark:text-slate-100" title={resolveAssigneeLabel(task)}>
                                     {resolveAssigneeLabel(task)}
                                   </p>
                                 </td>
                               ) : null}
                               <td
-                                className={`px-3 py-0.5 align-middle text-[13px] leading-tight ${isOverdue(task) ? "font-semibold text-rose-700" : "text-slate-900"}`}
+                                className={`whitespace-nowrap px-2 py-0.5 align-middle text-[13px] leading-tight ${isOverdue(task) ? "font-semibold text-rose-700 dark:text-rose-300" : "text-slate-900 dark:text-slate-100"}`}
                                 title={task.dueDate ?? "No due date"}
                               >
                                 {task.dueDate ? formatNumericDate(task.dueDate) : "No due date"}
                               </td>
-                              <td className="px-3 py-0.5 align-middle">
+                              <td className="whitespace-nowrap px-2 py-0.5 align-middle">
                                 <span className={`inline-flex items-center rounded-full border px-2.5 py-0.5 text-[11px] font-semibold ${priorityTone(task.priority)}`}>
                                   {formatPriorityLabel(task.priority)}
                                 </span>
                               </td>
-                              <td className="px-3 py-0.5 align-middle">
-                                <select
-                                  value={task.status}
-                                  onChange={(event) => void handleStatusChange(task.id, event.target.value as TaskStatus)}
-                                  disabled={updatingId === task.id}
-                                  className={`w-full max-w-[132px] rounded-full border px-2 py-0.5 text-[11px] font-semibold leading-tight outline-none ${statusTone(task.status)}`}
-                                >
-                                  {statusOptions.map((status) => (
-                                    <option key={status} value={status}>
-                                      {formatStatusLabel(status)}
-                                    </option>
-                                  ))}
-                                </select>
+                              <td className="px-2 py-0.5 align-middle">
+                                <div className="relative w-full">
+                                  <select
+                                    value={task.status}
+                                    onChange={(event) => void handleStatusChange(task.id, event.target.value as TaskStatus)}
+                                    disabled={updatingId === task.id}
+                                    className={`w-full appearance-none rounded-full border px-2 py-0.5 pr-7 text-[11px] font-semibold leading-tight outline-none ${statusTone(task.status)}`}
+                                  >
+                                    {statusOptions.map((status) => (
+                                      <option key={status} value={status}>
+                                        {formatStatusLabel(status)}
+                                      </option>
+                                    ))}
+                                  </select>
+                                  <ChevronDown className="pointer-events-none absolute right-2 top-1/2 h-3 w-3 -translate-y-1/2 text-current opacity-60" />
+                                </div>
                               </td>
                               {isAdminView ? (
-                                <td className="relative px-3 py-0.5 align-middle text-right">
+                                <td className="relative px-2 py-0.5 align-middle text-right">
                                   <button
                                     type="button"
                                     onClick={() => setOpenRowMenuId((current) => (current === task.id ? null : task.id))}
-                                    className="inline-flex h-6 w-6 items-center justify-center rounded-none border-0 bg-transparent text-slate-700 hover:text-slate-950"
+                                    className="inline-flex h-6 w-6 items-center justify-center rounded-none border-0 bg-transparent text-slate-700 hover:text-slate-950 dark:text-slate-300 dark:hover:text-slate-50"
                                     aria-label="Task actions"
                                   >
                                     <MoreVertical className="h-4 w-4" />
                                   </button>
                                   {openRowMenuId === task.id ? (
-                                    <div className="absolute right-3 top-10 z-10 w-32 overflow-hidden rounded-xl border border-slate-200 bg-white shadow-lg">
+                                    <div className="absolute right-3 top-10 z-10 w-32 overflow-hidden rounded-xl border border-slate-200 bg-white shadow-lg dark:border-slate-700/60 dark:bg-slate-950/95">
                                       <button
                                         type="button"
                                         onClick={() => void handleRemoveTask(task)}
-                                        className="flex w-full items-center gap-2 px-3 py-2 text-left text-sm font-medium text-rose-700 hover:bg-rose-50"
+                                        className="flex w-full items-center gap-2 px-3 py-2 text-left text-sm font-medium text-rose-700 hover:bg-rose-50 dark:text-rose-200 dark:hover:bg-rose-400/10"
                                       >
                                         <Trash2 className="h-3.5 w-3.5" />
                                         Remove
@@ -512,7 +519,7 @@ export function TasksPage() {
                                       <button
                                         type="button"
                                         onClick={() => openEditTask(task)}
-                                        className="flex w-full items-center gap-2 px-3 py-2 text-left text-sm font-medium text-slate-700 hover:bg-slate-50"
+                                        className="flex w-full items-center gap-2 px-3 py-2 text-left text-sm font-medium text-slate-700 hover:bg-slate-50 dark:text-slate-200 dark:hover:bg-slate-800"
                                       >
                                         <PencilLine className="h-3.5 w-3.5" />
                                         Edit
@@ -544,37 +551,37 @@ export function TasksPage() {
 
       {selectedTaskResolved ? (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-950/40 px-4" onClick={() => setSelectedTask(null)}>
-          <div className="w-full max-w-2xl rounded-2xl border border-slate-200 bg-white p-5 shadow-2xl" onClick={(event) => event.stopPropagation()}>
+          <div className="w-full max-w-2xl rounded-2xl border border-slate-200 bg-white p-5 shadow-2xl dark:border-slate-700/60 dark:bg-slate-950/95" onClick={(event) => event.stopPropagation()}>
             <div className="flex items-start justify-between gap-4">
               <div>
-                <p className="text-xs font-black uppercase tracking-[0.18em] text-slate-400">Task Details</p>
-                <h3 className="mt-2 text-xl font-black text-slate-950">{selectedTaskResolved.title}</h3>
+                <p className="text-xs font-black uppercase tracking-[0.18em] text-slate-400 dark:text-slate-500">Task Details</p>
+                <h3 className="mt-2 text-xl font-black text-slate-950 dark:text-slate-50">{selectedTaskResolved.title}</h3>
               </div>
-              <button type="button" onClick={() => setSelectedTask(null)} className="rounded-lg border border-slate-200 bg-white p-2 text-slate-500">
+              <button type="button" onClick={() => setSelectedTask(null)} className="rounded-lg border border-slate-200 bg-white p-2 text-slate-500 dark:border-slate-700/60 dark:bg-slate-900/80 dark:text-slate-300">
                 <X className="h-4 w-4" />
               </button>
             </div>
             <div className="mt-5 grid gap-4 md:grid-cols-2">
               <div>
-                <p className="text-[11px] font-black uppercase tracking-[0.16em] text-slate-400">Assignee</p>
-                <p className="mt-1 text-sm font-semibold text-slate-900">{resolveAssigneeLabel(selectedTaskResolved)}</p>
+                <p className="text-[11px] font-black uppercase tracking-[0.16em] text-slate-400 dark:text-slate-500">Assignee</p>
+                <p className="mt-1 text-sm font-semibold text-slate-900 dark:text-slate-100">{resolveAssigneeLabel(selectedTaskResolved)}</p>
               </div>
               <div>
-                <p className="text-[11px] font-black uppercase tracking-[0.16em] text-slate-400">Due</p>
-                <p className="mt-1 text-sm font-semibold text-slate-900">{formatTaskDue(selectedTaskResolved)}</p>
+                <p className="text-[11px] font-black uppercase tracking-[0.16em] text-slate-400 dark:text-slate-500">Due</p>
+                <p className="mt-1 text-sm font-semibold text-slate-900 dark:text-slate-100">{formatTaskDue(selectedTaskResolved)}</p>
               </div>
               <div>
-                <p className="text-[11px] font-black uppercase tracking-[0.16em] text-slate-400">Priority</p>
-                <p className="mt-1 text-sm font-semibold text-slate-900">{formatPriorityLabel(selectedTaskResolved.priority)}</p>
+                <p className="text-[11px] font-black uppercase tracking-[0.16em] text-slate-400 dark:text-slate-500">Priority</p>
+                <p className="mt-1 text-sm font-semibold text-slate-900 dark:text-slate-100">{formatPriorityLabel(selectedTaskResolved.priority)}</p>
               </div>
               <div>
-                <p className="text-[11px] font-black uppercase tracking-[0.16em] text-slate-400">Status</p>
-                <p className="mt-1 text-sm font-semibold text-slate-900">{formatStatusLabel(selectedTaskResolved.status)}</p>
+                <p className="text-[11px] font-black uppercase tracking-[0.16em] text-slate-400 dark:text-slate-500">Status</p>
+                <p className="mt-1 text-sm font-semibold text-slate-900 dark:text-slate-100">{formatStatusLabel(selectedTaskResolved.status)}</p>
               </div>
             </div>
             <div className="mt-4">
-              <p className="text-[11px] font-black uppercase tracking-[0.16em] text-slate-400">Description</p>
-              <p className="mt-1 text-sm leading-6 text-slate-700">{selectedTaskResolved.description || "No task description provided."}</p>
+              <p className="text-[11px] font-black uppercase tracking-[0.16em] text-slate-400 dark:text-slate-500">Description</p>
+              <p className="mt-1 text-sm leading-6 text-slate-700 dark:text-slate-300">{selectedTaskResolved.description || "No task description provided."}</p>
             </div>
           </div>
         </div>
@@ -582,13 +589,13 @@ export function TasksPage() {
 
       {isAdminView && editingTaskResolved && editFormState ? (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-950/40 px-4" onClick={closeEditTask}>
-          <div className="w-full max-w-2xl rounded-2xl border border-slate-200 bg-white p-5 shadow-2xl" onClick={(event) => event.stopPropagation()}>
+          <div className="w-full max-w-2xl rounded-2xl border border-slate-200 bg-white p-5 shadow-2xl dark:border-slate-700/60 dark:bg-slate-950/95" onClick={(event) => event.stopPropagation()}>
             <div className="flex items-start justify-between gap-4">
               <div>
-                <p className="text-xs font-black uppercase tracking-[0.18em] text-slate-400">Edit Task</p>
-                <h3 className="mt-2 text-xl font-black text-slate-950">{editingTaskResolved.title}</h3>
+                <p className="text-xs font-black uppercase tracking-[0.18em] text-slate-400 dark:text-slate-500">Edit Task</p>
+                <h3 className="mt-2 text-xl font-black text-slate-950 dark:text-slate-50">{editingTaskResolved.title}</h3>
               </div>
-              <button type="button" onClick={closeEditTask} className="rounded-lg border border-slate-200 bg-white p-2 text-slate-500">
+              <button type="button" onClick={closeEditTask} className="rounded-lg border border-slate-200 bg-white p-2 text-slate-500 dark:border-slate-700/60 dark:bg-slate-900/80 dark:text-slate-300">
                 <X className="h-4 w-4" />
               </button>
             </div>
@@ -652,9 +659,9 @@ export function TasksPage() {
                   ))}
                 </select>
               </div>
-              {editingError ? <p className="rounded-lg bg-rose-50 px-3 py-2 text-sm font-semibold text-rose-700">{editingError}</p> : null}
+              {editingError ? <p className="rounded-lg bg-rose-50 px-3 py-2 text-sm font-semibold text-rose-700 dark:border dark:border-rose-400/30 dark:bg-rose-400/10 dark:text-rose-200">{editingError}</p> : null}
               <div className="flex items-center justify-end gap-3 pt-1">
-                <button type="button" onClick={closeEditTask} className="rounded-lg border border-slate-200 bg-white px-4 py-2 text-sm font-semibold text-slate-700">
+                <button type="button" onClick={closeEditTask} className="rounded-lg border border-slate-200 bg-white px-4 py-2 text-sm font-semibold text-slate-700 dark:border-slate-700/60 dark:bg-slate-900/80 dark:text-slate-200">
                   Cancel
                 </button>
                 <button type="button" onClick={() => void handleEditTask()} disabled={editingSubmitting} className="btn-primary px-4 py-2">

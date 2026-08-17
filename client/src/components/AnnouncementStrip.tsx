@@ -17,8 +17,8 @@ const toneMap: Record<Announcement["tone"], string> = {
 export function AnnouncementStrip({ announcements, loading = false }: AnnouncementStripProps) {
   if (loading) {
     return (
-      <section className="mt-6 rounded-[28px] border border-white/45 bg-white/72 p-5 shadow-[0_22px_55px_rgba(15,23,42,0.12)] backdrop-blur">
-        <p className="text-sm font-semibold text-slate-700">Loading workspace updates...</p>
+      <section className="mt-6 rounded-[28px] border border-white/45 bg-white/72 p-5 shadow-[0_22px_55px_rgba(15,23,42,0.12)] backdrop-blur dark:border-slate-700/60 dark:bg-slate-950/80">
+        <p className="text-sm font-semibold text-slate-700 dark:text-slate-300">Loading workspace updates...</p>
       </section>
     );
   }
@@ -28,14 +28,14 @@ export function AnnouncementStrip({ announcements, loading = false }: Announceme
   }
 
   return (
-    <section className="mt-6 rounded-[32px] border border-white/45 bg-white/68 p-5 shadow-[0_24px_60px_rgba(15,23,42,0.12)] backdrop-blur">
+    <section className="mt-6 rounded-[32px] border border-white/45 bg-white/68 p-5 shadow-[0_24px_60px_rgba(15,23,42,0.12)] backdrop-blur dark:border-slate-700/60 dark:bg-slate-950/78">
       <div className="flex items-center gap-3">
-        <span className="flex h-10 w-10 items-center justify-center rounded-2xl bg-slate-950 text-slate-100 shadow-[0_14px_34px_rgba(15,23,42,0.18)]">
+        <span className="flex h-10 w-10 items-center justify-center rounded-2xl bg-slate-950 text-slate-100 shadow-[0_14px_34px_rgba(15,23,42,0.18)] dark:bg-slate-800 dark:text-slate-100">
           <Megaphone className="h-4 w-4 text-slate-100" />
         </span>
         <div>
-          <p className="text-[0.68rem] font-black uppercase tracking-[0.2em] text-brand-800">Workspace Broadcasts</p>
-          <h2 className="text-lg font-semibold text-slate-950">What changed and what needs action</h2>
+          <p className="text-[0.68rem] font-black uppercase tracking-[0.2em] text-brand-800 dark:text-brand-300">Workspace Broadcasts</p>
+          <h2 className="text-lg font-semibold text-slate-950 dark:text-slate-50">What changed and what needs action</h2>
         </div>
       </div>
 
@@ -47,10 +47,10 @@ export function AnnouncementStrip({ announcements, loading = false }: Announceme
           return (
             <article
               key={announcement.id}
-              className={`h-full overflow-hidden rounded-[24px] border p-4 shadow-[0_12px_30px_rgba(15,23,42,0.06)] ${toneMap[announcement.tone]}`}
+              className={`h-full overflow-hidden rounded-[24px] border p-4 shadow-[0_12px_30px_rgba(15,23,42,0.06)] ${toneMap[announcement.tone]} dark:border-slate-700/60 dark:bg-slate-900/70 dark:text-slate-100`}
             >
               {announcement.graphicUrl ? (
-                <div className="mb-4 overflow-hidden rounded-[18px] border border-white/60 bg-white/70 shadow-[0_10px_24px_rgba(15,23,42,0.08)]">
+                <div className="mb-4 overflow-hidden rounded-[18px] border border-white/60 bg-white/70 shadow-[0_10px_24px_rgba(15,23,42,0.08)] dark:border-slate-700/60 dark:bg-slate-950/70">
                   <img
                     src={announcement.graphicUrl}
                     alt={announcement.graphicAlt ?? announcement.title}
@@ -59,20 +59,20 @@ export function AnnouncementStrip({ announcements, loading = false }: Announceme
                   />
                 </div>
               ) : (
-                <div className="mb-4 inline-flex items-center gap-2 rounded-full border border-white/60 bg-white/55 px-3 py-1.5 text-[0.65rem] font-black uppercase tracking-[0.16em] text-slate-600">
+                <div className="mb-4 inline-flex items-center gap-2 rounded-full border border-white/60 bg-white/55 px-3 py-1.5 text-[0.65rem] font-black uppercase tracking-[0.16em] text-slate-600 dark:border-slate-700/60 dark:bg-slate-900/70 dark:text-slate-300">
                   <ImageIcon className="h-3.5 w-3.5" />
                   Text update
                 </div>
               )}
-              <p className="text-[0.7rem] font-black uppercase tracking-[0.18em] text-slate-600">
+              <p className="text-[0.7rem] font-black uppercase tracking-[0.18em] text-slate-600 dark:text-slate-300">
                 {announcement.audience === "all" ? "All workspaces" : `${announcement.audience} workspace`}
               </p>
-              <h3 className="mt-3 break-words text-base font-semibold text-slate-950">{announcement.title}</h3>
-              <p className="mt-2 whitespace-pre-wrap break-words text-sm font-medium text-slate-700">{announcementBody}</p>
+              <h3 className="mt-3 break-words text-base font-semibold text-slate-950 dark:text-slate-50">{announcement.title}</h3>
+              <p className="mt-2 whitespace-pre-wrap break-words text-sm font-medium text-slate-700 dark:text-slate-300">{announcementBody}</p>
               {announcement.ctaLabel && announcement.ctaPath ? (
                 <Link
                   to={announcement.ctaPath}
-                  className="mt-4 inline-flex max-w-full items-center gap-2 break-words text-sm font-semibold text-slate-950 transition hover:opacity-80"
+                  className="mt-4 inline-flex max-w-full items-center gap-2 break-words text-sm font-semibold text-slate-950 transition hover:opacity-80 dark:text-slate-50"
                 >
                   {announcement.ctaLabel}
                   <ArrowRight className="h-4 w-4" />

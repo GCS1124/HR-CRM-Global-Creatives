@@ -65,7 +65,7 @@ export function EmployeeLeavePage() {
   }
 
   const columns: Array<TableColumn<LeaveRequest>> = [
-    { key: "type", header: "Type", render: (row) => <span className="font-bold text-slate-700">{row.leaveType.toUpperCase()}</span> },
+    { key: "type", header: "Type", render: (row) => <span className="font-bold text-slate-700 dark:text-slate-200">{row.leaveType.toUpperCase()}</span> },
     { key: "start", header: "Start", render: (row) => <span className="text-xs font-bold text-slate-500">{formatDate(row.startDate)}</span> },
     { key: "end", header: "End", render: (row) => <span className="text-xs font-bold text-slate-500">{formatDate(row.endDate)}</span> },
     { key: "days", header: "Days", render: (row) => <span className="font-black text-brand-700">{row.days}</span> },
@@ -75,7 +75,7 @@ export function EmployeeLeavePage() {
       key: "actions",
       header: "",
       render: (row) => row.status === "pending" ? (
-        <button onClick={() => handleDelete(row.id)} className="p-1.5 hover:bg-rose-50 rounded-lg text-slate-400 hover:text-rose-600 transition" title="Delete request">
+        <button onClick={() => handleDelete(row.id)} className="rounded-lg p-1.5 text-slate-400 transition hover:bg-rose-50 hover:text-rose-600 dark:text-slate-400 dark:hover:bg-rose-400/10 dark:hover:text-rose-300" title="Delete request">
           <Trash2 className="h-4 w-4" />
         </button>
       ) : null,
@@ -162,7 +162,7 @@ export function EmployeeLeavePage() {
                 <option value="casual">Casual</option>
                 <option value="unpaid">Unpaid</option>
               </select>
-              <div className="rounded-xl border border-brand-200 bg-brand-50 px-4 py-3 text-sm text-brand-700">
+              <div className="rounded-xl border border-brand-200 bg-brand-50 px-4 py-3 text-sm text-brand-700 dark:border-slate-700/60 dark:bg-slate-900/70 dark:text-slate-300">
                 Keep your reason specific and short so approvals move faster.
               </div>
             </div>
@@ -188,7 +188,7 @@ export function EmployeeLeavePage() {
               rows={4}
               className="input-surface w-full resize-none"
             />
-            {error ? <p className="rounded-lg bg-rose-100 px-3 py-2 text-sm font-semibold text-rose-700">{error}</p> : null}
+            {error ? <p className="rounded-lg bg-rose-100 px-3 py-2 text-sm font-semibold text-rose-700 dark:border dark:border-rose-400/30 dark:bg-rose-400/10 dark:text-rose-200">{error}</p> : null}
             <button
               type="submit"
               disabled={isSubmitting}
@@ -203,8 +203,8 @@ export function EmployeeLeavePage() {
 
       <div className="grid gap-4 xl:grid-cols-[1.2fr_0.8fr]">
         <SectionCard title="Leave History" subtitle="Your submitted requests">
-          {leaveHook.loading ? <p className="text-sm font-semibold text-brand-700">Loading leave history...</p> : null}
-          {leaveHook.error ? <p className="text-sm font-semibold text-rose-700">{leaveHook.error}</p> : null}
+          {leaveHook.loading ? <p className="text-sm font-semibold text-brand-700 dark:text-brand-300">Loading leave history...</p> : null}
+          {leaveHook.error ? <p className="text-sm font-semibold text-rose-700 dark:text-rose-200">{leaveHook.error}</p> : null}
           <DataTable
             columns={columns}
             rows={leaveHook.data ?? []}
@@ -216,20 +216,20 @@ export function EmployeeLeavePage() {
 
         <SectionCard title="Approval Notes" subtitle="Simple rules that keep requests moving">
           <div className="space-y-3">
-            <div className="rounded-2xl border border-emerald-200 bg-emerald-50 p-4">
-              <p className="inline-flex items-center gap-2 text-xs font-bold uppercase tracking-[0.12em] text-emerald-700">
+            <div className="rounded-2xl border border-emerald-200 bg-emerald-50 p-4 dark:border-emerald-400/20 dark:bg-emerald-500/10">
+              <p className="inline-flex items-center gap-2 text-xs font-bold uppercase tracking-[0.12em] text-emerald-700 dark:text-emerald-200">
                 <Flag className="h-3.5 w-3.5" />
                 Plan early
               </p>
-              <p className="mt-2 text-sm font-medium text-emerald-900">Submit planned leave before peak delivery windows when possible.</p>
+              <p className="mt-2 text-sm font-medium text-emerald-900 dark:text-emerald-100">Submit planned leave before peak delivery windows when possible.</p>
             </div>
-            <div className="rounded-2xl border border-sky-200 bg-sky-50 p-4">
-              <p className="text-xs font-bold uppercase tracking-[0.12em] text-sky-700">Clear reason</p>
-              <p className="mt-2 text-sm font-medium text-sky-900">A short, clear reason reduces follow-up and speeds approvals.</p>
+            <div className="rounded-2xl border border-sky-200 bg-sky-50 p-4 dark:border-sky-400/20 dark:bg-sky-500/10">
+              <p className="text-xs font-bold uppercase tracking-[0.12em] text-sky-700 dark:text-sky-200">Clear reason</p>
+              <p className="mt-2 text-sm font-medium text-sky-900 dark:text-sky-100">A short, clear reason reduces follow-up and speeds approvals.</p>
             </div>
-            <div className="rounded-2xl border border-amber-200 bg-amber-50 p-4">
-              <p className="text-xs font-bold uppercase tracking-[0.12em] text-amber-700">Latest status</p>
-              <p className="mt-2 text-sm font-medium text-amber-900">
+            <div className="rounded-2xl border border-amber-200 bg-amber-50 p-4 dark:border-amber-400/20 dark:bg-amber-500/10">
+              <p className="text-xs font-bold uppercase tracking-[0.12em] text-amber-700 dark:text-amber-200">Latest status</p>
+              <p className="mt-2 text-sm font-medium text-amber-900 dark:text-amber-100">
                 {latestLeave ? `Your newest request is currently ${latestLeave.status}.` : "No request is currently in review."}
               </p>
             </div>

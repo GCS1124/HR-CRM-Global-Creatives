@@ -115,24 +115,24 @@ export function WorkspaceCommandPalette({
 
   return (
     <div className="fixed inset-0 z-50 flex items-start justify-center bg-slate-950/38 px-4 py-10 backdrop-blur-sm">
-      <div className="w-full max-w-3xl overflow-hidden rounded-[30px] border border-white/40 bg-white/86 shadow-[0_38px_120px_rgba(15,23,42,0.24)] backdrop-blur-xl">
-        <div className="border-b border-slate-200/80 px-5 py-4">
-          <div className="flex items-center gap-3 rounded-2xl border border-slate-200/80 bg-white px-4 py-3 shadow-[0_10px_24px_rgba(15,23,42,0.06)]">
-            <Search className="h-4 w-4 text-slate-500" />
+      <div className="w-full max-w-3xl overflow-hidden rounded-[30px] border border-white/40 bg-white/86 shadow-[0_38px_120px_rgba(15,23,42,0.24)] backdrop-blur-xl dark:border-slate-700/60 dark:bg-slate-950/92 dark:shadow-[0_38px_120px_rgba(2,6,23,0.6)]">
+        <div className="border-b border-slate-200/80 px-5 py-4 dark:border-slate-700/60">
+          <div className="flex items-center gap-3 rounded-2xl border border-slate-200/80 bg-white px-4 py-3 shadow-[0_10px_24px_rgba(15,23,42,0.06)] dark:border-slate-700/60 dark:bg-slate-900/80 dark:shadow-[0_10px_24px_rgba(2,6,23,0.35)]">
+            <Search className="h-4 w-4 text-slate-500 dark:text-slate-300" />
             <input
               ref={inputRef}
               value={query}
               onChange={(event) => setQuery(event.target.value)}
               placeholder={`Search ${workspaceLabel.toLowerCase()} routes and actions`}
-              className="w-full border-0 bg-transparent p-0 text-sm font-medium text-slate-950 outline-none placeholder:text-slate-400"
+              className="w-full border-0 bg-transparent p-0 text-sm font-medium text-slate-950 outline-none placeholder:text-slate-400 dark:text-slate-50 dark:placeholder:text-slate-500"
             />
-            <span className="rounded-full border border-slate-200 px-2 py-1 text-[0.65rem] font-bold uppercase tracking-[0.18em] text-slate-500">
+            <span className="rounded-full border border-slate-200 px-2 py-1 text-[0.65rem] font-bold uppercase tracking-[0.18em] text-slate-500 dark:border-slate-700/60 dark:text-slate-300">
               Esc
             </span>
             <button
               type="button"
               onClick={onClose}
-              className="rounded-full border border-slate-200 bg-white p-1 text-slate-500 transition hover:text-slate-700"
+              className="rounded-full border border-slate-200 bg-white p-1 text-slate-500 transition hover:text-slate-700 dark:border-slate-700/60 dark:bg-slate-900/80 dark:text-slate-300 dark:hover:text-slate-100"
               aria-label="Close search"
             >
               <X className="h-3.5 w-3.5" />
@@ -143,10 +143,10 @@ export function WorkspaceCommandPalette({
         <div className="max-h-[60vh] overflow-y-auto p-4">
           <div className="mb-3 flex items-center justify-between gap-3 px-2">
             <div>
-              <p className="text-[0.68rem] font-black uppercase tracking-[0.2em] text-brand-800">Quick Command</p>
-              <p className="text-sm font-medium text-slate-600">Navigate faster across the HR CRM shell.</p>
+              <p className="text-[0.68rem] font-black uppercase tracking-[0.2em] text-brand-800 dark:text-brand-300">Quick Command</p>
+              <p className="text-sm font-medium text-slate-600 dark:text-slate-300">Navigate faster across the HR CRM shell.</p>
             </div>
-            <div className="hidden items-center gap-2 rounded-full border border-slate-200 bg-white px-3 py-1.5 text-[0.7rem] font-semibold text-slate-500 sm:inline-flex">
+            <div className="hidden items-center gap-2 rounded-full border border-slate-200 bg-white px-3 py-1.5 text-[0.7rem] font-semibold text-slate-500 sm:inline-flex dark:border-slate-700/60 dark:bg-slate-900/80 dark:text-slate-300">
               <CornerDownLeft className="h-3.5 w-3.5" />
               Press Enter on a result
             </div>
@@ -154,16 +154,16 @@ export function WorkspaceCommandPalette({
 
           <div className="grid gap-2">
             {filteredItems.length === 0 ? (
-              <div className="rounded-2xl border border-dashed border-slate-300 bg-slate-50/80 px-4 py-8 text-center">
-                <p className="text-sm font-semibold text-slate-700">No matching route or action.</p>
-                <p className="mt-1 text-sm text-slate-500">Try searching for attendance, payroll, leave, or alerts.</p>
+              <div className="rounded-2xl border border-dashed border-slate-300 bg-slate-50/80 px-4 py-8 text-center dark:border-slate-700/60 dark:bg-slate-900/70">
+                <p className="text-sm font-semibold text-slate-700 dark:text-slate-200">No matching route or action.</p>
+                <p className="mt-1 text-sm text-slate-500 dark:text-slate-400">Try searching for attendance, payroll, leave, or alerts.</p>
               </div>
             ) : null}
 
             {groupedItems.map((section) => (
               <div key={section.group ?? "default"} className="space-y-2">
                 {section.group ? (
-                  <p className="px-2 text-[0.62rem] font-black uppercase tracking-[0.22em] text-slate-400">
+                  <p className="px-2 text-[0.62rem] font-black uppercase tracking-[0.22em] text-slate-400 dark:text-slate-500">
                     {section.group}
                   </p>
                 ) : null}
@@ -173,15 +173,15 @@ export function WorkspaceCommandPalette({
                       key={item.id}
                       type="button"
                       onClick={item.perform}
-                      className="flex w-full items-center justify-between gap-3 rounded-2xl border border-slate-200/80 bg-white px-4 py-3 text-left transition hover:-translate-y-0.5 hover:border-brand-200 hover:shadow-[0_14px_34px_rgba(15,23,42,0.08)]"
+                      className="flex w-full items-center justify-between gap-3 rounded-2xl border border-slate-200/80 bg-white px-4 py-3 text-left transition hover:-translate-y-0.5 hover:border-brand-200 hover:shadow-[0_14px_34px_rgba(15,23,42,0.08)] dark:border-slate-700/60 dark:bg-slate-900/80 dark:hover:border-brand-300/40 dark:hover:shadow-[0_14px_34px_rgba(2,6,23,0.45)]"
                     >
                       <div className="flex min-w-0 items-center gap-3">
-                        <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl bg-brand-50 text-brand-700">
+                        <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl bg-brand-50 text-brand-700 dark:bg-brand-500/15 dark:text-brand-200">
                           <item.icon className="h-4 w-4" />
                         </span>
                         <div className="min-w-0">
-                          <p className="truncate text-sm font-semibold text-slate-950">{item.label}</p>
-                          <p className="truncate text-sm text-slate-500">{item.description}</p>
+                          <p className="truncate text-sm font-semibold text-slate-950 dark:text-slate-50">{item.label}</p>
+                          <p className="truncate text-sm text-slate-500 dark:text-slate-400">{item.description}</p>
                         </div>
                       </div>
                     </button>

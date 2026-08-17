@@ -514,10 +514,10 @@ export function EmployeeAttendancePage() {
 
       
 
-      {recordsHook.loading ? <p className="text-sm font-semibold text-brand-700">Loading attendance summary...</p> : null}
-      {recordsHook.error ? <p className="text-sm font-semibold text-rose-700">{recordsHook.error}</p> : null}
+      {recordsHook.loading ? <p className="text-sm font-semibold text-brand-700 dark:text-brand-300">Loading attendance summary...</p> : null}
+      {recordsHook.error ? <p className="text-sm font-semibold text-rose-700 dark:text-rose-200">{recordsHook.error}</p> : null}
       {correctionMessage ? (
-        <p className="rounded-xl border border-emerald-100 bg-emerald-50 px-4 py-3 text-sm font-semibold text-emerald-700">
+        <p className="rounded-xl border border-emerald-100 bg-emerald-50 px-4 py-3 text-sm font-semibold text-emerald-700 dark:border-emerald-400/20 dark:bg-emerald-500/10 dark:text-emerald-200">
           {correctionMessage}
         </p>
       ) : null}
@@ -825,8 +825,8 @@ export function EmployeeAttendancePage() {
       
 
       <SectionCard title="Attendance Timeline" subtitle="Your recent attendance records">
-        {recordsHook.loading ? <p className="text-sm font-semibold text-brand-700">Loading attendance records...</p> : null}
-        {recordsHook.error ? <p className="text-sm font-semibold text-rose-700">{recordsHook.error}</p> : null}
+        {recordsHook.loading ? <p className="text-sm font-semibold text-brand-700 dark:text-brand-300">Loading attendance records...</p> : null}
+        {recordsHook.error ? <p className="text-sm font-semibold text-rose-700 dark:text-rose-200">{recordsHook.error}</p> : null}
         <DataTable
           columns={columns}
           rows={recordsHook.data ?? []}
@@ -838,23 +838,23 @@ export function EmployeeAttendancePage() {
 
       {showCorrectionModal ? (
         <div className="fixed inset-0 z-[100] flex items-center justify-center bg-slate-950/60 px-4 py-6 backdrop-blur-sm">
-          <div className="w-full max-w-xl rounded-[28px] border border-slate-200 bg-white shadow-panel">
-            <div className="flex items-start justify-between gap-4 border-b border-slate-100 px-6 py-5">
+          <div className="w-full max-w-xl rounded-[28px] border border-slate-200 bg-white shadow-panel dark:border-slate-700/60 dark:bg-slate-950/95">
+            <div className="flex items-start justify-between gap-4 border-b border-slate-100 px-6 py-5 dark:border-slate-700/60">
               <div>
-                <p className="text-[0.68rem] font-black uppercase tracking-[0.18em] text-brand-700">
+                <p className="text-[0.68rem] font-black uppercase tracking-[0.18em] text-brand-700 dark:text-brand-300">
                   Attendance Support
                 </p>
-                <h2 className="mt-2 text-xl font-black tracking-tight text-slate-950">
+                <h2 className="mt-2 text-xl font-black tracking-tight text-slate-950 dark:text-slate-50">
                   Request an attendance correction
                 </h2>
-                <p className="mt-1 text-sm font-semibold text-slate-500">
+                <p className="mt-1 text-sm font-semibold text-slate-500 dark:text-slate-300">
                   Submit the correct timings and a short note for admin review.
                 </p>
               </div>
               <button
                 type="button"
                 onClick={() => setShowCorrectionModal(false)}
-                className="rounded-full border border-slate-200 px-3 py-1 text-xs font-semibold uppercase tracking-[0.2em] text-slate-500 transition hover:bg-slate-50"
+                className="rounded-full border border-slate-200 px-3 py-1 text-xs font-semibold uppercase tracking-[0.2em] text-slate-500 transition hover:bg-slate-50 dark:border-slate-700/60 dark:bg-slate-900/80 dark:text-slate-300 dark:hover:bg-slate-800"
               >
                 Close
               </button>
@@ -873,7 +873,7 @@ export function EmployeeAttendancePage() {
                     className="input-surface w-full"
                   />
                 </div>
-                <div className="rounded-2xl border border-brand-100 bg-brand-50 px-4 py-3 text-sm font-semibold text-brand-800">
+                <div className="rounded-2xl border border-brand-100 bg-brand-50 px-4 py-3 text-sm font-semibold text-brand-800 dark:border-slate-700/60 dark:bg-slate-900/70 dark:text-slate-300">
                   Admin will compare your request with the existing record before applying changes.
                 </div>
               </div>
@@ -917,7 +917,7 @@ export function EmployeeAttendancePage() {
               </div>
 
               {correctionError ? (
-                <p className="rounded-xl border border-rose-100 bg-rose-50 px-4 py-3 text-sm font-semibold text-rose-700">
+                <p className="rounded-xl border border-rose-100 bg-rose-50 px-4 py-3 text-sm font-semibold text-rose-700 dark:border-rose-400/30 dark:bg-rose-400/10 dark:text-rose-200">
                   {correctionError}
                 </p>
               ) : null}
@@ -938,5 +938,4 @@ export function EmployeeAttendancePage() {
     </div>
   );
 }
-
 

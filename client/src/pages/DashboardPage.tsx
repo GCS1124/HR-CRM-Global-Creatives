@@ -83,7 +83,7 @@ export function DashboardPage() {
       <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
         <StatCard title="Total Headcount" value={String(overview.metrics.totalEmployees)} icon={Users} hint={`${overview.metrics.activeEmployees} active profiles`} accent />
         <StatCard title="Open Positions" value={String(overview.metrics.activeOpenings)} icon={BriefcaseBusiness} hint="Active talent intake" />
-        <StatCard title="Presence Rate" value={formatPercent(overview.metrics.attendanceRate)} icon={Clock3} hint={`${command.attendanceBreakdown.late} late today`} />
+        <StatCard title="On-Time Rate" value={formatPercent(overview.metrics.attendanceRate)} icon={Clock3} hint={`${command.attendanceBreakdown.late} late today`} />
         <StatCard title="Cycle Exposure" value={formatCurrency(overview.metrics.payrollTotal)} icon={CircleDollarSign} hint={`${command.payrollHealth.processedCount} processed`} />
       </div>
 

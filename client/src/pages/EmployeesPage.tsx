@@ -542,12 +542,16 @@ export function EmployeesPage() {
                   </div>
                 </div>
 
-                <div className="space-y-2">
-                  <div className="flex justify-between items-center">
-                    <label className="text-[0.6rem] font-black uppercase tracking-widest text-slate-400 ml-1">Performance</label>
-                    <span className="text-xs font-black text-brand-700">{editState.performanceScore}%</span>
+                <div className="rounded-xl border border-slate-200 bg-slate-50 px-4 py-3">
+                  <div className="flex items-center justify-between gap-3">
+                    <div>
+                      <label className="text-[0.6rem] font-black uppercase tracking-widest text-slate-400 ml-1">Performance</label>
+                      <p className="mt-1 text-sm font-semibold text-slate-500">Computed from attendance and completed workload.</p>
+                    </div>
+                    <span className="rounded-full bg-white px-3 py-1.5 text-sm font-black text-brand-700 shadow-sm ring-1 ring-brand-100">
+                      {selectedEmployee.performanceScore}%
+                    </span>
                   </div>
-                  <input type="range" min={0} max={100} value={editState.performanceScore} onChange={(e) => handleEditChange("performanceScore", e.target.value)} className="w-full accent-brand-600" title="Score range" />
                 </div>
 
                 <div className="p-3 rounded-xl bg-brand-50/50 border border-brand-100 flex gap-3">
@@ -603,6 +607,13 @@ export function EmployeesPage() {
                   <option value="">Select Shift</option>
                   {SHIFT_DEFINITIONS.map((s) => <option key={s.code} value={s.code}>{s.label}</option>)}
                 </select>
+              </div>
+
+              <div className="rounded-2xl border border-brand-200 bg-brand-50/70 px-4 py-3">
+                <p className="text-[0.6rem] font-black uppercase tracking-[0.16em] text-brand-700">Performance is automatic</p>
+                <p className="mt-1 text-xs font-semibold text-brand-700/80">
+                  The employee performance score is calculated after onboarding from attendance and completed workload.
+                </p>
               </div>
 
               {submitError && <p className="p-3 rounded-xl bg-rose-50 text-rose-600 text-xs font-bold">{submitError}</p>}

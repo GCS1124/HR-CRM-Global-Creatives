@@ -332,13 +332,13 @@ export function AppTopbar({
 
   return (
     <header className="app-topbar sticky top-0 z-20 border-b backdrop-blur-xl transition-all duration-200" aria-label="Topbar">
-      <div className="flex items-center justify-between gap-4 px-4 py-2.5 md:px-6 lg:px-8">
-        <div className="flex items-center gap-3">
+      <div className="flex flex-col gap-3 px-3 py-3 sm:flex-row sm:items-center sm:justify-between sm:gap-4 md:px-6 lg:px-8">
+        <div className="flex items-center gap-2 sm:gap-3">
           <TimeDisplay />
           <ThemeToggle className="min-h-[40px]" />
         </div>
 
-        <div className="flex items-center gap-2 sm:gap-3">
+        <div className="flex w-full flex-wrap items-center justify-end gap-2 sm:w-auto sm:gap-3">
           {showAttendanceControls ? (
             <>
               <div ref={checkInRef}>
@@ -385,7 +385,7 @@ export function AppTopbar({
           <button
             type="button"
             onClick={onSignOut}
-            className="btn-primary px-3 py-2 text-xs sm:text-sm"
+            className="btn-primary shrink-0 px-3 py-2 text-xs sm:text-sm"
           >
             <LogOut className="h-4 w-4" />
             <span className="hidden sm:inline">Sign out</span>

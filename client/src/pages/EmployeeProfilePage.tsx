@@ -36,7 +36,7 @@ export function EmployeeProfilePage() {
   }, [employeeHook.data]);
 
   if (employeeHook.loading) {
-    return <p className="text-sm font-semibold text-brand-700">Loading profile...</p>;
+    return <p className="text-sm font-semibold text-brand-700 dark:text-brand-300">Loading profile...</p>;
   }
 
   if (isNewUserEmployeeSetupError(employeeHook.error)) {
@@ -44,7 +44,7 @@ export function EmployeeProfilePage() {
   }
 
   if (employeeHook.error || !employeeHook.data) {
-    return <p className="text-sm font-semibold text-rose-700">{employeeHook.error ?? "Profile unavailable"}</p>;
+    return <p className="text-sm font-semibold text-rose-700 dark:text-rose-200">{employeeHook.error ?? "Profile unavailable"}</p>;
   }
 
   const employee = employeeHook.data;
@@ -110,7 +110,7 @@ export function EmployeeProfilePage() {
             <div className="relative">
               <div className="flex flex-wrap items-start justify-between gap-4">
                 <div>
-                  <h2 className="font-display text-3xl font-extrabold text-brand-950">{employee.name}</h2>
+                  <h2 className="font-display text-3xl font-extrabold text-brand-950 dark:text-slate-50">{employee.name}</h2>
                   <p className="mt-2 inline-flex rounded-full border border-brand-200/80 bg-white/85 px-3 py-1 text-sm font-semibold text-slate-900 shadow-sm ring-1 ring-brand-200/80 dark:border-slate-600/70 dark:bg-slate-900/85 dark:text-slate-100 dark:ring-slate-600/60">
                     {employee.email}
                   </p>
@@ -119,45 +119,45 @@ export function EmployeeProfilePage() {
             </div>
 
             <div className="mt-5 grid gap-3 md:grid-cols-2">
-              <div className="rounded-2xl border border-brand-200 bg-white/90 p-4">
-                <p className="text-xs font-bold uppercase tracking-[0.12em] text-brand-700">Role</p>
-                <p className="mt-2 text-lg font-bold text-brand-900">{employee.role}</p>
+              <div className="rounded-2xl border border-brand-200 bg-white/90 p-4 dark:border-slate-700/60 dark:bg-slate-950/80">
+                <p className="text-xs font-bold uppercase tracking-[0.12em] text-brand-700 dark:text-brand-300">Role</p>
+                <p className="mt-2 text-lg font-bold text-brand-900 dark:text-slate-100">{employee.role}</p>
               </div>
-              <div className="rounded-2xl border border-brand-200 bg-white/90 p-4">
-                <p className="text-xs font-bold uppercase tracking-[0.12em] text-brand-700">Reporting To</p>
-                <p className="mt-2 text-lg font-bold text-brand-900">{employee.manager}</p>
+              <div className="rounded-2xl border border-brand-200 bg-white/90 p-4 dark:border-slate-700/60 dark:bg-slate-950/80">
+                <p className="text-xs font-bold uppercase tracking-[0.12em] text-brand-700 dark:text-brand-300">Reporting To</p>
+                <p className="mt-2 text-lg font-bold text-brand-900 dark:text-slate-100">{employee.manager}</p>
               </div>
-              <div className="rounded-2xl border border-brand-200 bg-white/90 p-4">
-                <p className="text-xs font-bold uppercase tracking-[0.12em] text-brand-700">Location</p>
-                <p className="mt-2 text-lg font-bold text-brand-900">{employee.location}</p>
+              <div className="rounded-2xl border border-brand-200 bg-white/90 p-4 dark:border-slate-700/60 dark:bg-slate-950/80">
+                <p className="text-xs font-bold uppercase tracking-[0.12em] text-brand-700 dark:text-brand-300">Location</p>
+                <p className="mt-2 text-lg font-bold text-brand-900 dark:text-slate-100">{employee.location}</p>
               </div>
-              <div className="rounded-2xl border border-brand-200 bg-white/90 p-4">
-                <p className="text-xs font-bold uppercase tracking-[0.12em] text-brand-700">Performance Signal</p>
-                <p className="mt-2 text-lg font-bold text-brand-900">{employee.performanceScore}%</p>
+              <div className="rounded-2xl border border-brand-200 bg-white/90 p-4 dark:border-slate-700/60 dark:bg-slate-950/80">
+                <p className="text-xs font-bold uppercase tracking-[0.12em] text-brand-700 dark:text-brand-300">Performance Signal</p>
+                <p className="mt-2 text-lg font-bold text-brand-900 dark:text-slate-100">{employee.performanceScore}%</p>
               </div>
             </div>
           </div>
         </section>
 
-        <SectionCard title="Leave remainig">
-          {settingsHook.loading ? <p className="text-sm font-semibold text-brand-700">Loading policy defaults...</p> : null}
-          {settingsHook.error ? <p className="text-sm font-semibold text-rose-700">{settingsHook.error}</p> : null}
-          {leaveHook.loading ? <p className="text-sm font-semibold text-brand-700">Loading leave usage...</p> : null}
-          {leaveHook.error ? <p className="text-sm font-semibold text-rose-700">{leaveHook.error}</p> : null}
+        <SectionCard title="Leave remaining">
+          {settingsHook.loading ? <p className="text-sm font-semibold text-brand-700 dark:text-brand-300">Loading policy defaults...</p> : null}
+          {settingsHook.error ? <p className="text-sm font-semibold text-rose-700 dark:text-rose-200">{settingsHook.error}</p> : null}
+          {leaveHook.loading ? <p className="text-sm font-semibold text-brand-700 dark:text-brand-300">Loading leave usage...</p> : null}
+          {leaveHook.error ? <p className="text-sm font-semibold text-rose-700 dark:text-rose-200">{leaveHook.error}</p> : null}
 
           {remainingLeaves ? (
             <div className="grid gap-3 sm:grid-cols-3">
-              <div className="rounded-2xl border border-brand-200 bg-brand-50 p-4">
-                <p className="text-xs font-semibold uppercase tracking-wide text-brand-700">Annual Leave Remaining</p>
-                <p className="mt-2 text-2xl font-extrabold text-brand-900">{remainingLeaves.annual}</p>
+              <div className="rounded-2xl border border-brand-200 bg-brand-50 p-4 dark:border-slate-700/60 dark:bg-slate-900/70">
+                <p className="text-xs font-semibold uppercase tracking-wide text-brand-700 dark:text-brand-300">Annual Leave Remaining</p>
+                <p className="mt-2 text-2xl font-extrabold text-brand-900 dark:text-slate-100">{remainingLeaves.annual}</p>
               </div>
-              <div className="rounded-2xl border border-brand-200 bg-brand-50 p-4">
-                <p className="text-xs font-semibold uppercase tracking-wide text-brand-700">Sick Leave Remaining</p>
-                <p className="mt-2 text-2xl font-extrabold text-brand-900">{remainingLeaves.sick}</p>
+              <div className="rounded-2xl border border-brand-200 bg-brand-50 p-4 dark:border-slate-700/60 dark:bg-slate-900/70">
+                <p className="text-xs font-semibold uppercase tracking-wide text-brand-700 dark:text-brand-300">Sick Leave Remaining</p>
+                <p className="mt-2 text-2xl font-extrabold text-brand-900 dark:text-slate-100">{remainingLeaves.sick}</p>
               </div>
-              <div className="rounded-2xl border border-brand-200 bg-brand-50 p-4">
-                <p className="text-xs font-semibold uppercase tracking-wide text-brand-700">Casual Leave Remaining</p>
-                <p className="mt-2 text-2xl font-extrabold text-brand-900">{remainingLeaves.casual}</p>
+              <div className="rounded-2xl border border-brand-200 bg-brand-50 p-4 dark:border-slate-700/60 dark:bg-slate-900/70">
+                <p className="text-xs font-semibold uppercase tracking-wide text-brand-700 dark:text-brand-300">Casual Leave Remaining</p>
+                <p className="mt-2 text-2xl font-extrabold text-brand-900 dark:text-slate-100">{remainingLeaves.casual}</p>
               </div>
             </div>
           ) : null}
@@ -170,7 +170,9 @@ export function EmployeeProfilePage() {
           rightSlot={
             <span
               className={`rounded-full px-3 py-1.5 text-xs font-bold uppercase tracking-[0.14em] ${
-                detailsComplete ? "bg-emerald-50 text-emerald-700" : "bg-amber-50 text-amber-700"
+                detailsComplete
+                  ? "bg-emerald-50 text-emerald-700 dark:bg-emerald-500/15 dark:text-emerald-200"
+                  : "bg-amber-50 text-amber-700 dark:bg-amber-400/15 dark:text-amber-200"
               }`}
             >
               {detailsComplete ? "Complete" : "Action needed"}
@@ -190,28 +192,28 @@ export function EmployeeProfilePage() {
 
         <SectionCard title="Verification Snapshot">
           <div className="grid gap-3 sm:grid-cols-2">
-            <div className="rounded-2xl border border-brand-200 bg-brand-50 p-4">
-              <p className="inline-flex items-center gap-2 text-xs font-bold uppercase tracking-[0.12em] text-brand-700">
+            <div className="rounded-2xl border border-brand-200 bg-brand-50 p-4 dark:border-slate-700/60 dark:bg-slate-900/70">
+              <p className="inline-flex items-center gap-2 text-xs font-bold uppercase tracking-[0.12em] text-brand-700 dark:text-brand-300">
                 <Phone className="h-3.5 w-3.5" />
                 Mobile
               </p>
-              <p className="mt-2 text-sm font-semibold text-brand-900">{employee.mobile ?? "Pending update"}</p>
+              <p className="mt-2 text-sm font-semibold text-brand-900 dark:text-slate-100">{employee.mobile ?? "Pending update"}</p>
             </div>
-            <div className="rounded-2xl border border-brand-200 bg-brand-50 p-4">
-              <p className="inline-flex items-center gap-2 text-xs font-bold uppercase tracking-[0.12em] text-brand-700">
+            <div className="rounded-2xl border border-brand-200 bg-brand-50 p-4 dark:border-slate-700/60 dark:bg-slate-900/70">
+              <p className="inline-flex items-center gap-2 text-xs font-bold uppercase tracking-[0.12em] text-brand-700 dark:text-brand-300">
                 <Landmark className="h-3.5 w-3.5" />
                 Bank
               </p>
-              <p className="mt-2 text-sm font-semibold text-brand-900">{employee.bankName ?? "Pending update"}</p>
-              <p className="mt-1 text-xs text-slate-500">{employee.bankAccountNumber ?? "Account number missing"}</p>
+              <p className="mt-2 text-sm font-semibold text-brand-900 dark:text-slate-100">{employee.bankName ?? "Pending update"}</p>
+              <p className="mt-1 text-xs text-slate-500 dark:text-slate-400">{employee.bankAccountNumber ?? "Account number missing"}</p>
             </div>
-            <div className="rounded-2xl border border-brand-200 bg-brand-50 p-4">
-              <p className="text-xs font-bold uppercase tracking-[0.12em] text-brand-700">PAN</p>
-              <p className="mt-2 text-sm font-semibold text-brand-900">{employee.pan ?? "Pending update"}</p>
+            <div className="rounded-2xl border border-brand-200 bg-brand-50 p-4 dark:border-slate-700/60 dark:bg-slate-900/70">
+              <p className="text-xs font-bold uppercase tracking-[0.12em] text-brand-700 dark:text-brand-300">PAN</p>
+              <p className="mt-2 text-sm font-semibold text-brand-900 dark:text-slate-100">{employee.pan ?? "Pending update"}</p>
             </div>
-            <div className="rounded-2xl border border-brand-200 bg-brand-50 p-4">
-              <p className="text-xs font-bold uppercase tracking-[0.12em] text-brand-700">Address</p>
-              <p className="mt-2 text-sm font-semibold text-brand-900 whitespace-pre-line">
+            <div className="rounded-2xl border border-brand-200 bg-brand-50 p-4 dark:border-slate-700/60 dark:bg-slate-900/70">
+              <p className="text-xs font-bold uppercase tracking-[0.12em] text-brand-700 dark:text-brand-300">Address</p>
+              <p className="mt-2 text-sm font-semibold whitespace-pre-line text-brand-900 dark:text-slate-100">
                 {employee.address ?? "Pending update"}
               </p>
             </div>
@@ -221,23 +223,23 @@ export function EmployeeProfilePage() {
 
       <SectionCard title="Profile Card">
         <div className="grid gap-3 md:grid-cols-2 xl:grid-cols-4">
-          <div className="rounded-2xl border border-brand-200 bg-brand-50 p-4">
-            <p className="text-xs font-bold uppercase tracking-[0.12em] text-brand-700">Department</p>
-            <p className="mt-2 text-sm font-semibold text-brand-900">{employee.department}</p>
+          <div className="rounded-2xl border border-brand-200 bg-brand-50 p-4 dark:border-slate-700/60 dark:bg-slate-900/70">
+            <p className="text-xs font-bold uppercase tracking-[0.12em] text-brand-700 dark:text-brand-300">Department</p>
+            <p className="mt-2 text-sm font-semibold text-brand-900 dark:text-slate-100">{employee.department}</p>
           </div>
-          <div className="rounded-2xl border border-brand-200 bg-brand-50 p-4">
-            <p className="text-xs font-bold uppercase tracking-[0.12em] text-brand-700">Join Date</p>
-            <p className="mt-2 text-sm font-semibold text-brand-900">{formatDate(employee.joinDate)}</p>
+          <div className="rounded-2xl border border-brand-200 bg-brand-50 p-4 dark:border-slate-700/60 dark:bg-slate-900/70">
+            <p className="text-xs font-bold uppercase tracking-[0.12em] text-brand-700 dark:text-brand-300">Join Date</p>
+            <p className="mt-2 text-sm font-semibold text-brand-900 dark:text-slate-100">{formatDate(employee.joinDate)}</p>
           </div>
-          <div className="rounded-2xl border border-brand-200 bg-brand-50 p-4">
-            <p className="text-xs font-bold uppercase tracking-[0.12em] text-brand-700">Status</p>
+          <div className="rounded-2xl border border-brand-200 bg-brand-50 p-4 dark:border-slate-700/60 dark:bg-slate-900/70">
+            <p className="text-xs font-bold uppercase tracking-[0.12em] text-brand-700 dark:text-brand-300">Status</p>
             <div className="mt-2">
               <StatusBadge value={employee.status} />
             </div>
           </div>
-          <div className="rounded-2xl border border-brand-200 bg-brand-50 p-4">
-            <p className="text-xs font-bold uppercase tracking-[0.12em] text-brand-700">Email</p>
-            <p className="mt-2 text-sm font-semibold text-brand-900 break-all">{employee.email}</p>
+          <div className="rounded-2xl border border-brand-200 bg-brand-50 p-4 dark:border-slate-700/60 dark:bg-slate-900/70">
+            <p className="text-xs font-bold uppercase tracking-[0.12em] text-brand-700 dark:text-brand-300">Email</p>
+            <p className="mt-2 break-all text-sm font-semibold text-brand-900 dark:text-slate-100">{employee.email}</p>
           </div>
         </div>
       </SectionCard>

@@ -10,14 +10,20 @@ import { StatusBadge } from "../components/StatusBadge";
 import { useApi } from "../hooks/useApi";
 import { useAuthSession } from "../hooks/useAuthSession";
 import { hrService, isNewUserEmployeeSetupError } from "../services/hrService";
+import {
+  calculateAttendanceRate,
+  calculateCompletedWorkloadRate,
+  calculateOverallPerformanceScore,
+  clampScore,
+} from "../utils/performance";
 import { getLoginBroadcastRemainingMs } from "../utils/loginBroadcast";
-import { formatDate, formatPercent, getLocalDateKey } from "../utils/formatters";
+import { formatDate, formatPercent } from "../utils/formatters";
 
 const focusTone: Record<string, string> = {
-  info: "border-sky-200/80 bg-sky-50/80",
-  success: "border-emerald-200/80 bg-emerald-50/80",
-  warning: "border-amber-200/80 bg-amber-50/80",
-  critical: "border-rose-200/80 bg-rose-50/80",
+  info: "border-sky-200/80 bg-sky-50/80 dark:border-sky-400/20 dark:bg-sky-400/10",
+  success: "border-emerald-200/80 bg-emerald-50/80 dark:border-emerald-400/20 dark:bg-emerald-400/10",
+  warning: "border-amber-200/80 bg-amber-50/80 dark:border-amber-400/20 dark:bg-amber-400/10",
+  critical: "border-rose-200/80 bg-rose-50/80 dark:border-rose-400/20 dark:bg-rose-400/10",
 };
 
 const greetingBuckets: Record<"morning" | "afternoon" | "evening" | "night", string[]> = {
@@ -168,8 +174,6 @@ const describeDonutSegment = (
   ].join(" ");
 };
 
-const clampScore = (value: number) => Math.max(0, Math.min(100, Math.round(value)));
-
 const performanceAspectStyles = [
   { key: "attendance", label: "Attendance streak", color: "#60a5fa" },
   { key: "workload", label: "Completed workload", color: "#f97316" },
@@ -198,40 +202,7 @@ export function EmployeeDashboardPage() {
     return () => window.clearTimeout(timer);
   }, []);
 
-  const presenceRate = useMemo(() => {
-    const today = new Date();
-    const cutoffKey = getLocalDateKey(today);
-    const monthStartKey = getLocalDateKey(new Date(today.getFullYear(), today.getMonth(), 1));
-    const monthEnd = new Date(today.getFullYear(), today.getMonth() + 1, 0);
-    const daysInMonth = monthEnd.getDate();
-
-    const monthRecords = (attendanceRecordsHook.data ?? []).filter(
-      (record) => record.date >= monthStartKey && record.date <= cutoffKey,
-    );
-
-    const monthStats = monthRecords.reduce(
-      (acc, record) => {
-        if (record.status === "present") acc.present += 1;
-        if (record.status === "late") acc.late += 1;
-        if (record.status === "remote") acc.remote += 1;
-        return acc;
-      },
-      { present: 0, late: 0, remote: 0 },
-    );
-
-    let weekendDays = 0;
-    for (let day = 1; day <= today.getDate(); day += 1) {
-      const date = new Date(today.getFullYear(), today.getMonth(), day);
-      const weekday = date.getDay();
-      if (weekday === 0 || weekday === 6) weekendDays += 1;
-    }
-
-    const totalWorkingDays = Math.max(0, Math.min(daysInMonth, today.getDate()) - weekendDays);
-    const present = monthStats.present + monthStats.late + monthStats.remote;
-
-    if (totalWorkingDays === 0) return 0;
-    return (present / totalWorkingDays) * 100;
-  }, [attendanceRecordsHook.data]);
+  const presenceRate = useMemo(() => calculateAttendanceRate(attendanceRecordsHook.data ?? []), [attendanceRecordsHook.data]);
 
   const latestPayroll = payrollHook.data?.[0] ?? null;
   const latestProcessedPayroll = payrollHook.data?.find((record) => record.status === "processed") ?? null;
@@ -245,7 +216,7 @@ export function EmployeeDashboardPage() {
   }, [greeting]);
 
   if (employeeHook.loading) {
-    return <p className="text-sm font-semibold text-slate-700">Loading employee workspace...</p>;
+    return <p className="text-sm font-semibold text-slate-700 dark:text-slate-300">Loading employee workspace...</p>;
   }
 
   if (isNewUserEmployeeSetupError(employeeHook.error)) {
@@ -253,7 +224,7 @@ export function EmployeeDashboardPage() {
   }
 
   if (employeeHook.error || !employeeHook.data) {
-    return <p className="text-sm font-semibold text-rose-700">{employeeHook.error ?? "Employee profile unavailable"}</p>;
+    return <p className="text-sm font-semibold text-rose-700 dark:text-rose-200">{employeeHook.error ?? "Employee profile unavailable"}</p>;
   }
 
   const employee = employeeHook.data;
@@ -265,17 +236,16 @@ export function EmployeeDashboardPage() {
   const pendingTasks = command?.pendingTasks ?? 0;
   const completedTasks = command?.completedTasks ?? 0;
   const totalTasks = pendingTasks + completedTasks;
-  // Higher attendance and a lighter active workload should both raise the score.
-  const activeWorkloadScore = clampScore(totalTasks > 0 ? (completedTasks / totalTasks) * 100 : 100);
+  const completedWorkloadScore = clampScore(calculateCompletedWorkloadRate(completedTasks, totalTasks));
   const approvalsScore = clampScore(100 - (command?.pendingApprovals ?? 0) * 20);
   const payrollScore = clampScore(latestProcessedPayroll ? 100 : latestPayroll ? 50 : 0);
   const performanceAspects = [
     { ...performanceAspectStyles[0], score: attendanceScore },
-    { ...performanceAspectStyles[1], score: activeWorkloadScore },
+    { ...performanceAspectStyles[1], score: completedWorkloadScore },
     { ...performanceAspectStyles[2], score: approvalsScore },
     { ...performanceAspectStyles[3], score: payrollScore },
   ];
-  const overallPerformance = clampScore((attendanceScore + activeWorkloadScore) / 2);
+  const overallPerformance = calculateOverallPerformanceScore(attendanceScore, completedWorkloadScore);
   const gaugeBands = [
     { label: "Below par", from: 0, to: 20, color: "#f87171" },
     { label: "Bad", from: 20, to: 40, color: "#fb923c" },
@@ -425,7 +395,7 @@ export function EmployeeDashboardPage() {
                     </p>
                     <div className="relative">
                       {hoveredTooltip ? (
-                        <div className="absolute left-1/2 top-0 -translate-x-1/2 -translate-y-1/2 rounded-2xl border border-slate-200 bg-white/95 px-3 py-2 text-xs font-semibold text-slate-700 shadow-[0_18px_40px_rgba(15,23,42,0.15)]">
+                        <div className="absolute left-1/2 top-0 -translate-x-1/2 -translate-y-1/2 rounded-2xl border border-slate-200 bg-white/95 px-3 py-2 text-xs font-semibold text-slate-700 shadow-[0_18px_40px_rgba(15,23,42,0.15)] dark:border-slate-700/60 dark:bg-slate-950/95 dark:text-slate-200">
                           <span className="inline-flex items-center gap-2">
                             <span className="h-2.5 w-2.5 rounded-full" style={{ backgroundColor: hoveredTooltip.color }} />
                             {hoveredTooltip.text}
@@ -613,32 +583,32 @@ export function EmployeeDashboardPage() {
       <div className="grid gap-6">
         <SectionCard title="Active Work" subtitle="">
           <div className="grid gap-4 lg:grid-cols-2">
-            <div className="rounded-[24px] border border-slate-200/80 bg-white/90 p-4">
-              <p className="text-xs font-black uppercase tracking-[0.16em] text-slate-500">Current tasks</p>
+            <div className="rounded-[24px] border border-slate-200/80 bg-white/90 p-4 dark:border-slate-700/60 dark:bg-slate-950/80">
+              <p className="text-xs font-black uppercase tracking-[0.16em] text-slate-500 dark:text-slate-300">Current tasks</p>
               <div className="mt-4 space-y-3">
                 {(command?.activeTasks ?? []).length > 0 ? (
                   (command?.activeTasks ?? []).map((task) => (
-                    <div key={task.id} className="rounded-2xl border border-slate-200/80 bg-slate-50/80 p-3">
-                      <p className="text-sm font-semibold text-slate-950">{task.title}</p>
-                      <p className="mt-1 text-sm text-slate-600">{task.description ?? "No description provided."}</p>
+                    <div key={task.id} className="rounded-2xl border border-slate-200/80 bg-slate-50/80 p-3 dark:border-slate-700/60 dark:bg-slate-900/70">
+                      <p className="text-sm font-semibold text-slate-950 dark:text-slate-50">{task.title}</p>
+                      <p className="mt-1 text-sm text-slate-600 dark:text-slate-300">{task.description ?? "No description provided."}</p>
                     </div>
                   ))
                 ) : (
-                  <p className="text-sm font-medium text-slate-500">No active tasks right now.</p>
+                  <p className="text-sm font-medium text-slate-500 dark:text-slate-400">No active tasks right now.</p>
                 )}
               </div>
             </div>
 
-            <div className="rounded-[24px] border border-slate-200/80 bg-white/90 p-4">
-              <p className="text-xs font-black uppercase tracking-[0.16em] text-slate-500">Upcoming leave</p>
+            <div className="rounded-[24px] border border-slate-200/80 bg-white/90 p-4 dark:border-slate-700/60 dark:bg-slate-950/80">
+              <p className="text-xs font-black uppercase tracking-[0.16em] text-slate-500 dark:text-slate-300">Upcoming leave</p>
               <div className="mt-4 space-y-3">
                 {(command?.upcomingLeaves ?? []).length > 0 ? (
                   (command?.upcomingLeaves ?? []).map((leave) => (
-                    <div key={leave.id} className="rounded-2xl border border-slate-200/80 bg-slate-50/80 p-3">
-                      <p className="text-sm font-semibold text-slate-950">
+                    <div key={leave.id} className="rounded-2xl border border-slate-200/80 bg-slate-50/80 p-3 dark:border-slate-700/60 dark:bg-slate-900/70">
+                      <p className="text-sm font-semibold text-slate-950 dark:text-slate-50">
                         {leave.leaveType} · {leave.days} day{leave.days === 1 ? "" : "s"}
                       </p>
-                      <p className="mt-1 text-sm text-slate-600">
+                      <p className="mt-1 text-sm text-slate-600 dark:text-slate-300">
                         {formatDate(leave.startDate)} to {formatDate(leave.endDate)}
                       </p>
                       <div className="mt-2">
@@ -647,7 +617,7 @@ export function EmployeeDashboardPage() {
                     </div>
                   ))
                 ) : (
-                  <p className="text-sm font-medium text-slate-500">No upcoming leave on your calendar.</p>
+                  <p className="text-sm font-medium text-slate-500 dark:text-slate-400">No upcoming leave on your calendar.</p>
                 )}
               </div>
             </div>

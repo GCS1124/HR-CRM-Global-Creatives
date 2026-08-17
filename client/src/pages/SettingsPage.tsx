@@ -1,16 +1,12 @@
 import { useCallback, useEffect, useMemo, useState } from "react";
 import {
-  BookCheck,
   Building2,
   CalendarDays,
   Clock3,
-  Copy,
   Download,
   Globe2,
-  Landmark,
   RotateCcw,
   Save,
-  Workflow,
 } from "lucide-react";
 import { PageHeader } from "../components/PageHeader";
 import { SectionCard } from "../components/SectionCard";
@@ -19,18 +15,11 @@ import { StatusBadge } from "../components/StatusBadge";
 import { useApi } from "../hooks/useApi";
 import { hrService } from "../services/hrService";
 import type { UpdateCRMSettingsPayload } from "../types/hr";
-import { copyText, downloadJson } from "../utils/fileExport";
+import { downloadJson } from "../utils/fileExport";
 
 const weekDays = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"];
 const timezoneOptions = ["Asia/Kolkata", "UTC", "America/New_York", "Europe/London", "Asia/Dubai"];
 const payrollCycleOptions = ["Monthly", "Semi-monthly", "Bi-weekly", "Weekly"];
-
-const checklistSeed = {
-  handbook: true,
-  payrollAudit: true,
-  managerTraining: false,
-  timezoneNotice: false,
-};
 
 const settingTemplates: Array<{
   id: string;
@@ -106,7 +95,6 @@ export function SettingsPage() {
   const [saveError, setSaveError] = useState<string | null>(null);
   const [saveMessage, setSaveMessage] = useState<string | null>(null);
   const [workspaceMessage, setWorkspaceMessage] = useState<string | null>(null);
-  const [checklist, setChecklist] = useState(checklistSeed);
 
   useEffect(() => {
     if (settingsHook.data) {
@@ -205,26 +193,6 @@ export function SettingsPage() {
     return flags;
   }, [derived, draft]);
 
-  const memoText = useMemo(() => {
-    if (!draft || !derived) {
-      return "";
-    }
-
-    return [
-      `${draft.companyName} operates on a ${derived.workingDayCount}-day workweek with ${draft.workHours} daily hours in ${draft.timezone}.`,
-      `Payroll is configured as ${draft.payrollCycle}, which results in approximately ${derived.payrollRunsPerYear} payroll runs per year.`,
-      `The configured leave allowance totals ${derived.totalLeaveAllowance} days per employee across annual, sick, and casual categories.`,
-      derived.nonWorkingDays.length > 0
-        ? `Non-working days are ${derived.nonWorkingDays.join(", ")}, which should be reflected in attendance and manager coverage planning.`
-        : "No non-working days are currently configured, so attendance exceptions and rest-day policies should be reviewed immediately.",
-    ].join("\n\n");
-  }, [derived, draft]);
-
-  const checklistCompletion = useMemo(() => {
-    const completed = Object.values(checklist).filter(Boolean).length;
-    return Math.round((completed / Object.keys(checklist).length) * 100);
-  }, [checklist]);
-
   if (settingsHook.loading || !draft || !derived) {
     return <p className="text-sm font-semibold text-slate-600">Loading settings...</p>;
   }
@@ -309,30 +277,17 @@ export function SettingsPage() {
     setWorkspaceMessage("Configuration exported as JSON.");
   };
 
-  const handleCopyMemo = async () => {
-    try {
-      await copyText(memoText);
-      setWorkspaceMessage("Policy memo copied to clipboard.");
-    } catch (issue) {
-      setWorkspaceMessage(issue instanceof Error ? issue.message : "Unable to copy memo.");
-    }
-  };
-
   return (
     <div className="animate-page-enter space-y-6">
       <PageHeader
         title="Settings"
-        subtitle="This is now a real admin configuration studio: edit policies, test templates, inspect change impact, save to Supabase, and export or circulate the resulting policy memo."
+        subtitle="Edit policies, test templates, inspect change impact, save to Supabase, and export JSON."
         eyebrow="Organization configuration"
         action={
           <>
             <button type="button" onClick={handleExport} className="btn-secondary">
               <Download className="h-4 w-4" />
               Export JSON
-            </button>
-            <button type="button" onClick={() => void handleCopyMemo()} className="btn-secondary">
-              <Copy className="h-4 w-4" />
-              Copy memo
             </button>
             {isDirty ? (
               <button type="button" onClick={handleReset} className="btn-secondary">
@@ -570,83 +525,6 @@ export function SettingsPage() {
         </SectionCard>
       </div>
 
-      <div className="grid gap-4 xl:grid-cols-[0.95fr_1.05fr]">
-        <SectionCard
-          title="Governance checklist"
-          subtitle="Track readiness items that usually block policy rollout"
-          collapsible
-          defaultCollapsed
-        >
-          <div className="mb-4 rounded-xl border border-slate-200 bg-slate-50 px-4 py-4">
-            <p className="text-sm font-semibold text-slate-950">Checklist completion</p>
-            <p className="mt-2 text-3xl font-extrabold tracking-tight text-slate-950">{checklistCompletion}%</p>
-            <div className="mt-3 h-2 rounded-full bg-white">
-              <div className="h-full rounded-full bg-brand-700" style={{ width: `${Math.max(checklistCompletion, 6)}%` }} />
-            </div>
-          </div>
-          <div className="space-y-3">
-            {[
-              { key: "handbook", label: "Employee handbook reflects the latest leave policy" },
-              { key: "payrollAudit", label: "Finance has approved the selected payroll cadence" },
-              { key: "managerTraining", label: "Managers have been briefed on the working-day structure" },
-              { key: "timezoneNotice", label: "Timezone and work-hour changes have been communicated" },
-            ].map((item) => (
-              <label key={item.key} className="flex items-start gap-3 rounded-xl border border-slate-200 bg-white px-4 py-4">
-                <input
-                  type="checkbox"
-                  checked={checklist[item.key as keyof typeof checklist]}
-                  onChange={(event) =>
-                    setChecklist((current) => ({
-                      ...current,
-                      [item.key]: event.target.checked,
-                    }))
-                  }
-                  className="mt-1 h-4 w-4 accent-brand-700"
-                />
-                <span className="text-sm font-medium text-slate-700">{item.label}</span>
-              </label>
-            ))}
-          </div>
-        </SectionCard>
-
-        <SectionCard
-          title="Operational memo"
-          subtitle="Generated policy summary for sharing with finance, managers, or leadership"
-          rightSlot={
-            <button type="button" onClick={() => void handleCopyMemo()} className="btn-secondary px-3 py-2">
-              <Copy className="h-4 w-4" />
-              Copy text
-            </button>
-          }
-          collapsible
-          defaultCollapsed
-        >
-          <div className="rounded-xl border border-slate-200 bg-slate-50 px-4 py-4">
-            <p className="inline-flex items-center gap-2 text-sm font-semibold text-slate-950">
-              <BookCheck className="h-4 w-4 text-brand-700" />
-              Policy summary
-            </p>
-            <pre className="mt-3 whitespace-pre-wrap text-sm font-medium leading-relaxed text-slate-700">{memoText}</pre>
-          </div>
-
-          <div className="mt-4 grid gap-3 sm:grid-cols-2">
-            <div className="rounded-xl border border-slate-200 bg-slate-50 px-4 py-4">
-              <p className="inline-flex items-center gap-2 text-sm font-semibold text-slate-950">
-                <Landmark className="h-4 w-4 text-brand-700" />
-                Finance impact
-              </p>
-              <p className="mt-2 text-sm text-slate-600">Cadence and weekly hours shape payout timing, overtime expectations, and payroll-close rhythm.</p>
-            </div>
-            <div className="rounded-xl border border-slate-200 bg-slate-50 px-4 py-4">
-              <p className="inline-flex items-center gap-2 text-sm font-semibold text-slate-950">
-                <Workflow className="h-4 w-4 text-brand-700" />
-                Manager impact
-              </p>
-              <p className="mt-2 text-sm text-slate-600">Working-day design and leave allowance directly affect approval loads, coverage planning, and attendance exceptions.</p>
-            </div>
-          </div>
-        </SectionCard>
-      </div>
     </div>
   );
 }

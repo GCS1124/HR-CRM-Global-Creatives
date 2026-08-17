@@ -29,7 +29,7 @@ export function TimeDisplay() {
   }, []);
 
   return (
-    <div className="hidden items-center gap-2 rounded-full border border-slate-200 bg-white/80 px-3 py-2 text-sm font-bold text-slate-700 shadow-soft md:inline-flex">
+    <div className="hidden items-center gap-2 rounded-full border border-slate-200 bg-white/80 px-3 py-2 text-sm font-bold text-slate-700 shadow-soft md:inline-flex dark:border-slate-700/60 dark:bg-slate-900/80 dark:text-slate-100">
       <Clock3 className="h-4 w-4 text-brand-700" />
       <span className="tabular-nums">{timeLabel}</span>
     </div>
