@@ -172,7 +172,7 @@ const clampScore = (value: number) => Math.max(0, Math.min(100, Math.round(value
 
 const performanceAspectStyles = [
   { key: "attendance", label: "Attendance streak", color: "#60a5fa" },
-  { key: "workload", label: "Active workload", color: "#f97316" },
+  { key: "workload", label: "Completed workload", color: "#f97316" },
   { key: "approvals", label: "Leave approvals", color: "#a78bfa" },
   { key: "payroll", label: "Payroll visibility", color: "#34d399" },
 ];
@@ -421,7 +421,7 @@ export function EmployeeDashboardPage() {
                 <div className="grid items-center gap-6 lg:grid-cols-2">
                   <div className="flex min-w-0 flex-col items-center justify-start">
                     <p className="mb-3 text-sm font-black uppercase tracking-[0.28em] text-slate-900 text-center dark:text-white drop-shadow-[0_6px_18px_rgba(15,23,42,0.2)] whitespace-nowrap">
-                      Breakdown performance
+                      Performance breakdown
                     </p>
                     <div className="relative">
                       {hoveredTooltip ? (

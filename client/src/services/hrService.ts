@@ -2451,7 +2451,7 @@ export const hrService = {
       },
       {
         id: "focus-tasks",
-        title: "Active workload",
+        title: "Completed workload",
         value: `${pendingTasks} tasks`,
         meta: `${completedTasks} tasks completed in the current queue.`,
         route: "/employee/tasks",
