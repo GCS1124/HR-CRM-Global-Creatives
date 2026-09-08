@@ -482,8 +482,8 @@ export function PayrollPage() {
       header: "Employee",
       render: (row) => (
         <div>
-          <p className="font-semibold text-slate-950">{row.employeeName}</p>
-          <p className="text-xs text-slate-500">{row.department}</p>
+          <p className="font-semibold text-slate-950 dark:text-slate-50">{row.employeeName}</p>
+          <p className="text-xs text-slate-500 dark:text-slate-400">{row.department}</p>
         </div>
       ),
     },
@@ -493,15 +493,15 @@ export function PayrollPage() {
       header: "Compensation",
       render: (row) => (
         <div>
-          <p className="font-semibold text-slate-950">{formatCurrency(row.baseSalary)}</p>
-          <p className="text-xs text-slate-500">+ {formatCurrency(row.bonus)} bonus · - {formatCurrency(row.deductions)}</p>
+          <p className="font-semibold text-slate-950 dark:text-slate-50">{formatCurrency(row.baseSalary)}</p>
+          <p className="text-xs text-slate-500 dark:text-slate-400">+ {formatCurrency(row.bonus)} bonus · - {formatCurrency(row.deductions)}</p>
         </div>
       ),
     },
     {
       key: "net",
       header: "Net Pay",
-      render: (row) => <span className="font-semibold text-slate-950">{formatCurrency(row.netPay)}</span>,
+      render: (row) => <span className="font-semibold text-slate-950 dark:text-slate-50">{formatCurrency(row.netPay)}</span>,
     },
     { key: "status", header: "Status", render: (row) => <StatusBadge value={row.status} /> },
     {
@@ -511,16 +511,16 @@ export function PayrollPage() {
         <div>
           <div className="flex items-start justify-between gap-3">
             <div>
-              <p className="font-semibold text-slate-950">
+              <p className="font-semibold text-slate-950 dark:text-slate-50">
                 {row.payslipSentAt ? formatDate(row.payslipSentAt) : row.status === "processed" ? "Ready to send" : "Pending completion"}
               </p>
-              <p className="text-xs text-slate-500">{row.payslipFileName ?? "No salary slip emailed yet."}</p>
+              <p className="text-xs text-slate-500 dark:text-slate-400">{row.payslipFileName ?? "No salary slip emailed yet."}</p>
             </div>
             <button
               type="button"
               onClick={() => void handleDownloadPayslip(row)}
               disabled={downloadingId === row.id || row.status !== "processed"}
-              className="inline-flex h-8 w-8 items-center justify-center rounded-full border border-slate-200 bg-white text-slate-600 transition hover:border-slate-300 hover:bg-slate-50 disabled:cursor-not-allowed disabled:opacity-60"
+              className="inline-flex h-8 w-8 items-center justify-center rounded-full border border-slate-200 bg-white text-slate-600 transition hover:border-slate-300 hover:bg-slate-50 disabled:cursor-not-allowed disabled:opacity-60 dark:border-slate-700/60 dark:bg-slate-900/80 dark:text-slate-200 dark:hover:bg-slate-800"
               title={row.status === "processed" ? "Download payslip" : "Payslip available after completion"}
             >
               <Download className="h-4 w-4" />
@@ -557,7 +557,7 @@ export function PayrollPage() {
               {updatingPayrollId === row.id ? "Sending..." : row.payslipSentAt ? "Resend slip" : "Send slip"}
             </button>
           ) : null}
-          <button type="button" onClick={() => void handleDeleteRecord(row.id, row.employeeName)} className="inline-flex items-center justify-center rounded-lg border border-rose-200 bg-white p-2 text-rose-700 transition hover:bg-rose-50">
+          <button type="button" onClick={() => void handleDeleteRecord(row.id, row.employeeName)} className="inline-flex items-center justify-center rounded-lg border border-rose-200 bg-white p-2 text-rose-700 transition hover:bg-rose-50 dark:border-rose-500/20 dark:bg-slate-900/80 dark:text-rose-200 dark:hover:bg-rose-500/10">
             <Trash2 className="h-4 w-4" />
           </button>
         </div>
@@ -817,7 +817,7 @@ export function PayrollPage() {
         }
       />
 
-      {actionMessage ? <p className="rounded-2xl border border-emerald-200 bg-emerald-50 px-4 py-3 text-sm font-semibold text-emerald-700">{actionMessage}</p> : null}
+      {actionMessage ? <p className="rounded-2xl border border-emerald-200 bg-emerald-50 px-4 py-3 text-sm font-semibold text-emerald-700 dark:border-emerald-500/20 dark:bg-emerald-500/10 dark:text-emerald-200">{actionMessage}</p> : null}
 
       <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-4">
         <StatCard title="Visible net pay" value={formatCurrency(summary.totalNetPay)} hint="Current register scope" icon={Wallet} accent />
@@ -869,7 +869,7 @@ export function PayrollPage() {
               type="button"
               onClick={() => setFocusMode(item.id)}
               className={`rounded-full px-3 py-1.5 text-sm font-semibold transition ${
-                focusMode === item.id ? "bg-brand-900 text-white" : "border border-slate-200 bg-white text-slate-700 hover:bg-slate-50"
+                focusMode === item.id ? "bg-brand-900 text-white dark:bg-brand-300 dark:text-slate-950" : "border border-slate-200 bg-white text-slate-700 hover:bg-slate-50 dark:border-slate-700/60 dark:bg-slate-900/80 dark:text-slate-200 dark:hover:bg-slate-800"
               }`}
             >
               {item.label}
@@ -881,28 +881,28 @@ export function PayrollPage() {
       <div className="grid gap-4 xl:grid-cols-[1.45fr_0.95fr]">
         <SectionCard title="Payroll register" subtitle="Operate status, queue selection, deletion, and next-cycle duplication from one ledger view">
           {selectedIds.length > 0 ? (
-            <div className="mb-4 flex flex-wrap items-center gap-2 rounded-xl border border-brand-200 bg-brand-50 px-4 py-3">
-              <span className="text-sm font-semibold text-brand-900">{selectedIds.length} selected</span>
+            <div className="mb-4 flex flex-wrap items-center gap-2 rounded-xl border border-brand-200 bg-brand-50 px-4 py-3 dark:border-brand-500/20 dark:bg-brand-500/10">
+              <span className="text-sm font-semibold text-brand-900 dark:text-brand-100">{selectedIds.length} selected</span>
               <button type="button" onClick={() => void handleBulkStatusChange("scheduled")} disabled={bulkLoading !== null} className="btn-secondary px-3 py-2 disabled:cursor-not-allowed disabled:opacity-70">
                 Set scheduled
               </button>
               <button type="button" onClick={() => void handleBulkStatusChange("processed")} disabled={bulkLoading !== null} className="btn-secondary px-3 py-2 disabled:cursor-not-allowed disabled:opacity-70">
                 Set completed
               </button>
-              <button type="button" onClick={() => void handleBulkDelete()} disabled={bulkLoading !== null} className="inline-flex items-center gap-2 rounded-lg border border-rose-200 bg-white px-3 py-2 text-sm font-semibold text-rose-700 transition hover:bg-rose-50 disabled:cursor-not-allowed disabled:opacity-70">
+              <button type="button" onClick={() => void handleBulkDelete()} disabled={bulkLoading !== null} className="inline-flex items-center gap-2 rounded-lg border border-rose-200 bg-white px-3 py-2 text-sm font-semibold text-rose-700 transition hover:bg-rose-50 disabled:cursor-not-allowed disabled:opacity-70 dark:border-rose-500/20 dark:bg-slate-900/80 dark:text-rose-200 dark:hover:bg-rose-500/10">
                 <Trash2 className="h-4 w-4" />
                 Delete selected
               </button>
             </div>
           ) : null}
-          {bulkError ? <p className="mb-3 rounded-lg bg-rose-50 px-3 py-2 text-sm font-semibold text-rose-700">{bulkError}</p> : null}
-          {recordsHook.loading ? <p className="text-sm font-semibold text-slate-600">Loading payroll records...</p> : null}
-          {recordsHook.error ? <p className="text-sm font-semibold text-rose-700">{recordsHook.error}</p> : null}
-          {updateError ? <p className="mb-3 rounded-lg bg-rose-50 px-3 py-2 text-sm font-semibold text-rose-700">{updateError}</p> : null}
+          {bulkError ? <p className="mb-3 rounded-lg bg-rose-50 px-3 py-2 text-sm font-semibold text-rose-700 dark:bg-rose-500/10 dark:text-rose-200">{bulkError}</p> : null}
+          {recordsHook.loading ? <p className="text-sm font-semibold text-slate-600 dark:text-slate-300">Loading payroll records...</p> : null}
+          {recordsHook.error ? <p className="text-sm font-semibold text-rose-700 dark:text-rose-200">{recordsHook.error}</p> : null}
+          {updateError ? <p className="mb-3 rounded-lg bg-rose-50 px-3 py-2 text-sm font-semibold text-rose-700 dark:bg-rose-500/10 dark:text-rose-200">{updateError}</p> : null}
         {downloadNotice ? (
-          <p className="mb-3 rounded-lg bg-sky-50 px-3 py-2 text-sm font-semibold text-sky-700">{downloadNotice}</p>
+          <p className="mb-3 rounded-lg bg-sky-50 px-3 py-2 text-sm font-semibold text-sky-700 dark:bg-sky-500/10 dark:text-sky-200">{downloadNotice}</p>
         ) : null}
-        {downloadError ? <p className="mb-3 rounded-lg bg-rose-50 px-3 py-2 text-sm font-semibold text-rose-700">{downloadError}</p> : null}
+        {downloadError ? <p className="mb-3 rounded-lg bg-rose-50 px-3 py-2 text-sm font-semibold text-rose-700 dark:bg-rose-500/10 dark:text-rose-200">{downloadError}</p> : null}
         <DataTable
           columns={columns}
           rows={filteredRecords}
@@ -911,10 +911,10 @@ export function PayrollPage() {
             emptyText="No payroll records available for this filter."
             rowClassName={(row) => {
               if (selectedIds.includes(row.id)) {
-                return "!bg-brand-100/80";
+                return "!bg-brand-100/80 dark:!bg-brand-900/30";
               }
 
-              return row.status === "scheduled" ? "bg-blue-50/50" : "";
+              return row.status === "scheduled" ? "bg-blue-50/50 dark:bg-blue-500/10" : "";
             }}
           />
         </SectionCard>
@@ -955,17 +955,17 @@ export function PayrollPage() {
                 <input type="number" min="0" value={formState.bonus} onChange={(event) => handleFormChange("bonus", event.target.value)} placeholder="Bonus" className="input-surface w-full" required />
                 <input type="number" min="0" value={formState.deductions} placeholder="Deductions" className="input-surface w-full" required readOnly />
               </div>
-              <p className="text-xs font-medium text-slate-500">{leaveDeductionNote}</p>
+              <p className="text-xs font-medium text-slate-500 dark:text-slate-400">{leaveDeductionNote}</p>
               <select value={formState.status} onChange={(event) => handleFormChange("status", event.target.value)} className="input-surface w-full">
                 <option value="scheduled">Scheduled</option>
                 <option value="processed">Completed</option>
               </select>
-              <div className="rounded-xl border border-slate-200 bg-slate-50 px-4 py-4">
-                <p className="text-xs font-semibold uppercase tracking-wide text-slate-500">Net pay preview</p>
-                <p className="mt-2 text-2xl font-semibold text-slate-950">{formatCurrency(netPayPreview)}</p>
-                {formMessage ? <p className="mt-2 text-sm font-medium text-emerald-700">{formMessage}</p> : null}
+              <div className="rounded-xl border border-slate-200 bg-slate-50 px-4 py-4 dark:border-slate-700/60 dark:bg-slate-900/70">
+                <p className="text-xs font-semibold uppercase tracking-wide text-slate-500 dark:text-slate-400">Net pay preview</p>
+                <p className="mt-2 text-2xl font-semibold text-slate-950 dark:text-slate-50">{formatCurrency(netPayPreview)}</p>
+                {formMessage ? <p className="mt-2 text-sm font-medium text-emerald-700 dark:text-emerald-200">{formMessage}</p> : null}
               </div>
-              {submitError ? <p className="rounded-lg bg-rose-50 px-3 py-2 text-sm font-semibold text-rose-700">{submitError}</p> : null}
+              {submitError ? <p className="rounded-lg bg-rose-50 px-3 py-2 text-sm font-semibold text-rose-700 dark:bg-rose-500/10 dark:text-rose-200">{submitError}</p> : null}
               <button type="submit" disabled={submitting} className="btn-primary w-full disabled:cursor-not-allowed disabled:opacity-70">
                 <Plus className="h-4 w-4" />
                 {submitting ? "Creating..." : "Create payroll record"}

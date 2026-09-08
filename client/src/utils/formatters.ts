@@ -6,16 +6,32 @@ export function formatCurrency(value: number): string {
   }).format(value);
 }
 
+function parseDateValue(value: string): Date | null {
+  const date = /^\d{4}-\d{2}-\d{2}$/.test(value)
+    ? new Date(`${value}T00:00:00`)
+    : new Date(value);
+  return Number.isNaN(date.valueOf()) ? null : date;
+}
+
 export function formatDate(value: string): string {
+  const date = parseDateValue(value);
+  if (!date) {
+    return "Date unavailable";
+  }
+
   return new Intl.DateTimeFormat("en-US", {
     day: "2-digit",
     month: "short",
     year: "numeric",
-  }).format(new Date(value));
+  }).format(date);
 }
 
 export function formatNumericDate(value: string): string {
-  const date = new Date(value);
+  const date = parseDateValue(value);
+  if (!date) {
+    return "--";
+  }
+
   const day = `${date.getDate()}`.padStart(2, "0");
   const month = `${date.getMonth() + 1}`.padStart(2, "0");
   const year = `${date.getFullYear()}`.slice(-2);

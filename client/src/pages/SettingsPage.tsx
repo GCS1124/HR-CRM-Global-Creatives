@@ -194,7 +194,7 @@ export function SettingsPage() {
   }, [derived, draft]);
 
   if (settingsHook.loading || !draft || !derived) {
-    return <p className="text-sm font-semibold text-slate-600">Loading settings...</p>;
+    return <p className="text-sm font-semibold text-slate-600 dark:text-slate-300">Loading settings...</p>;
   }
 
   if (settingsHook.error) {
@@ -314,11 +314,11 @@ export function SettingsPage() {
         <SectionCard title="Configuration studio" subtitle="Edit the organization-level defaults that shape attendance, leave, and payroll behavior">
           <div className="grid gap-3 md:grid-cols-2">
             <div>
-              <label className="mb-2 block text-xs font-semibold uppercase tracking-wide text-slate-500">Company name</label>
+              <label className="mb-2 block text-xs font-semibold uppercase tracking-wide text-slate-500 dark:text-slate-400">Company name</label>
               <input value={draft.companyName} onChange={(event) => updateDraft("companyName", event.target.value)} className="input-surface w-full" />
             </div>
             <div>
-              <label className="mb-2 block text-xs font-semibold uppercase tracking-wide text-slate-500">Timezone</label>
+              <label className="mb-2 block text-xs font-semibold uppercase tracking-wide text-slate-500 dark:text-slate-400">Timezone</label>
               <select value={draft.timezone} onChange={(event) => updateDraft("timezone", event.target.value)} className="input-surface w-full">
                 {timezoneOptions.map((timezone) => (
                   <option key={timezone} value={timezone}>
@@ -328,7 +328,7 @@ export function SettingsPage() {
               </select>
             </div>
             <div>
-              <label className="mb-2 block text-xs font-semibold uppercase tracking-wide text-slate-500">Payroll cycle</label>
+              <label className="mb-2 block text-xs font-semibold uppercase tracking-wide text-slate-500 dark:text-slate-400">Payroll cycle</label>
               <select value={draft.payrollCycle} onChange={(event) => updateDraft("payrollCycle", event.target.value)} className="input-surface w-full">
                 {payrollCycleOptions.map((cycle) => (
                   <option key={cycle} value={cycle}>
@@ -338,23 +338,23 @@ export function SettingsPage() {
               </select>
             </div>
             <div>
-              <label className="mb-2 block text-xs font-semibold uppercase tracking-wide text-slate-500">Work hours</label>
+              <label className="mb-2 block text-xs font-semibold uppercase tracking-wide text-slate-500 dark:text-slate-400">Work hours</label>
               <input value={draft.workHours} onChange={(event) => updateDraft("workHours", event.target.value)} className="input-surface w-full" placeholder="09:00 - 18:00" />
             </div>
           </div>
 
           <div className="mt-5">
-            <p className="text-xs font-semibold uppercase tracking-wide text-slate-500">Templates</p>
+            <p className="text-xs font-semibold uppercase tracking-wide text-slate-500 dark:text-slate-400">Templates</p>
             <div className="mt-3 grid gap-3 md:grid-cols-3">
               {settingTemplates.map((template) => (
                 <button
                   key={template.id}
                   type="button"
                   onClick={() => handleTemplateApply(template.id)}
-                  className="rounded-xl border border-slate-200 bg-white px-4 py-4 text-left transition hover:border-slate-300"
+                  className="rounded-xl border border-slate-200 bg-white px-4 py-4 text-left transition hover:border-slate-300 dark:border-slate-700/60 dark:bg-slate-900/80 dark:hover:border-slate-600"
                 >
-                  <p className="text-sm font-semibold text-slate-950">{template.label}</p>
-                  <p className="mt-2 text-sm text-slate-600">{template.description}</p>
+                  <p className="text-sm font-semibold text-slate-950 dark:text-slate-50">{template.label}</p>
+                  <p className="mt-2 text-sm text-slate-600 dark:text-slate-300">{template.description}</p>
                 </button>
               ))}
             </div>
@@ -369,25 +369,25 @@ export function SettingsPage() {
           defaultCollapsed
         >
           <div className="space-y-3">
-            <div className="rounded-xl border border-slate-200 bg-slate-50 px-4 py-4">
-              <p className="text-sm font-semibold text-slate-950">Unsaved changes</p>
-              <p className="mt-1 text-3xl font-extrabold tracking-tight text-slate-950">{changeList.length}</p>
-              <p className="mt-2 text-sm text-slate-600">Fields that differ from the live settings record.</p>
+            <div className="rounded-xl border border-slate-200 bg-slate-50 px-4 py-4 dark:border-slate-700/60 dark:bg-slate-900/70">
+              <p className="text-sm font-semibold text-slate-950 dark:text-slate-50">Unsaved changes</p>
+              <p className="mt-1 text-3xl font-extrabold tracking-tight text-slate-950 dark:text-slate-50">{changeList.length}</p>
+              <p className="mt-2 text-sm text-slate-600 dark:text-slate-300">Fields that differ from the live settings record.</p>
             </div>
-            {saveError ? <p className="rounded-lg bg-rose-50 px-3 py-2 text-sm font-semibold text-rose-700">{saveError}</p> : null}
-            {saveMessage ? <p className="rounded-lg bg-emerald-50 px-3 py-2 text-sm font-semibold text-emerald-700">{saveMessage}</p> : null}
-            {workspaceMessage ? <p className="rounded-lg bg-brand-50 px-3 py-2 text-sm font-semibold text-brand-700">{workspaceMessage}</p> : null}
+            {saveError ? <p className="rounded-lg bg-rose-50 px-3 py-2 text-sm font-semibold text-rose-700 dark:bg-rose-500/10 dark:text-rose-200">{saveError}</p> : null}
+            {saveMessage ? <p className="rounded-lg bg-emerald-50 px-3 py-2 text-sm font-semibold text-emerald-700 dark:bg-emerald-500/10 dark:text-emerald-200">{saveMessage}</p> : null}
+            {workspaceMessage ? <p className="rounded-lg bg-brand-50 px-3 py-2 text-sm font-semibold text-brand-700 dark:bg-brand-500/10 dark:text-brand-200">{workspaceMessage}</p> : null}
             {changeList.length > 0 ? (
               <div className="space-y-2">
                 {changeList.map((change) => (
-                  <div key={change.label} className="rounded-xl border border-slate-200 bg-white px-4 py-3">
-                    <p className="text-sm font-semibold text-slate-950">{change.label}</p>
-                    <p className="mt-1 text-xs font-medium uppercase tracking-wide text-slate-500">{change.before}{" -> "}{change.after}</p>
+                  <div key={change.label} className="rounded-xl border border-slate-200 bg-white px-4 py-3 dark:border-slate-700/60 dark:bg-slate-900/80">
+                    <p className="text-sm font-semibold text-slate-950 dark:text-slate-50">{change.label}</p>
+                    <p className="mt-1 text-xs font-medium uppercase tracking-wide text-slate-500 dark:text-slate-400">{change.before}{" -> "}{change.after}</p>
                   </div>
                 ))}
               </div>
             ) : (
-              <p className="text-sm font-medium text-slate-600">No unsaved changes in the current draft.</p>
+              <p className="text-sm font-medium text-slate-600 dark:text-slate-300">No unsaved changes in the current draft.</p>
             )}
           </div>
         </SectionCard>
@@ -408,27 +408,27 @@ export function SettingsPage() {
                   key={day}
                   type="button"
                   onClick={() => toggleWorkingDay(day)}
-                  className={`rounded-xl border px-3 py-4 text-left transition ${enabled ? "border-brand-200 bg-brand-50" : "border-slate-200 bg-slate-50 hover:bg-slate-100"}`}
+                  className={`rounded-xl border px-3 py-4 text-left transition ${enabled ? "border-brand-200 bg-brand-50 dark:border-brand-500/20 dark:bg-brand-500/10" : "border-slate-200 bg-slate-50 hover:bg-slate-100 dark:border-slate-700/60 dark:bg-slate-900/70 dark:hover:bg-slate-800"}`}
                 >
-                  <p className="text-[0.68rem] font-black uppercase tracking-[0.14em] text-slate-500">{day.slice(0, 3)}</p>
-                  <p className="mt-2 text-sm font-semibold text-slate-950">{enabled ? "Working" : "Off"}</p>
+                  <p className="text-[0.68rem] font-black uppercase tracking-[0.14em] text-slate-500 dark:text-slate-400">{day.slice(0, 3)}</p>
+                  <p className="mt-2 text-sm font-semibold text-slate-950 dark:text-slate-50">{enabled ? "Working" : "Off"}</p>
                 </button>
               );
             })}
           </div>
 
           <div className="mt-4 grid gap-3 sm:grid-cols-3">
-            <div className="rounded-xl border border-slate-200 bg-slate-50 px-4 py-4">
-              <p className="text-[0.68rem] font-black uppercase tracking-[0.14em] text-slate-500">Working days</p>
-              <p className="mt-2 text-2xl font-extrabold tracking-tight text-slate-950">{derived.workingDayCount}</p>
+            <div className="rounded-xl border border-slate-200 bg-slate-50 px-4 py-4 dark:border-slate-700/60 dark:bg-slate-900/70">
+              <p className="text-[0.68rem] font-black uppercase tracking-[0.14em] text-slate-500 dark:text-slate-400">Working days</p>
+              <p className="mt-2 text-2xl font-extrabold tracking-tight text-slate-950 dark:text-slate-50">{derived.workingDayCount}</p>
             </div>
-            <div className="rounded-xl border border-slate-200 bg-slate-50 px-4 py-4">
-              <p className="text-[0.68rem] font-black uppercase tracking-[0.14em] text-slate-500">Daily hours</p>
-              <p className="mt-2 text-2xl font-extrabold tracking-tight text-slate-950">{derived.dailyHours}</p>
+            <div className="rounded-xl border border-slate-200 bg-slate-50 px-4 py-4 dark:border-slate-700/60 dark:bg-slate-900/70">
+              <p className="text-[0.68rem] font-black uppercase tracking-[0.14em] text-slate-500 dark:text-slate-400">Daily hours</p>
+              <p className="mt-2 text-2xl font-extrabold tracking-tight text-slate-950 dark:text-slate-50">{derived.dailyHours}</p>
             </div>
-            <div className="rounded-xl border border-slate-200 bg-slate-50 px-4 py-4">
-              <p className="text-[0.68rem] font-black uppercase tracking-[0.14em] text-slate-500">Recovery days</p>
-              <p className="mt-2 text-2xl font-extrabold tracking-tight text-slate-950">{derived.nonWorkingDays.length}</p>
+            <div className="rounded-xl border border-slate-200 bg-slate-50 px-4 py-4 dark:border-slate-700/60 dark:bg-slate-900/70">
+              <p className="text-[0.68rem] font-black uppercase tracking-[0.14em] text-slate-500 dark:text-slate-400">Recovery days</p>
+              <p className="mt-2 text-2xl font-extrabold tracking-tight text-slate-950 dark:text-slate-50">{derived.nonWorkingDays.length}</p>
             </div>
           </div>
         </SectionCard>
@@ -440,25 +440,25 @@ export function SettingsPage() {
           defaultCollapsed
         >
           <div className="grid gap-3 sm:grid-cols-2">
-            <div className="rounded-xl border border-slate-200 bg-slate-50 px-4 py-4">
-              <p className="text-[0.68rem] font-black uppercase tracking-[0.14em] text-slate-500">Payroll frequency</p>
-              <p className="mt-2 text-lg font-semibold text-slate-950">{derived.payrollRunsPerYear} runs/year</p>
-              <p className="mt-1 text-sm text-slate-600">Based on the selected payroll cycle.</p>
+            <div className="rounded-xl border border-slate-200 bg-slate-50 px-4 py-4 dark:border-slate-700/60 dark:bg-slate-900/70">
+              <p className="text-[0.68rem] font-black uppercase tracking-[0.14em] text-slate-500 dark:text-slate-400">Payroll frequency</p>
+              <p className="mt-2 text-lg font-semibold text-slate-950 dark:text-slate-50">{derived.payrollRunsPerYear} runs/year</p>
+              <p className="mt-1 text-sm text-slate-600 dark:text-slate-300">Based on the selected payroll cycle.</p>
             </div>
-            <div className="rounded-xl border border-slate-200 bg-slate-50 px-4 py-4">
-              <p className="text-[0.68rem] font-black uppercase tracking-[0.14em] text-slate-500">Leave budget</p>
-              <p className="mt-2 text-lg font-semibold text-slate-950">{derived.totalLeaveAllowance} days/employee</p>
-              <p className="mt-1 text-sm text-slate-600">Total annual leave allocation across all leave buckets.</p>
+            <div className="rounded-xl border border-slate-200 bg-slate-50 px-4 py-4 dark:border-slate-700/60 dark:bg-slate-900/70">
+              <p className="text-[0.68rem] font-black uppercase tracking-[0.14em] text-slate-500 dark:text-slate-400">Leave budget</p>
+              <p className="mt-2 text-lg font-semibold text-slate-950 dark:text-slate-50">{derived.totalLeaveAllowance} days/employee</p>
+              <p className="mt-1 text-sm text-slate-600 dark:text-slate-300">Total annual leave allocation across all leave buckets.</p>
             </div>
-            <div className="rounded-xl border border-slate-200 bg-slate-50 px-4 py-4">
-              <p className="text-[0.68rem] font-black uppercase tracking-[0.14em] text-slate-500">Weekly load</p>
-              <p className="mt-2 text-lg font-semibold text-slate-950">{derived.weeklyHours} hours</p>
-              <p className="mt-1 text-sm text-slate-600">Used as a rough staffing and compliance reference.</p>
+            <div className="rounded-xl border border-slate-200 bg-slate-50 px-4 py-4 dark:border-slate-700/60 dark:bg-slate-900/70">
+              <p className="text-[0.68rem] font-black uppercase tracking-[0.14em] text-slate-500 dark:text-slate-400">Weekly load</p>
+              <p className="mt-2 text-lg font-semibold text-slate-950 dark:text-slate-50">{derived.weeklyHours} hours</p>
+              <p className="mt-1 text-sm text-slate-600 dark:text-slate-300">Used as a rough staffing and compliance reference.</p>
             </div>
-            <div className="rounded-xl border border-slate-200 bg-slate-50 px-4 py-4">
-              <p className="text-[0.68rem] font-black uppercase tracking-[0.14em] text-slate-500">Non-working days</p>
-              <p className="mt-2 text-lg font-semibold text-slate-950">{derived.nonWorkingDays.length > 0 ? derived.nonWorkingDays.join(", ") : "None configured"}</p>
-              <p className="mt-1 text-sm text-slate-600">Feeds attendance exceptions and manager planning.</p>
+            <div className="rounded-xl border border-slate-200 bg-slate-50 px-4 py-4 dark:border-slate-700/60 dark:bg-slate-900/70">
+              <p className="text-[0.68rem] font-black uppercase tracking-[0.14em] text-slate-500 dark:text-slate-400">Non-working days</p>
+              <p className="mt-2 text-lg font-semibold text-slate-950 dark:text-slate-50">{derived.nonWorkingDays.length > 0 ? derived.nonWorkingDays.join(", ") : "None configured"}</p>
+              <p className="mt-1 text-sm text-slate-600 dark:text-slate-300">Feeds attendance exceptions and manager planning.</p>
             </div>
           </div>
         </SectionCard>
@@ -473,12 +473,12 @@ export function SettingsPage() {
         >
           <div className="grid gap-3 md:grid-cols-3">
             {([
-              { key: "annual", label: "Annual", tone: "border-brand-200 bg-brand-50" },
-              { key: "sick", label: "Sick", tone: "border-emerald-200 bg-emerald-50" },
-              { key: "casual", label: "Casual", tone: "border-amber-200 bg-amber-50" },
+              { key: "annual", label: "Annual", tone: "border-brand-200 bg-brand-50 dark:border-brand-500/20 dark:bg-brand-500/10" },
+              { key: "sick", label: "Sick", tone: "border-emerald-200 bg-emerald-50 dark:border-emerald-500/20 dark:bg-emerald-500/10" },
+              { key: "casual", label: "Casual", tone: "border-amber-200 bg-amber-50 dark:border-amber-500/20 dark:bg-amber-500/10" },
             ] as Array<{ key: keyof UpdateCRMSettingsPayload["leavePolicy"]; label: string; tone: string }>).map((item) => (
               <div key={item.key} className={`rounded-xl border px-4 py-4 ${item.tone}`}>
-                <p className="text-[0.68rem] font-black uppercase tracking-[0.14em] text-slate-500">{item.label}</p>
+                <p className="text-[0.68rem] font-black uppercase tracking-[0.14em] text-slate-500 dark:text-slate-400">{item.label}</p>
                 <input
                   type="number"
                   min="0"
@@ -486,13 +486,13 @@ export function SettingsPage() {
                   onChange={(event) => handleLeavePolicyChange(item.key, event.target.value)}
                   className="input-surface mt-3 w-full"
                 />
-                <p className="mt-2 text-sm text-slate-600">{draft.leavePolicy[item.key]} days configured</p>
+                <p className="mt-2 text-sm text-slate-600 dark:text-slate-300">{draft.leavePolicy[item.key]} days configured</p>
               </div>
             ))}
           </div>
-          <div className="mt-4 rounded-xl border border-slate-200 bg-slate-50 px-4 py-4">
-            <p className="text-sm font-semibold text-slate-950">Total configured leave allowance</p>
-            <p className="mt-1 text-sm text-slate-600">{derived.totalLeaveAllowance} days across annual, sick, and casual leave.</p>
+          <div className="mt-4 rounded-xl border border-slate-200 bg-slate-50 px-4 py-4 dark:border-slate-700/60 dark:bg-slate-900/70">
+            <p className="text-sm font-semibold text-slate-950 dark:text-slate-50">Total configured leave allowance</p>
+            <p className="mt-1 text-sm text-slate-600 dark:text-slate-300">{derived.totalLeaveAllowance} days across annual, sick, and casual leave.</p>
           </div>
         </SectionCard>
 
@@ -505,21 +505,21 @@ export function SettingsPage() {
           {riskFlags.length > 0 ? (
             <div className="space-y-3">
               {riskFlags.map((flag) => (
-                <div key={flag.title} className="rounded-xl border border-amber-200 bg-amber-50 px-4 py-4">
+                <div key={flag.title} className="rounded-xl border border-amber-200 bg-amber-50 px-4 py-4 dark:border-amber-500/20 dark:bg-amber-500/10">
                   <div className="flex items-start justify-between gap-3">
                     <div>
-                      <p className="text-sm font-semibold text-slate-950">{flag.title}</p>
-                      <p className="mt-2 text-sm text-slate-600">{flag.detail}</p>
+                      <p className="text-sm font-semibold text-slate-950 dark:text-slate-50">{flag.title}</p>
+                      <p className="mt-2 text-sm text-slate-600 dark:text-slate-300">{flag.detail}</p>
                     </div>
-                    <span className="rounded-full bg-white px-3 py-1 text-xs font-bold text-amber-700">{flag.value}</span>
+                    <span className="rounded-full bg-white px-3 py-1 text-xs font-bold text-amber-700 dark:bg-slate-950/80 dark:text-amber-200">{flag.value}</span>
                   </div>
                 </div>
               ))}
             </div>
           ) : (
-            <div className="rounded-xl border border-emerald-200 bg-emerald-50 px-4 py-4">
-              <p className="text-sm font-semibold text-slate-950">No structural risks detected</p>
-              <p className="mt-2 text-sm text-slate-600">The current draft has a balanced weekly load, leave coverage, and payroll cadence.</p>
+            <div className="rounded-xl border border-emerald-200 bg-emerald-50 px-4 py-4 dark:border-emerald-500/20 dark:bg-emerald-500/10">
+              <p className="text-sm font-semibold text-slate-950 dark:text-slate-50">No structural risks detected</p>
+              <p className="mt-2 text-sm text-slate-600 dark:text-slate-300">The current draft has a balanced weekly load, leave coverage, and payroll cadence.</p>
             </div>
           )}
         </SectionCard>

@@ -44,10 +44,10 @@ const announcementToneOptions: Array<{ value: InsightTone; label: string; descri
 ];
 
 const announcementToneSurface: Record<InsightTone, string> = {
-  info: "border-sky-200 bg-sky-50/90 text-sky-950",
-  success: "border-emerald-200 bg-emerald-50/90 text-emerald-950",
-  warning: "border-amber-200 bg-amber-50/90 text-amber-950",
-  critical: "border-rose-200 bg-rose-50/90 text-rose-950",
+  info: "border-sky-200 bg-sky-50/90 text-sky-950 dark:border-sky-500/20 dark:bg-sky-500/10 dark:text-sky-100",
+  success: "border-emerald-200 bg-emerald-50/90 text-emerald-950 dark:border-emerald-500/20 dark:bg-emerald-500/10 dark:text-emerald-100",
+  warning: "border-amber-200 bg-amber-50/90 text-amber-950 dark:border-amber-500/20 dark:bg-amber-500/10 dark:text-amber-100",
+  critical: "border-rose-200 bg-rose-50/90 text-rose-950 dark:border-rose-500/20 dark:bg-rose-500/10 dark:text-rose-100",
 };
 
 const maxAnnouncementGraphicBytes = 5 * 1024 * 1024;
@@ -357,7 +357,7 @@ export function AnnouncementsPage() {
   };
 
   if (announcementsHook.loading && announcementList.length === 0) {
-    return <p className="text-sm font-semibold text-slate-600">Loading announcements...</p>;
+    return <p className="text-sm font-semibold text-slate-600 dark:text-slate-300">Loading announcements...</p>;
   }
 
   if (announcementsHook.error && announcementList.length === 0) {
@@ -388,25 +388,25 @@ export function AnnouncementsPage() {
         title="Workspace announcement studio"
         subtitle="Compose the message once, optionally upload a local image or attach a graphic URL, and publish it to the selected workspace audience."
         rightSlot={
-          <span className="inline-flex items-center gap-2 rounded-full border border-slate-200 bg-white px-3 py-1.5 text-[0.65rem] font-black uppercase tracking-[0.16em] text-slate-600">
+          <span className="inline-flex items-center gap-2 rounded-full border border-slate-200 bg-white px-3 py-1.5 text-[0.65rem] font-black uppercase tracking-[0.16em] text-slate-600 dark:border-slate-700/60 dark:bg-slate-900/80 dark:text-slate-300">
             <Sparkles className="h-3.5 w-3.5" />
             {isEditingAnnouncement ? "Editing" : "Live composer"}
           </span>
         }
       >
         <div className="grid gap-5 xl:grid-cols-[minmax(0,1.18fr)_minmax(320px,0.82fr)]">
-          <div className="min-w-0 rounded-[28px] border border-slate-200 bg-slate-50/85 p-5 shadow-sm">
+          <div className="min-w-0 rounded-[28px] border border-slate-200 bg-slate-50/85 p-5 shadow-sm dark:border-slate-700/60 dark:bg-slate-900/70">
             {isEditingAnnouncement ? (
-              <div className="mb-4 rounded-[22px] border border-brand-200 bg-brand-50/80 px-4 py-3">
+              <div className="mb-4 rounded-[22px] border border-brand-200 bg-brand-50/80 px-4 py-3 dark:border-brand-500/20 dark:bg-brand-500/10">
                 <div className="flex items-start justify-between gap-3">
                   <div className="min-w-0">
-                    <p className="text-[0.65rem] font-black uppercase tracking-[0.18em] text-brand-700">Editing announcement</p>
-                    <p className="mt-1 break-words text-sm font-semibold text-brand-950">{editingAnnouncement?.title}</p>
+                    <p className="text-[0.65rem] font-black uppercase tracking-[0.18em] text-brand-700 dark:text-brand-200">Editing announcement</p>
+                    <p className="mt-1 break-words text-sm font-semibold text-brand-950 dark:text-slate-50">{editingAnnouncement?.title}</p>
                   </div>
                   <button
                     type="button"
                     onClick={handleResetAnnouncementDraft}
-                    className="inline-flex shrink-0 items-center rounded-full border border-brand-200 bg-white px-3 py-1 text-[0.65rem] font-black uppercase tracking-[0.14em] text-brand-700 transition hover:border-brand-300 hover:text-brand-900"
+                    className="inline-flex shrink-0 items-center rounded-full border border-brand-200 bg-white px-3 py-1 text-[0.65rem] font-black uppercase tracking-[0.14em] text-brand-700 transition hover:border-brand-300 hover:text-brand-900 dark:border-brand-500/20 dark:bg-slate-950/80 dark:text-brand-200 dark:hover:border-brand-400/30 dark:hover:text-brand-100"
                   >
                     Cancel edit
                   </button>
@@ -415,11 +415,11 @@ export function AnnouncementsPage() {
             ) : null}
 
             <div className="flex flex-wrap items-center gap-2">
-              <span className="inline-flex items-center gap-2 rounded-full border border-brand-200 bg-brand-50 px-3 py-1.5 text-[0.65rem] font-black uppercase tracking-[0.16em] text-brand-800">
+              <span className="inline-flex items-center gap-2 rounded-full border border-brand-200 bg-brand-50 px-3 py-1.5 text-[0.65rem] font-black uppercase tracking-[0.16em] text-brand-800 dark:border-brand-500/20 dark:bg-brand-500/10 dark:text-brand-200">
                 <Megaphone className="h-3.5 w-3.5" />
                 {isEditingAnnouncement ? "Update post" : "Publish update"}
               </span>
-              <span className="text-xs font-semibold text-slate-500">
+              <span className="text-xs font-semibold text-slate-500 dark:text-slate-300">
                 {isEditingAnnouncement
                   ? "Refine the selected post, then save the revision back into the feed."
                   : "Create a post that can target all users, admins only, or employees only."}
@@ -428,7 +428,7 @@ export function AnnouncementsPage() {
 
             <div className="mt-4 grid gap-3 md:grid-cols-2">
               <div>
-                <label className="mb-2 block text-xs font-semibold uppercase tracking-wide text-slate-500">Audience</label>
+                <label className="mb-2 block text-xs font-semibold uppercase tracking-wide text-slate-500 dark:text-slate-400">Audience</label>
                 <select
                   value={announcementDraft.audience}
                   onChange={(event) => updateAnnouncementDraft("audience", event.target.value as AnnouncementAudience)}
@@ -440,12 +440,12 @@ export function AnnouncementsPage() {
                     </option>
                   ))}
                 </select>
-                <p className="mt-2 text-xs text-slate-500">
+                <p className="mt-2 text-xs text-slate-500 dark:text-slate-400">
                   {announcementAudienceOptions.find((item) => item.value === announcementDraft.audience)?.description}
                 </p>
               </div>
               <div>
-                <label className="mb-2 block text-xs font-semibold uppercase tracking-wide text-slate-500">Tone</label>
+                <label className="mb-2 block text-xs font-semibold uppercase tracking-wide text-slate-500 dark:text-slate-400">Tone</label>
                 <select
                   value={announcementDraft.tone}
                   onChange={(event) => updateAnnouncementDraft("tone", event.target.value as InsightTone)}
@@ -457,12 +457,12 @@ export function AnnouncementsPage() {
                     </option>
                   ))}
                 </select>
-                <p className="mt-2 text-xs text-slate-500">
+                <p className="mt-2 text-xs text-slate-500 dark:text-slate-400">
                   {announcementToneOptions.find((item) => item.value === announcementDraft.tone)?.description}
                 </p>
               </div>
               <div className="md:col-span-2">
-                <label className="mb-2 block text-xs font-semibold uppercase tracking-wide text-slate-500">Title</label>
+                <label className="mb-2 block text-xs font-semibold uppercase tracking-wide text-slate-500 dark:text-slate-400">Title</label>
                 <input
                   ref={announcementTitleInputRef}
                   value={announcementDraft.title}
@@ -472,7 +472,7 @@ export function AnnouncementsPage() {
                 />
               </div>
               <div className="md:col-span-2">
-                <label className="mb-2 block text-xs font-semibold uppercase tracking-wide text-slate-500">Message</label>
+                <label className="mb-2 block text-xs font-semibold uppercase tracking-wide text-slate-500 dark:text-slate-400">Message</label>
                 <textarea
                   value={announcementDraft.message}
                   onChange={(event) => updateAnnouncementDraft("message", event.target.value)}
@@ -481,11 +481,11 @@ export function AnnouncementsPage() {
                 />
               </div>
               <div className="md:col-span-2">
-                <div className="rounded-2xl border border-dashed border-slate-200 bg-white px-4 py-4">
+                <div className="rounded-2xl border border-dashed border-slate-200 bg-white px-4 py-4 dark:border-slate-700/60 dark:bg-slate-950/70">
                   <div className="flex flex-wrap items-start justify-between gap-3">
                     <div>
-                      <label className="block text-xs font-semibold uppercase tracking-wide text-slate-500">Graphic asset</label>
-                      <p className="mt-2 text-xs text-slate-500">
+                      <label className="block text-xs font-semibold uppercase tracking-wide text-slate-500 dark:text-slate-400">Graphic asset</label>
+                      <p className="mt-2 text-xs text-slate-500 dark:text-slate-400">
                         Upload an image from your device or paste a remote URL. Local uploads are stored with the announcement.
                       </p>
                     </div>
@@ -516,36 +516,36 @@ export function AnnouncementsPage() {
                   </div>
 
                   <div className="mt-3 flex flex-wrap items-center gap-2">
-                    <span className="rounded-full border border-slate-200 bg-slate-50 px-3 py-1 text-[0.65rem] font-black uppercase tracking-[0.16em] text-slate-600">
+                    <span className="rounded-full border border-slate-200 bg-slate-50 px-3 py-1 text-[0.65rem] font-black uppercase tracking-[0.16em] text-slate-600 dark:border-slate-700/60 dark:bg-slate-900/80 dark:text-slate-300">
                       {announcementGraphicSourceLabel}
                     </span>
                     {selectedGraphicFile ? (
-                      <span className="rounded-full border border-brand-200 bg-brand-50 px-3 py-1 text-[0.65rem] font-black uppercase tracking-[0.16em] text-brand-800">
+                      <span className="rounded-full border border-brand-200 bg-brand-50 px-3 py-1 text-[0.65rem] font-black uppercase tracking-[0.16em] text-brand-800 dark:border-brand-500/20 dark:bg-brand-500/10 dark:text-brand-200">
                         Local image selected
                       </span>
                     ) : null}
                   </div>
                   {selectedGraphicFile ? (
-                    <p className="mt-2 text-xs text-slate-500">
+                    <p className="mt-2 text-xs text-slate-500 dark:text-slate-400">
                       {selectedGraphicFile.type || "image"} · {formatFileSize(selectedGraphicFile.size)} · This file will be embedded when you publish.
                     </p>
                   ) : (
-                    <p className="mt-2 text-xs text-slate-500">No file selected yet. Use the button above or paste a URL below.</p>
+                    <p className="mt-2 text-xs text-slate-500 dark:text-slate-400">No file selected yet. Use the button above or paste a URL below.</p>
                   )}
                 </div>
               </div>
               <div className="md:col-span-2">
-                <label className="mb-2 block text-xs font-semibold uppercase tracking-wide text-slate-500">Graphic URL fallback</label>
+                <label className="mb-2 block text-xs font-semibold uppercase tracking-wide text-slate-500 dark:text-slate-400">Graphic URL fallback</label>
                 <input
                   value={announcementDraft.graphicUrl}
                   onChange={(event) => updateAnnouncementDraft("graphicUrl", event.target.value)}
                   placeholder="https://.../banner.png"
                   className="input-surface w-full"
                 />
-                <p className="mt-2 text-xs text-slate-500">Used when you do not choose a local file.</p>
+                <p className="mt-2 text-xs text-slate-500 dark:text-slate-400">Used when you do not choose a local file.</p>
               </div>
               <div className="md:col-span-2">
-                <label className="mb-2 block text-xs font-semibold uppercase tracking-wide text-slate-500">Graphic alt text</label>
+                <label className="mb-2 block text-xs font-semibold uppercase tracking-wide text-slate-500 dark:text-slate-400">Graphic alt text</label>
                 <input
                   value={announcementDraft.graphicAlt}
                   onChange={(event) => updateAnnouncementDraft("graphicAlt", event.target.value)}
@@ -554,7 +554,7 @@ export function AnnouncementsPage() {
                 />
               </div>
               <div>
-                <label className="mb-2 block text-xs font-semibold uppercase tracking-wide text-slate-500">CTA label</label>
+                <label className="mb-2 block text-xs font-semibold uppercase tracking-wide text-slate-500 dark:text-slate-400">CTA label</label>
                 <input
                   value={announcementDraft.ctaLabel}
                   onChange={(event) => updateAnnouncementDraft("ctaLabel", event.target.value)}
@@ -563,7 +563,7 @@ export function AnnouncementsPage() {
                 />
               </div>
               <div>
-                <label className="mb-2 block text-xs font-semibold uppercase tracking-wide text-slate-500">CTA path</label>
+                <label className="mb-2 block text-xs font-semibold uppercase tracking-wide text-slate-500 dark:text-slate-400">CTA path</label>
                 <input
                   value={announcementDraft.ctaPath}
                   onChange={(event) => updateAnnouncementDraft("ctaPath", event.target.value)}
@@ -574,9 +574,9 @@ export function AnnouncementsPage() {
             </div>
 
             <div className="mt-4 space-y-2">
-              {announcementError ? <p className="rounded-lg bg-rose-50 px-3 py-2 text-sm font-semibold text-rose-700">{announcementError}</p> : null}
-              {announcementMessage ? <p className="rounded-lg bg-emerald-50 px-3 py-2 text-sm font-semibold text-emerald-700">{announcementMessage}</p> : null}
-              <p className="text-xs font-medium text-slate-500">
+              {announcementError ? <p className="rounded-lg bg-rose-50 px-3 py-2 text-sm font-semibold text-rose-700 dark:bg-rose-500/10 dark:text-rose-200">{announcementError}</p> : null}
+              {announcementMessage ? <p className="rounded-lg bg-emerald-50 px-3 py-2 text-sm font-semibold text-emerald-700 dark:bg-emerald-500/10 dark:text-emerald-200">{announcementMessage}</p> : null}
+              <p className="text-xs font-medium text-slate-500 dark:text-slate-400">
                 Graphics are optional. If you skip the image, the strip stays text-first and still uses the tone and CTA.
               </p>
             </div>
@@ -598,49 +598,49 @@ export function AnnouncementsPage() {
             </div>
           </div>
 
-          <div className="min-w-0 space-y-4">
+            <div className="min-w-0 space-y-4">
             <div className={`overflow-hidden rounded-[28px] border p-4 shadow-[0_18px_45px_rgba(15,23,42,0.08)] ${announcementToneSurface[announcementDraft.tone]}`}>
               {announcementPreviewGraphicUrl ? (
-                <div className="overflow-hidden rounded-[20px] border border-white/60 bg-white/75 shadow-[0_12px_28px_rgba(15,23,42,0.08)]">
+                <div className="overflow-hidden rounded-[20px] border border-white/60 bg-white/75 shadow-[0_12px_28px_rgba(15,23,42,0.08)] dark:border-slate-700/60 dark:bg-slate-950/70">
                   <img src={announcementPreviewGraphicUrl} alt={announcementPreviewGraphicAlt} className="h-40 w-full object-cover" />
                 </div>
               ) : (
-                <div className="flex h-40 items-center justify-center rounded-[20px] border border-dashed border-white/70 bg-white/45 px-4 text-center">
+                <div className="flex h-40 items-center justify-center rounded-[20px] border border-dashed border-white/70 bg-white/45 px-4 text-center dark:border-slate-700/60 dark:bg-slate-950/40">
                   <div>
-                    <ImageIcon className="mx-auto h-8 w-8 text-slate-500" />
-                    <p className="mt-3 text-sm font-semibold text-slate-700">Add a graphic URL for a richer card.</p>
-                    <p className="mt-1 text-xs font-medium text-slate-500">Text-only announcements still work without an image.</p>
+                    <ImageIcon className="mx-auto h-8 w-8 text-slate-500 dark:text-slate-400" />
+                    <p className="mt-3 text-sm font-semibold text-slate-700 dark:text-slate-200">Add a graphic URL for a richer card.</p>
+                    <p className="mt-1 text-xs font-medium text-slate-500 dark:text-slate-400">Text-only announcements still work without an image.</p>
                   </div>
                 </div>
               )}
 
               <div className="mt-4 flex flex-wrap items-center gap-2">
-                <span className="rounded-full border border-white/60 bg-white/70 px-3 py-1 text-[0.65rem] font-black uppercase tracking-[0.16em] text-slate-700">
+                <span className="rounded-full border border-white/60 bg-white/70 px-3 py-1 text-[0.65rem] font-black uppercase tracking-[0.16em] text-slate-700 dark:border-slate-700/60 dark:bg-slate-950/80 dark:text-slate-200">
                   {announcementPreviewAudience?.label ?? announcementDraft.audience}
                 </span>
-                <span className="rounded-full border border-white/60 bg-white/70 px-3 py-1 text-[0.65rem] font-black uppercase tracking-[0.16em] text-slate-700">
+                <span className="rounded-full border border-white/60 bg-white/70 px-3 py-1 text-[0.65rem] font-black uppercase tracking-[0.16em] text-slate-700 dark:border-slate-700/60 dark:bg-slate-950/80 dark:text-slate-200">
                   {announcementPreviewTone?.label ?? announcementDraft.tone}
                 </span>
                 {selectedGraphicFile ? (
-                  <span className="rounded-full border border-white/60 bg-white/70 px-3 py-1 text-[0.65rem] font-black uppercase tracking-[0.16em] text-slate-700">
+                  <span className="rounded-full border border-white/60 bg-white/70 px-3 py-1 text-[0.65rem] font-black uppercase tracking-[0.16em] text-slate-700 dark:border-slate-700/60 dark:bg-slate-950/80 dark:text-slate-200">
                     Local upload
                   </span>
                 ) : null}
               </div>
 
-              <h3 className="mt-3 break-words text-xl font-black tracking-tight text-slate-950">{announcementPreviewTitle}</h3>
-              <p className="mt-2 whitespace-pre-wrap break-words text-sm font-medium text-slate-700">{announcementPreviewMessage}</p>
+              <h3 className="mt-3 break-words text-xl font-black tracking-tight text-slate-950 dark:text-slate-50">{announcementPreviewTitle}</h3>
+              <p className="mt-2 whitespace-pre-wrap break-words text-sm font-medium text-slate-700 dark:text-slate-200">{announcementPreviewMessage}</p>
               {announcementPreviewCtaLabel && announcementPreviewCtaPath ? (
-                <div className="mt-4 inline-flex max-w-full items-center gap-2 rounded-full border border-white/60 bg-white/70 px-3 py-1.5 text-sm font-semibold text-slate-950 shadow-sm">
+                <div className="mt-4 inline-flex max-w-full items-center gap-2 rounded-full border border-white/60 bg-white/70 px-3 py-1.5 text-sm font-semibold text-slate-950 shadow-sm dark:border-slate-700/60 dark:bg-slate-950/80 dark:text-slate-100">
                   <span className="break-words">{announcementPreviewCtaLabel}</span>
-                  <span className="break-words text-slate-400">{announcementPreviewCtaPath}</span>
+                  <span className="break-words text-slate-400 dark:text-slate-400">{announcementPreviewCtaPath}</span>
                 </div>
               ) : null}
             </div>
 
-            <div className="rounded-[24px] border border-slate-200 bg-white/90 p-4 shadow-[0_14px_34px_rgba(15,23,42,0.05)]">
-              <p className="text-[0.65rem] font-black uppercase tracking-[0.18em] text-slate-400">Publishing notes</p>
-              <ul className="mt-3 space-y-2 text-sm text-slate-600">
+            <div className="rounded-[24px] border border-slate-200 bg-white/90 p-4 shadow-[0_14px_34px_rgba(15,23,42,0.05)] dark:border-slate-700/60 dark:bg-slate-950/80">
+              <p className="text-[0.65rem] font-black uppercase tracking-[0.18em] text-slate-400 dark:text-slate-500">Publishing notes</p>
+              <ul className="mt-3 space-y-2 text-sm text-slate-600 dark:text-slate-300">
                 <li>Lead with a short title and a clear message so the feed scans quickly.</li>
                 <li>Local uploads are embedded automatically, even when the graphic columns are unavailable.</li>
                 <li>Use the preview to confirm tone, audience, and CTA before publishing.</li>
@@ -649,23 +649,23 @@ export function AnnouncementsPage() {
           </div>
         </div>
 
-        <div className="mt-5 overflow-hidden rounded-[28px] border border-slate-200 bg-white p-4 shadow-[0_16px_40px_rgba(15,23,42,0.06)]">
+        <div className="mt-5 overflow-hidden rounded-[28px] border border-slate-200 bg-white p-4 shadow-[0_16px_40px_rgba(15,23,42,0.06)] dark:border-slate-700/60 dark:bg-slate-950/80">
           <div className="flex items-center justify-between gap-3">
             <div>
-              <p className="text-[0.65rem] font-black uppercase tracking-[0.18em] text-slate-400">Recent posts</p>
-              <p className="mt-1 text-sm font-semibold text-slate-950">What is already live in the feed</p>
+              <p className="text-[0.65rem] font-black uppercase tracking-[0.18em] text-slate-400 dark:text-slate-500">Recent posts</p>
+              <p className="mt-1 text-sm font-semibold text-slate-950 dark:text-slate-50">What is already live in the feed</p>
             </div>
-            <span className="rounded-full bg-slate-100 px-3 py-1 text-[0.65rem] font-black uppercase tracking-[0.16em] text-slate-600">
+            <span className="rounded-full bg-slate-100 px-3 py-1 text-[0.65rem] font-black uppercase tracking-[0.16em] text-slate-600 dark:bg-slate-900/80 dark:text-slate-300">
               {announcementList.length} items
             </span>
           </div>
 
           {announcementsHook.loading && announcementList.length === 0 ? (
-            <p className="mt-4 text-sm font-semibold text-slate-600">Loading announcements...</p>
+            <p className="mt-4 text-sm font-semibold text-slate-600 dark:text-slate-300">Loading announcements...</p>
           ) : announcementsHook.error ? (
-            <p className="mt-4 rounded-lg bg-rose-50 px-3 py-2 text-sm font-semibold text-rose-700">{announcementsHook.error}</p>
+            <p className="mt-4 rounded-lg bg-rose-50 px-3 py-2 text-sm font-semibold text-rose-700 dark:bg-rose-500/10 dark:text-rose-200">{announcementsHook.error}</p>
           ) : announcementList.length === 0 ? (
-            <p className="mt-4 text-sm font-medium text-slate-600">No announcements yet. Publish one from the composer above.</p>
+            <p className="mt-4 text-sm font-medium text-slate-600 dark:text-slate-300">No announcements yet. Publish one from the composer above.</p>
           ) : (
             <div className="mt-4 grid gap-3 xl:grid-cols-2 2xl:grid-cols-3">
               {announcementList.slice(0, 6).map((announcement) => {
@@ -682,20 +682,20 @@ export function AnnouncementsPage() {
                         <img
                           src={announcement.graphicUrl}
                           alt={announcement.graphicAlt ?? announcement.title}
-                          className="h-16 w-16 shrink-0 rounded-[16px] border border-white/70 object-cover"
+                          className="h-16 w-16 shrink-0 rounded-[16px] border border-white/70 object-cover dark:border-slate-700/60"
                         />
                       ) : (
-                        <div className="flex h-16 w-16 shrink-0 items-center justify-center rounded-[16px] border border-white/70 bg-white/70">
-                          <ImageIcon className="h-5 w-5 text-slate-600" />
+                        <div className="flex h-16 w-16 shrink-0 items-center justify-center rounded-[16px] border border-white/70 bg-white/70 dark:border-slate-700/60 dark:bg-slate-950/70">
+                          <ImageIcon className="h-5 w-5 text-slate-600 dark:text-slate-300" />
                         </div>
                       )}
                       <div className="min-w-0 flex-1">
                         <div className="flex items-start justify-between gap-3">
                           <div className="flex flex-wrap gap-2">
-                            <span className="rounded-full border border-white/70 bg-white/70 px-2.5 py-1 text-[0.6rem] font-black uppercase tracking-[0.16em] text-slate-700">
+                            <span className="rounded-full border border-white/70 bg-white/70 px-2.5 py-1 text-[0.6rem] font-black uppercase tracking-[0.16em] text-slate-700 dark:border-slate-700/60 dark:bg-slate-950/80 dark:text-slate-200">
                               {audienceLabel}
                             </span>
-                            <span className="rounded-full border border-white/70 bg-white/70 px-2.5 py-1 text-[0.6rem] font-black uppercase tracking-[0.16em] text-slate-700">
+                            <span className="rounded-full border border-white/70 bg-white/70 px-2.5 py-1 text-[0.6rem] font-black uppercase tracking-[0.16em] text-slate-700 dark:border-slate-700/60 dark:bg-slate-950/80 dark:text-slate-200">
                               {toneLabel}
                             </span>
                           </div>
@@ -703,7 +703,7 @@ export function AnnouncementsPage() {
                             <button
                               type="button"
                               onClick={() => handleBeginEditAnnouncement(announcement)}
-                              className="inline-flex items-center gap-1 rounded-full border border-white/70 bg-white/80 px-2.5 py-1 text-[0.62rem] font-black uppercase tracking-[0.14em] text-slate-600 transition hover:border-slate-300 hover:text-slate-950"
+                              className="inline-flex items-center gap-1 rounded-full border border-white/70 bg-white/80 px-2.5 py-1 text-[0.62rem] font-black uppercase tracking-[0.14em] text-slate-600 transition hover:border-slate-300 hover:text-slate-950 dark:border-slate-700/60 dark:bg-slate-950/80 dark:text-slate-300 dark:hover:border-slate-600 dark:hover:text-slate-100"
                             >
                               <PencilLine className="h-3.5 w-3.5" />
                               Edit
@@ -711,16 +711,16 @@ export function AnnouncementsPage() {
                             <button
                               type="button"
                               onClick={() => setAnnouncementDeleteTarget(announcement)}
-                              className="inline-flex items-center gap-1 rounded-full border border-rose-200/80 bg-white/80 px-2.5 py-1 text-[0.62rem] font-black uppercase tracking-[0.14em] text-rose-600 transition hover:border-rose-300 hover:text-rose-700"
+                              className="inline-flex items-center gap-1 rounded-full border border-rose-200/80 bg-white/80 px-2.5 py-1 text-[0.62rem] font-black uppercase tracking-[0.14em] text-rose-600 transition hover:border-rose-300 hover:text-rose-700 dark:border-rose-500/20 dark:bg-slate-950/80 dark:text-rose-200 dark:hover:border-rose-400/30 dark:hover:text-rose-100"
                             >
                               <Trash2 className="h-3.5 w-3.5" />
                               Delete
                             </button>
                           </div>
                         </div>
-                        <p className="mt-2 break-words text-sm font-semibold text-slate-950">{announcement.title}</p>
-                        <p className="mt-1 whitespace-pre-wrap break-words text-sm font-medium text-slate-700">{announcementBody}</p>
-                        <p className="mt-2 text-[0.7rem] font-semibold uppercase tracking-[0.16em] text-slate-500">
+                        <p className="mt-2 break-words text-sm font-semibold text-slate-950 dark:text-slate-50">{announcement.title}</p>
+                        <p className="mt-1 whitespace-pre-wrap break-words text-sm font-medium text-slate-700 dark:text-slate-200">{announcementBody}</p>
+                        <p className="mt-2 text-[0.7rem] font-semibold uppercase tracking-[0.16em] text-slate-500 dark:text-slate-400">
                           {new Date(announcement.createdAt).toLocaleString()}
                         </p>
                       </div>
@@ -742,15 +742,15 @@ export function AnnouncementsPage() {
             }
           }}
         >
-          <div className="w-full max-w-md rounded-[28px] border border-slate-200 bg-white p-6 shadow-[0_28px_80px_rgba(15,23,42,0.25)]">
+          <div className="w-full max-w-md rounded-[28px] border border-slate-200 bg-white p-6 shadow-[0_28px_80px_rgba(15,23,42,0.25)] dark:border-slate-700/60 dark:bg-slate-950/95">
             <div className="flex items-start gap-3">
-              <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl bg-rose-50 text-rose-600">
+              <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl bg-rose-50 text-rose-600 dark:bg-rose-500/10 dark:text-rose-200">
                 <Trash2 className="h-5 w-5" />
               </span>
               <div className="min-w-0">
-                <p className="text-[0.65rem] font-black uppercase tracking-[0.18em] text-rose-500">Delete announcement</p>
-                <h3 className="mt-1 break-words text-lg font-semibold text-slate-950">{announcementDeleteTarget.title}</h3>
-                <p className="mt-2 text-sm leading-relaxed text-slate-600">
+                <p className="text-[0.65rem] font-black uppercase tracking-[0.18em] text-rose-500 dark:text-rose-200">Delete announcement</p>
+                <h3 className="mt-1 break-words text-lg font-semibold text-slate-950 dark:text-slate-50">{announcementDeleteTarget.title}</h3>
+                <p className="mt-2 text-sm leading-relaxed text-slate-600 dark:text-slate-300">
                   This removes the post from the workspace feed and cannot be undone.
                 </p>
               </div>
@@ -769,7 +769,7 @@ export function AnnouncementsPage() {
                 type="button"
                 onClick={() => void handleDeleteAnnouncement()}
                 disabled={announcementDeletePending}
-                className="inline-flex items-center gap-2 rounded-full border border-rose-300 bg-rose-600 px-4 py-2 text-sm font-semibold text-white shadow-sm transition hover:bg-rose-500 disabled:cursor-not-allowed disabled:opacity-60"
+                className="inline-flex items-center gap-2 rounded-full border border-rose-300 bg-rose-600 px-4 py-2 text-sm font-semibold text-white shadow-sm transition hover:bg-rose-500 disabled:cursor-not-allowed disabled:opacity-60 dark:border-rose-400/30 dark:bg-rose-500/80 dark:hover:bg-rose-500"
               >
                 <Trash2 className="h-4 w-4" />
                 {announcementDeletePending ? "Deleting..." : "Delete announcement"}

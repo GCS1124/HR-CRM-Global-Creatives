@@ -21,18 +21,18 @@ import { getLoginBroadcastRemainingMs } from "../utils/loginBroadcast";
 import { formatCurrency, formatPercent } from "../utils/formatters";
 
 const stageTone: Record<string, string> = {
-  sourced: "bg-slate-50 text-slate-700 border-slate-200",
-  interview: "bg-sky-50 text-sky-700 border-sky-200",
-  offer: "bg-amber-50 text-amber-700 border-amber-200",
-  hired: "bg-emerald-50 text-emerald-700 border-emerald-200",
-  rejected: "bg-rose-50 text-rose-700 border-rose-200",
+  sourced: "bg-slate-50 text-slate-700 border-slate-200 dark:border-slate-700/60 dark:bg-slate-900/80 dark:text-slate-200",
+  interview: "bg-sky-50 text-sky-700 border-sky-200 dark:border-sky-400/30 dark:bg-sky-500/10 dark:text-sky-200",
+  offer: "bg-amber-50 text-amber-700 border-amber-200 dark:border-amber-400/30 dark:bg-amber-500/10 dark:text-amber-200",
+  hired: "bg-emerald-50 text-emerald-700 border-emerald-200 dark:border-emerald-400/30 dark:bg-emerald-500/10 dark:text-emerald-200",
+  rejected: "bg-rose-50 text-rose-700 border-rose-200 dark:border-rose-400/30 dark:bg-rose-500/10 dark:text-rose-200",
 };
 
 const priorityTone: Record<string, string> = {
-  info: "border-sky-100 bg-sky-50/50",
-  success: "border-emerald-100 bg-emerald-50/50",
-  warning: "border-amber-100 bg-amber-50/50",
-  critical: "border-rose-100 bg-rose-50/50",
+  info: "border-sky-100 bg-sky-50/50 dark:border-sky-500/20 dark:bg-sky-500/10",
+  success: "border-emerald-100 bg-emerald-50/50 dark:border-emerald-500/20 dark:bg-emerald-500/10",
+  warning: "border-amber-100 bg-amber-50/50 dark:border-amber-500/20 dark:bg-amber-500/10",
+  critical: "border-rose-100 bg-rose-50/50 dark:border-rose-500/20 dark:bg-rose-500/10",
 };
 
 export function DashboardPage() {
@@ -98,18 +98,18 @@ export function DashboardPage() {
             {command.departmentSnapshots.map((d) => {
               const rate = d.headcount ? Math.round((d.activeCount / d.headcount) * 100) : 0;
               return (
-                <div key={d.department} className="p-4 rounded-2xl border border-slate-100 bg-slate-50/50 hover:bg-white hover:border-slate-200 transition-all shadow-sm">
+                <div key={d.department} className="p-4 rounded-2xl border border-slate-100 bg-slate-50/50 hover:bg-white hover:border-slate-200 transition-all shadow-sm dark:border-slate-700/60 dark:bg-slate-900/70 dark:hover:border-slate-600 dark:hover:bg-slate-900">
                   <div className="flex justify-between items-start">
                     <div>
-                      <p className="text-[0.65rem] font-black uppercase text-brand-600 tracking-wider">{d.department}</p>
-                      <p className="mt-1 text-xl font-black text-slate-900">{d.headcount} <span className="text-xs text-slate-400 font-bold tracking-normal">People</span></p>
+                      <p className="text-[0.65rem] font-black uppercase text-brand-600 tracking-wider dark:text-brand-300">{d.department}</p>
+                      <p className="mt-1 text-xl font-black text-slate-900 dark:text-slate-50">{d.headcount} <span className="text-xs text-slate-400 font-bold tracking-normal dark:text-slate-400">People</span></p>
                     </div>
-                    <span className="text-[0.6rem] font-black bg-brand-100 text-brand-700 px-2 py-0.5 rounded-full">{rate}% Active</span>
+                    <span className="text-[0.6rem] font-black bg-brand-100 text-brand-700 px-2 py-0.5 rounded-full dark:bg-brand-500/15 dark:text-brand-200">{rate}% Active</span>
                   </div>
-                  <div className="mt-4 flex gap-4 text-center border-t border-slate-100/60 pt-3">
-                    <div className="flex-1"><p className="text-[0.55rem] font-black uppercase text-slate-400">Payroll</p><p className="text-xs font-black text-slate-700 truncate">{formatCurrency(d.payrollTotal)}</p></div>
-                    <div className="flex-1 border-x border-slate-100/60"><p className="text-[0.55rem] font-black uppercase text-slate-400">Leave</p><p className="text-xs font-black text-slate-700">{d.leaveCount}</p></div>
-                    <div className="flex-1"><p className="text-[0.55rem] font-black uppercase text-slate-400">Score</p><p className="text-xs font-black text-slate-700">{d.avgPerformance}%</p></div>
+                  <div className="mt-4 flex gap-4 text-center border-t border-slate-100/60 pt-3 dark:border-slate-700/60">
+                    <div className="flex-1"><p className="text-[0.55rem] font-black uppercase text-slate-400 dark:text-slate-500">Payroll</p><p className="text-xs font-black text-slate-700 truncate dark:text-slate-200">{formatCurrency(d.payrollTotal)}</p></div>
+                    <div className="flex-1 border-x border-slate-100/60 dark:border-slate-700/60"><p className="text-[0.55rem] font-black uppercase text-slate-400 dark:text-slate-500">Leave</p><p className="text-xs font-black text-slate-700 dark:text-slate-200">{d.leaveCount}</p></div>
+                    <div className="flex-1"><p className="text-[0.55rem] font-black uppercase text-slate-400 dark:text-slate-500">Score</p><p className="text-xs font-black text-slate-700 dark:text-slate-200">{d.avgPerformance}%</p></div>
                   </div>
                 </div>
               );
@@ -122,11 +122,11 @@ export function DashboardPage() {
             {command.priorityItems.map((item) => (
               <Link key={item.id} to={item.route} className={`flex items-center justify-between p-3.5 rounded-xl border transition-all hover:scale-[1.02] active:scale-[0.98] ${priorityTone[item.tone] || priorityTone.info}`}>
                 <div className="min-w-0 flex-1">
-                  <p className="text-xs font-black text-slate-900 truncate">{item.title}</p>
-                  <p className="text-sm font-bold text-slate-600 truncate mt-0.5">{item.value}</p>
-                  <p className="text-[0.65rem] font-bold text-slate-400 mt-1">{item.meta}</p>
+                  <p className="text-xs font-black text-slate-900 truncate dark:text-slate-50">{item.title}</p>
+                  <p className="text-sm font-bold text-slate-600 truncate mt-0.5 dark:text-slate-200">{item.value}</p>
+                  <p className="text-[0.65rem] font-bold text-slate-400 mt-1 dark:text-slate-400">{item.meta}</p>
                 </div>
-                <ArrowRight className="h-4 w-4 text-slate-300 ml-2" />
+                <ArrowRight className="h-4 w-4 text-slate-300 ml-2 dark:text-slate-500" />
               </Link>
             ))}
           </div>
@@ -149,23 +149,23 @@ export function DashboardPage() {
                 { l: "Overdue", v: command.taskSummary.overdue, i: CalendarClock, t: "text-rose-600" },
                 { l: "Critical", v: command.taskSummary.critical, i: TriangleAlert, t: "text-rose-700" },
               ].map((item, idx) => (
-                <div key={idx} className="p-3 rounded-xl border border-slate-100 bg-white">
+                <div key={idx} className="p-3 rounded-xl border border-slate-100 bg-white dark:border-slate-700/60 dark:bg-slate-900/80">
                    <div className="flex items-center justify-between">
-                      <span className="text-[0.55rem] font-black uppercase text-slate-400">{item.l}</span>
+                      <span className="text-[0.55rem] font-black uppercase text-slate-400 dark:text-slate-500">{item.l}</span>
                       <item.i className={`h-3.5 w-3.5 ${item.t || "text-brand-600"}`} />
                    </div>
-                   <p className={`mt-2 text-xl font-black ${item.t || "text-slate-900"}`}>{item.v}</p>
+                   <p className={`mt-2 text-xl font-black ${item.t || "text-slate-900 dark:text-slate-50"}`}>{item.v}</p>
                 </div>
               ))}
            </div>
            
-           <div className="mt-6 border-t border-slate-100 pt-5">
+           <div className="mt-6 border-t border-slate-100 pt-5 dark:border-slate-700/60">
               <p className="text-[0.65rem] font-black uppercase text-slate-400 tracking-wider mb-4">Talent Intake Funnel</p>
               <div className="grid grid-cols-2 sm:grid-cols-5 gap-2">
                 {command.candidatePipeline.map((p) => (
                   <div key={p.stage} className={`p-2.5 rounded-xl border flex flex-col items-center text-center ${stageTone[p.stage] || stageTone.sourced}`}>
-                    <span className="text-[0.55rem] font-black uppercase truncate w-full">{p.stage.replace("_", " ")}</span>
-                    <span className="text-lg font-black mt-1">{p.count}</span>
+                    <span className="text-[0.55rem] font-black uppercase truncate w-full dark:text-inherit">{p.stage.replace("_", " ")}</span>
+                    <span className="text-lg font-black mt-1 dark:text-inherit">{p.count}</span>
                   </div>
                 ))}
               </div>
@@ -180,23 +180,23 @@ export function DashboardPage() {
         >
            <div className="grid gap-6 sm:grid-cols-2">
               <div className="space-y-4">
-                <p className="text-[0.65rem] font-black uppercase text-slate-400 tracking-wider">Attendance Mix</p>
+                <p className="text-[0.65rem] font-black uppercase text-slate-400 tracking-wider dark:text-slate-500">Attendance Mix</p>
                 <div className="space-y-3">
                   {[
                     { l: "Present", v: command.attendanceBreakdown.present, c: "bg-brand-600" },
                     { l: "Remote", v: command.attendanceBreakdown.remote, c: "bg-sky-400" },
-                    { l: "Late", v: command.attendanceBreakdown.late, c: "bg-amber-500" },
-                    { l: "Absent", v: command.attendanceBreakdown.absent, c: "bg-rose-500" },
+                    { l: "Late", v: command.attendanceBreakdown.late, c: "bg-amber-500 dark:bg-amber-400" },
+                    { l: "Absent", v: command.attendanceBreakdown.absent, c: "bg-rose-500 dark:bg-rose-400" },
                   ].map((item) => {
                     const total = Object.values(command.attendanceBreakdown).reduce((a, b) => a + b, 0);
                     const w = total > 0 ? Math.max((item.v / total) * 100, 4) : 4;
                     return (
                       <div key={item.l}>
                         <div className="flex justify-between text-[0.65rem] font-black mb-1.5">
-                           <span className="text-slate-500 uppercase">{item.l}</span>
-                           <span className="text-slate-900">{item.v}</span>
+                           <span className="text-slate-500 uppercase dark:text-slate-400">{item.l}</span>
+                           <span className="text-slate-900 dark:text-slate-50">{item.v}</span>
                         </div>
-                        <div className="h-1.5 w-full bg-slate-100 rounded-full overflow-hidden">
+                        <div className="h-1.5 w-full bg-slate-100 rounded-full overflow-hidden dark:bg-slate-800">
                            <div className={`h-full ${item.c} transition-all duration-1000`} style={{ width: `${w}%` }} />
                         </div>
                       </div>
@@ -206,20 +206,20 @@ export function DashboardPage() {
               </div>
 
               <div className="space-y-4">
-                <p className="text-[0.65rem] font-black uppercase text-slate-400 tracking-wider">Financial Snapshot</p>
-                <div className="p-4 rounded-xl bg-emerald-50 border border-emerald-100">
-                   <p className="text-[0.55rem] font-black uppercase text-emerald-600">Exposure</p>
-                   <p className="text-xl font-black text-emerald-900 mt-1">{formatCurrency(command.payrollHealth.scheduledExposure)}</p>
-                   <p className="text-[0.6rem] font-bold text-emerald-700/70 mt-1">{command.payrollHealth.scheduledCount} records pending</p>
+                <p className="text-[0.65rem] font-black uppercase text-slate-400 tracking-wider dark:text-slate-500">Financial Snapshot</p>
+                <div className="p-4 rounded-xl bg-emerald-50 border border-emerald-100 dark:border-emerald-500/20 dark:bg-emerald-500/10">
+                   <p className="text-[0.55rem] font-black uppercase text-emerald-600 dark:text-emerald-200">Exposure</p>
+                   <p className="text-xl font-black text-emerald-900 mt-1 dark:text-emerald-100">{formatCurrency(command.payrollHealth.scheduledExposure)}</p>
+                   <p className="text-[0.6rem] font-bold text-emerald-700/70 mt-1 dark:text-emerald-200/70">{command.payrollHealth.scheduledCount} records pending</p>
                 </div>
                 <div className="grid grid-cols-2 gap-2">
-                   <div className="p-3 rounded-xl border border-slate-100 bg-white">
-                      <p className="text-[0.55rem] font-black uppercase text-slate-400">Avg Pay</p>
-                      <p className="text-xs font-black text-slate-700 mt-1">{formatCurrency(command.payrollHealth.averageNetPay)}</p>
+                   <div className="p-3 rounded-xl border border-slate-100 bg-white dark:border-slate-700/60 dark:bg-slate-900/80">
+                      <p className="text-[0.55rem] font-black uppercase text-slate-400 dark:text-slate-500">Avg Pay</p>
+                      <p className="text-xs font-black text-slate-700 mt-1 dark:text-slate-200">{formatCurrency(command.payrollHealth.averageNetPay)}</p>
                    </div>
-                   <div className="p-3 rounded-xl border border-slate-100 bg-white">
-                      <p className="text-[0.55rem] font-black uppercase text-slate-400">Processed</p>
-                      <p className="text-xs font-black text-slate-700 mt-1">{command.payrollHealth.processedCount}</p>
+                   <div className="p-3 rounded-xl border border-slate-100 bg-white dark:border-slate-700/60 dark:bg-slate-900/80">
+                      <p className="text-[0.55rem] font-black uppercase text-slate-400 dark:text-slate-500">Processed</p>
+                      <p className="text-xs font-black text-slate-700 mt-1 dark:text-slate-200">{command.payrollHealth.processedCount}</p>
                    </div>
                 </div>
               </div>

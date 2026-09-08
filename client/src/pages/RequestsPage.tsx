@@ -79,7 +79,7 @@ export function RequestsPage() {
       render: (r) => (
         <div className="flex items-center gap-2">
           <User className="h-4 w-4 text-slate-400" />
-          <span className="font-bold text-slate-900">{r.employeeName}</span>
+          <span className="font-bold text-slate-900 dark:text-slate-50">{r.employeeName}</span>
         </div>
       ) 
     },
@@ -87,7 +87,7 @@ export function RequestsPage() {
       key: "type", 
       header: "Type", 
       render: (r) => (
-        <span className="px-2 py-1 rounded-md bg-slate-100 text-[0.65rem] font-black uppercase tracking-widest text-slate-600">
+        <span className="rounded-md bg-slate-100 px-2 py-1 text-[0.65rem] font-black uppercase tracking-widest text-slate-600 dark:bg-slate-900/80 dark:text-slate-300">
           {r.type.replace("_", " ")}
         </span>
       ) 
@@ -98,13 +98,13 @@ export function RequestsPage() {
       render: (r) => (
         <div className="max-w-xs">
           {r.type === "attendance_correction" && isAttendanceCorrectionPayload(r.payload) ? (
-            <p className="text-xs font-bold text-slate-700">
+            <p className="text-xs font-bold text-slate-700 dark:text-slate-200">
               {formatDate(r.payload.date)}: {r.payload.checkIn} - {r.payload.checkOut}
             </p>
           ) : (
-            <p className="text-xs text-slate-500">View payload in system</p>
+            <p className="text-xs text-slate-500 dark:text-slate-300">View payload in system</p>
           )}
-          <p className="text-[0.65rem] text-slate-400 italic mt-0.5 line-clamp-1">{r.reason}</p>
+          <p className="mt-0.5 line-clamp-1 text-[0.65rem] italic text-slate-400 dark:text-slate-400">{r.reason}</p>
         </div>
       ) 
     },
@@ -112,7 +112,7 @@ export function RequestsPage() {
       key: "date", 
       header: "Requested", 
       render: (r) => (
-        <div className="flex items-center gap-1.5 text-xs font-bold text-slate-400">
+        <div className="flex items-center gap-1.5 text-xs font-bold text-slate-400 dark:text-slate-500">
           <Clock className="h-3 w-3" />
           {formatDate(r.createdAt)}
         </div>
@@ -127,7 +127,7 @@ export function RequestsPage() {
           <button 
             disabled={busyId === r.id}
             onClick={() => handleAction(r.id, "approved")}
-            className="p-1.5 hover:bg-emerald-50 rounded-lg text-emerald-600 transition shadow-sm border border-emerald-100"
+            className="rounded-lg border border-emerald-100 p-1.5 text-emerald-600 transition shadow-sm hover:bg-emerald-50 dark:border-emerald-500/20 dark:text-emerald-200 dark:hover:bg-emerald-500/10"
             title="Approve"
           >
             <CheckCheck className="h-4 w-4" />
@@ -135,14 +135,14 @@ export function RequestsPage() {
           <button 
             disabled={busyId === r.id}
             onClick={() => handleAction(r.id, "rejected")}
-            className="p-1.5 hover:bg-rose-50 rounded-lg text-rose-600 transition shadow-sm border border-rose-100"
+            className="rounded-lg border border-rose-100 p-1.5 text-rose-600 transition shadow-sm hover:bg-rose-50 dark:border-rose-500/20 dark:text-rose-200 dark:hover:bg-rose-500/10"
             title="Reject"
           >
             <X className="h-4 w-4" />
           </button>
         </div>
       ) : (
-        <span className="text-[0.65rem] font-bold text-slate-400 uppercase">Resolved</span>
+        <span className="text-[0.65rem] font-bold uppercase text-slate-400 dark:text-slate-500">Resolved</span>
       ),
     },
   ];
@@ -156,9 +156,9 @@ export function RequestsPage() {
       />
 
       <div className="space-y-6">
-        <div className="flex flex-wrap items-center gap-3 bg-white/50 p-2 rounded-2xl border border-slate-200/60 backdrop-blur-sm">
+        <div className="flex flex-wrap items-center gap-3 rounded-2xl border border-slate-200/60 bg-white/50 p-2 backdrop-blur-sm dark:border-slate-700/60 dark:bg-slate-950/70">
           <div className="relative flex-1 min-w-[200px]">
-            <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-slate-400" />
+            <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-slate-400 dark:text-slate-500" />
             <input value={search} onChange={e => setSearch(e.target.value)} placeholder="Search employee..." className="input-surface w-full pl-10 h-10" />
           </div>
           <select
@@ -189,11 +189,11 @@ export function RequestsPage() {
                 setTypeFilter("");
                 setStatusFilter("pending");
               }}
-              className="p-2.5 bg-slate-100 rounded-xl hover:bg-slate-200 transition"
+              className="rounded-xl bg-slate-100 p-2.5 transition hover:bg-slate-200 dark:bg-slate-900/80 dark:hover:bg-slate-800"
               title="Reset filters"
               aria-label="Reset filters"
             >
-              <RotateCcw className="h-4 w-4 text-slate-600" />
+              <RotateCcw className="h-4 w-4 text-slate-600 dark:text-slate-300" />
             </button>
           )}
         </div>
@@ -213,9 +213,9 @@ export function RequestsPage() {
                 className="input-surface w-full min-h-[120px] pl-10 pt-3"
               />
             </div>
-            <div className="p-3 rounded-xl bg-slate-50 border border-slate-100 flex gap-3">
-              <ClipboardCheck className="h-4 w-4 text-slate-400 shrink-0 mt-0.5" />
-              <p className="text-[0.7rem] font-bold text-slate-500 leading-relaxed">
+            <div className="flex gap-3 rounded-xl border border-slate-100 bg-slate-50 p-3 dark:border-slate-700/60 dark:bg-slate-900/70">
+              <ClipboardCheck className="mt-0.5 h-4 w-4 shrink-0 text-slate-400 dark:text-slate-300" />
+              <p className="text-[0.7rem] font-bold leading-relaxed text-slate-500 dark:text-slate-300">
                 Approving an attendance correction will automatically update the corresponding registry record.
               </p>
             </div>

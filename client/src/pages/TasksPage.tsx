@@ -37,19 +37,19 @@ function formatPriorityLabel(priority: TaskPriority) {
 
 function priorityTone(priority: TaskPriority) {
   if (priority === "critical" || priority === "high") {
-    return "border-rose-200 bg-rose-50 text-rose-700 dark:border-rose-400/30 dark:bg-rose-400/12 dark:text-rose-200";
+    return "border-rose-200 bg-rose-50 text-rose-700 dark:border-rose-400/40 dark:bg-rose-500/20 dark:text-rose-50";
   }
   if (priority === "medium") {
-    return "border-amber-200 bg-amber-50 text-amber-700 dark:border-amber-400/30 dark:bg-amber-400/12 dark:text-amber-200";
+    return "border-amber-200 bg-amber-50 text-amber-700 dark:border-amber-400/40 dark:bg-amber-500/20 dark:text-amber-50";
   }
-  return "border-slate-200 bg-slate-100 text-slate-700 dark:border-slate-700/60 dark:bg-slate-900/80 dark:text-slate-200";
+  return "border-slate-200 bg-slate-100 text-slate-700 dark:border-slate-700/70 dark:bg-slate-900 dark:text-slate-100";
 }
 
 function statusTone(status: TaskStatus) {
-  if (status === "done") return "border-emerald-200 bg-emerald-50 text-emerald-700 dark:border-emerald-400/30 dark:bg-emerald-500/12 dark:text-emerald-200";
-  if (status === "in_progress") return "border-sky-200 bg-sky-50 text-sky-700 dark:border-sky-400/30 dark:bg-sky-400/12 dark:text-sky-200";
-  if (status === "blocked") return "border-rose-200 bg-rose-50 text-rose-700 dark:border-rose-400/30 dark:bg-rose-400/12 dark:text-rose-200";
-  return "border-slate-200 bg-slate-100 text-slate-700 dark:border-slate-700/60 dark:bg-slate-900/80 dark:text-slate-200";
+  if (status === "done") return "border-emerald-200 bg-emerald-50 text-emerald-700 dark:border-emerald-400/40 dark:bg-emerald-500/20 dark:text-emerald-50";
+  if (status === "in_progress") return "border-sky-200 bg-sky-50 text-sky-700 dark:border-sky-400/40 dark:bg-sky-500/20 dark:text-sky-50";
+  if (status === "blocked") return "border-rose-200 bg-rose-50 text-rose-700 dark:border-rose-400/40 dark:bg-rose-500/20 dark:text-rose-50";
+  return "border-slate-200 bg-slate-100 text-slate-700 dark:border-slate-700/70 dark:bg-slate-900 dark:text-slate-100";
 }
 
 function formatStatusLabel(status: TaskStatus) {

@@ -104,14 +104,14 @@ export function LeavePage() {
     {
       key: "reason",
       header: "Reason",
-      render: (row) => <span className="line-clamp-1 max-w-[220px] text-brand-700">{row.reason}</span>,
+      render: (row) => <span className="line-clamp-1 max-w-[220px] text-brand-700 dark:text-brand-200">{row.reason}</span>,
     },
     { key: "status", header: "Status", render: (row) => <StatusBadge value={row.status} /> },
     {
       key: "compensated",
       header: "Compensated",
       render: (row) => (
-        <div className="flex items-center gap-3 text-xs font-semibold text-slate-600">
+        <div className="flex items-center gap-3 text-xs font-semibold text-slate-600 dark:text-slate-300">
           <label className="inline-flex items-center gap-2">
             <input
               type="radio"
@@ -268,7 +268,7 @@ export function LeavePage() {
             type="button"
             onClick={() => setStatusFilter("")}
             className={`rounded-full px-3 py-1.5 text-sm font-semibold transition ${
-              statusFilter === "" ? "bg-brand-900 text-white" : "border border-slate-200 bg-white text-slate-700 hover:bg-slate-50"
+              statusFilter === "" ? "bg-brand-900 text-white shadow-sm dark:bg-brand-300 dark:text-slate-950" : "border border-slate-200 bg-white text-slate-700 hover:bg-slate-50 dark:border-slate-700/60 dark:bg-slate-900/80 dark:text-slate-200 dark:hover:bg-slate-800"
             }`}
           >
             All · {stats.total}
@@ -283,31 +283,31 @@ export function LeavePage() {
               type="button"
               onClick={() => setStatusFilter(item.value)}
               className={`rounded-full px-3 py-1.5 text-sm font-semibold transition ${
-                statusFilter === item.value ? "bg-brand-900 text-white" : "border border-slate-200 bg-white text-slate-700 hover:bg-slate-50"
+                statusFilter === item.value ? "bg-brand-900 text-white shadow-sm dark:bg-brand-300 dark:text-slate-950" : "border border-slate-200 bg-white text-slate-700 hover:bg-slate-50 dark:border-slate-700/60 dark:bg-slate-900/80 dark:text-slate-200 dark:hover:bg-slate-800"
               }`}
             >
               {item.label} · {item.count}
             </button>
           ))}
-          <span className="mx-1 h-5 w-px bg-slate-200" />
+          <span className="mx-1 h-5 w-px bg-slate-200 dark:bg-slate-700/60" />
           <button
             type="button"
             onClick={() => applyDatePreset("next_7")}
-            className="rounded-full border border-slate-200 bg-white px-3 py-1.5 text-sm font-semibold text-slate-700 hover:bg-slate-50"
+            className="rounded-full border border-slate-200 bg-white px-3 py-1.5 text-sm font-semibold text-slate-700 hover:bg-slate-50 dark:border-slate-700/60 dark:bg-slate-900/80 dark:text-slate-200 dark:hover:bg-slate-800"
           >
             Next 7 days
           </button>
           <button
             type="button"
             onClick={() => applyDatePreset("this_month")}
-            className="rounded-full border border-slate-200 bg-white px-3 py-1.5 text-sm font-semibold text-slate-700 hover:bg-slate-50"
+            className="rounded-full border border-slate-200 bg-white px-3 py-1.5 text-sm font-semibold text-slate-700 hover:bg-slate-50 dark:border-slate-700/60 dark:bg-slate-900/80 dark:text-slate-200 dark:hover:bg-slate-800"
           >
             This month
           </button>
           <button
             type="button"
             onClick={() => applyDatePreset("clear")}
-            className="rounded-full border border-slate-200 bg-white px-3 py-1.5 text-sm font-semibold text-slate-700 hover:bg-slate-50"
+            className="rounded-full border border-slate-200 bg-white px-3 py-1.5 text-sm font-semibold text-slate-700 hover:bg-slate-50 dark:border-slate-700/60 dark:bg-slate-900/80 dark:text-slate-200 dark:hover:bg-slate-800"
           >
             Clear dates
           </button>
@@ -343,7 +343,7 @@ export function LeavePage() {
             rows={filteredRequests}
             rowKey={(row) => row.id}
             exportFileName="leave-requests"
-            rowClassName={(row) => (row.id === selectedId ? "!bg-brand-100/70" : "")}
+            rowClassName={(row) => (row.id === selectedId ? "!bg-brand-100/70 dark:!bg-brand-900/30" : "")}
             emptyText="No leave requests match this filter."
           />
         </SectionCard>
@@ -355,13 +355,13 @@ export function LeavePage() {
             collapsed={!selectedLeave}
           >
             {selectedLeave ? (
-              <div className="space-y-3 text-sm text-slate-600">
-                <div className="rounded-xl border border-slate-200 bg-slate-50 px-4 py-4">
-                  <p className="text-xs font-black uppercase tracking-[0.14em] text-slate-500">Employee</p>
-                  <p className="mt-2 text-base font-semibold text-slate-950">{selectedLeave.employeeName}</p>
+              <div className="space-y-3 text-sm text-slate-600 dark:text-slate-300">
+                <div className="rounded-xl border border-slate-200 bg-slate-50 px-4 py-4 dark:border-slate-700/60 dark:bg-slate-900/70">
+                  <p className="text-xs font-black uppercase tracking-[0.14em] text-slate-500 dark:text-slate-400">Employee</p>
+                  <p className="mt-2 text-base font-semibold text-slate-950 dark:text-slate-50">{selectedLeave.employeeName}</p>
                   <div className="mt-2 inline-flex items-center gap-2">
                     <StatusBadge value={selectedLeave.status} />
-                    <span className="text-xs font-semibold uppercase tracking-wide text-slate-500">
+                    <span className="text-xs font-semibold uppercase tracking-wide text-slate-500 dark:text-slate-400">
                       {selectedLeave.leaveType.toUpperCase()}
                     </span>
                   </div>
@@ -394,25 +394,25 @@ export function LeavePage() {
                 </div>
 
                 <div className="grid gap-3 sm:grid-cols-2">
-                  <div className="rounded-xl border border-slate-200 bg-white px-4 py-3">
-                    <p className="text-[0.68rem] font-black uppercase tracking-[0.14em] text-slate-500">Start</p>
-                    <p className="mt-2 text-sm font-semibold text-slate-950">{formatDate(selectedLeave.startDate)}</p>
+                  <div className="rounded-xl border border-slate-200 bg-white px-4 py-3 dark:border-slate-700/60 dark:bg-slate-900/80">
+                    <p className="text-[0.68rem] font-black uppercase tracking-[0.14em] text-slate-500 dark:text-slate-400">Start</p>
+                    <p className="mt-2 text-sm font-semibold text-slate-950 dark:text-slate-50">{formatDate(selectedLeave.startDate)}</p>
                   </div>
-                  <div className="rounded-xl border border-slate-200 bg-white px-4 py-3">
-                    <p className="text-[0.68rem] font-black uppercase tracking-[0.14em] text-slate-500">End</p>
-                    <p className="mt-2 text-sm font-semibold text-slate-950">{formatDate(selectedLeave.endDate)}</p>
+                  <div className="rounded-xl border border-slate-200 bg-white px-4 py-3 dark:border-slate-700/60 dark:bg-slate-900/80">
+                    <p className="text-[0.68rem] font-black uppercase tracking-[0.14em] text-slate-500 dark:text-slate-400">End</p>
+                    <p className="mt-2 text-sm font-semibold text-slate-950 dark:text-slate-50">{formatDate(selectedLeave.endDate)}</p>
                   </div>
-                  <div className="rounded-xl border border-slate-200 bg-white px-4 py-3">
-                    <p className="text-[0.68rem] font-black uppercase tracking-[0.14em] text-slate-500">Days</p>
-                    <p className="mt-2 text-sm font-semibold text-slate-950">{selectedLeave.days}</p>
+                  <div className="rounded-xl border border-slate-200 bg-white px-4 py-3 dark:border-slate-700/60 dark:bg-slate-900/80">
+                    <p className="text-[0.68rem] font-black uppercase tracking-[0.14em] text-slate-500 dark:text-slate-400">Days</p>
+                    <p className="mt-2 text-sm font-semibold text-slate-950 dark:text-slate-50">{selectedLeave.days}</p>
                   </div>
-                  <div className="rounded-xl border border-slate-200 bg-white px-4 py-3">
-                    <p className="text-[0.68rem] font-black uppercase tracking-[0.14em] text-slate-500">Status</p>
-                    <p className="mt-2 text-sm font-semibold text-slate-950">{selectedLeave.status}</p>
+                  <div className="rounded-xl border border-slate-200 bg-white px-4 py-3 dark:border-slate-700/60 dark:bg-slate-900/80">
+                    <p className="text-[0.68rem] font-black uppercase tracking-[0.14em] text-slate-500 dark:text-slate-400">Status</p>
+                    <p className="mt-2 text-sm font-semibold text-slate-950 dark:text-slate-50">{selectedLeave.status}</p>
                   </div>
-                  <div className="rounded-xl border border-slate-200 bg-white px-4 py-3">
-                    <p className="text-[0.68rem] font-black uppercase tracking-[0.14em] text-slate-500">Compensated</p>
-                    <div className="mt-2 flex items-center gap-4 text-sm font-semibold text-slate-950">
+                  <div className="rounded-xl border border-slate-200 bg-white px-4 py-3 dark:border-slate-700/60 dark:bg-slate-900/80">
+                    <p className="text-[0.68rem] font-black uppercase tracking-[0.14em] text-slate-500 dark:text-slate-400">Compensated</p>
+                    <div className="mt-2 flex items-center gap-4 text-sm font-semibold text-slate-950 dark:text-slate-50">
                       <label className="inline-flex items-center gap-2">
                         <input
                           type="radio"
@@ -439,40 +439,40 @@ export function LeavePage() {
                   </div>
                 </div>
 
-                <div className="rounded-xl border border-slate-200 bg-white px-4 py-3">
+                <div className="rounded-xl border border-slate-200 bg-white px-4 py-3 dark:border-slate-700/60 dark:bg-slate-900/80">
                   <div className="flex items-center justify-between">
-                    <p className="text-[0.68rem] font-black uppercase tracking-[0.14em] text-slate-500">Reason</p>
-                    <button type="button" onClick={() => void handleCopyReason()} className="inline-flex items-center gap-1 text-xs font-semibold text-brand-700">
+                    <p className="text-[0.68rem] font-black uppercase tracking-[0.14em] text-slate-500 dark:text-slate-400">Reason</p>
+                    <button type="button" onClick={() => void handleCopyReason()} className="inline-flex items-center gap-1 text-xs font-semibold text-brand-700 dark:text-brand-200">
                       <Copy className="h-3.5 w-3.5" />
                       Copy
                     </button>
                   </div>
-                  <p className="mt-2 text-sm font-medium text-slate-700">{selectedLeave.reason}</p>
+                  <p className="mt-2 text-sm font-medium text-slate-700 dark:text-slate-200">{selectedLeave.reason}</p>
                 </div>
                 {detailMessage ? (
-                  <p className="rounded-lg bg-emerald-50 px-3 py-2 text-sm font-semibold text-emerald-700">{detailMessage}</p>
+                  <p className="rounded-lg bg-emerald-50 px-3 py-2 text-sm font-semibold text-emerald-700 dark:bg-emerald-500/10 dark:text-emerald-200">{detailMessage}</p>
                 ) : null}
               </div>
             ) : (
-              <p className="text-sm font-medium text-slate-600">Select a request from the queue to see full details.</p>
+              <p className="text-sm font-medium text-slate-600 dark:text-slate-300">Select a request from the queue to see full details.</p>
             )}
           </SectionCard>
 
           <SectionCard title="Policy Guardrails" subtitle="Approval checklist for team leads" collapsible defaultCollapsed>
-            <div className="space-y-3 text-sm font-medium text-brand-700">
-              <div className="rounded-lg border border-brand-200 bg-brand-50 p-3">
-                <p className="inline-flex items-center gap-2 font-semibold text-brand-900">
+            <div className="space-y-3 text-sm font-medium text-brand-700 dark:text-brand-200">
+              <div className="rounded-lg border border-brand-200 bg-brand-50 p-3 dark:border-brand-500/20 dark:bg-brand-500/10">
+                <p className="inline-flex items-center gap-2 font-semibold text-brand-900 dark:text-brand-100">
                   <Flag className="h-4 w-4" />
                   Balance staffing before approval
                 </p>
                 <p className="mt-1">Check overlapping requests in the same department and ensure coverage.</p>
               </div>
-              <div className="rounded-lg border border-brand-200 bg-brand-50 p-3">
-                <p className="font-semibold text-brand-900">Critical window checks</p>
+              <div className="rounded-lg border border-brand-200 bg-brand-50 p-3 dark:border-brand-500/20 dark:bg-brand-500/10">
+                <p className="font-semibold text-brand-900 dark:text-brand-100">Critical window checks</p>
                 <p className="mt-1">Flag leaves during payroll week, client launches, or interview cycles.</p>
               </div>
-              <div className="rounded-lg border border-brand-200 bg-brand-50 p-3">
-                <p className="font-semibold text-brand-900">SLA expectation</p>
+              <div className="rounded-lg border border-brand-200 bg-brand-50 p-3 dark:border-brand-500/20 dark:bg-brand-500/10">
+                <p className="font-semibold text-brand-900 dark:text-brand-100">SLA expectation</p>
                 <p className="mt-1">Respond to pending requests within 24 working hours.</p>
               </div>
             </div>
@@ -483,19 +483,19 @@ export function LeavePage() {
       <SectionCard title="Leave Radar" subtitle="Queue pressure by request status">
         <div className="space-y-4">
           {[
-            { label: "Approved", value: stats.approved, tone: "bg-emerald-500" },
-            { label: "Pending", value: stats.pending, tone: "bg-amber-500" },
-            { label: "Rejected", value: stats.rejected, tone: "bg-rose-500" },
+            { label: "Approved", value: stats.approved, tone: "bg-emerald-500 dark:bg-emerald-400" },
+            { label: "Pending", value: stats.pending, tone: "bg-amber-500 dark:bg-amber-400" },
+            { label: "Rejected", value: stats.rejected, tone: "bg-rose-500 dark:bg-rose-400" },
           ].map((item) => {
             const width = (item.value / Math.max(stats.total, 1)) * 100;
 
             return (
               <div key={item.label}>
-                <div className="mb-1 flex items-center justify-between text-sm font-semibold text-brand-700">
+                <div className="mb-1 flex items-center justify-between text-sm font-semibold text-brand-700 dark:text-brand-200">
                   <span>{item.label}</span>
                   <span>{item.value}</span>
                 </div>
-                <div className="h-2.5 rounded-full bg-brand-100">
+                <div className="h-2.5 rounded-full bg-brand-100 dark:bg-slate-800">
                   <div className={`h-full rounded-full ${item.tone}`} style={{ width: `${Math.max(width, item.value > 0 ? 6 : 0)}%` }} />
                 </div>
               </div>

@@ -209,11 +209,11 @@ export function RecruitmentPage() {
   };
 
   const columns: Array<TableColumn<Candidate>> = [
-    { key: "name", header: "Candidate", render: (r) => <span className="font-bold text-slate-900">{r.name}</span> },
-    { key: "role", header: "Role", render: (r) => <span className="font-bold text-slate-600">{r.role}</span> },
+    { key: "name", header: "Candidate", render: (r) => <span className="font-bold text-slate-900 dark:text-slate-50">{r.name}</span> },
+    { key: "role", header: "Role", render: (r) => <span className="font-bold text-slate-600 dark:text-slate-200">{r.role}</span> },
     { key: "stage", header: "Stage", render: (r) => <StatusBadge value={r.stage} /> },
-    { key: "interview", header: "Interview", render: (r) => <span className="text-xs font-bold text-slate-500">{formatDate(r.interviewDate)}</span> },
-    { key: "rating", header: "Rating", render: (r) => <span className="inline-flex items-center gap-1 text-xs font-black text-brand-700 bg-brand-50 px-2 py-1 rounded-full"><Star className="h-3 w-3 fill-current" /> {r.rating}/5</span> },
+    { key: "interview", header: "Interview", render: (r) => <span className="text-xs font-bold text-slate-500 dark:text-slate-400">{formatDate(r.interviewDate)}</span> },
+    { key: "rating", header: "Rating", render: (r) => <span className="inline-flex items-center gap-1 rounded-full bg-brand-50 px-2 py-1 text-xs font-black text-brand-700 dark:bg-brand-500/10 dark:text-brand-200"><Star className="h-3 w-3 fill-current" /> {r.rating}/5</span> },
     {
       key: "actions",
       header: "Action",
@@ -239,9 +239,9 @@ export function RecruitmentPage() {
         eyebrow="Talent"
         action={
           <div className="flex items-center gap-2">
-            <div className="flex bg-slate-100 p-1 rounded-xl">
-              <button onClick={() => setViewMode("pipeline")} className={`p-2 rounded-lg transition-all ${viewMode === 'pipeline' ? 'bg-white shadow-sm text-brand-700' : 'text-slate-500 hover:text-slate-700'}`} title="Kanban view"><LayoutGrid className="h-4 w-4" /></button>
-              <button onClick={() => setViewMode("list")} className={`p-2 rounded-lg transition-all ${viewMode === 'list' ? 'bg-white shadow-sm text-brand-700' : 'text-slate-500 hover:text-slate-700'}`} title="Table view"><List className="h-4 w-4" /></button>
+            <div className="flex rounded-xl bg-slate-100 p-1 dark:bg-slate-900/80">
+              <button onClick={() => setViewMode("pipeline")} className={`rounded-lg p-2 transition-all ${viewMode === 'pipeline' ? 'bg-white text-brand-700 shadow-sm dark:bg-slate-950 dark:text-brand-200' : 'text-slate-500 hover:text-slate-700 dark:text-slate-300 dark:hover:text-slate-100'}`} title="Kanban view"><LayoutGrid className="h-4 w-4" /></button>
+              <button onClick={() => setViewMode("list")} className={`rounded-lg p-2 transition-all ${viewMode === 'list' ? 'bg-white text-brand-700 shadow-sm dark:bg-slate-950 dark:text-brand-200' : 'text-slate-500 hover:text-slate-700 dark:text-slate-300 dark:hover:text-slate-100'}`} title="Table view"><List className="h-4 w-4" /></button>
             </div>
             <button type="button" onClick={() => setShowAddModal(true)} className="btn-primary">
               <Plus className="h-4 w-4" />
@@ -251,12 +251,12 @@ export function RecruitmentPage() {
         }
       />
 
-      {actionMessage && <p className="p-3 rounded-xl bg-emerald-50 text-emerald-700 text-xs font-bold border border-emerald-100">{actionMessage}</p>}
-      {updateError && <p className="p-3 rounded-xl bg-rose-50 text-rose-700 text-xs font-bold border border-rose-100">{updateError}</p>}
+      {actionMessage && <p className="rounded-xl border border-emerald-100 bg-emerald-50 p-3 text-xs font-bold text-emerald-700 dark:border-emerald-500/20 dark:bg-emerald-500/10 dark:text-emerald-200">{actionMessage}</p>}
+      {updateError && <p className="rounded-xl border border-rose-100 bg-rose-50 p-3 text-xs font-bold text-rose-700 dark:border-rose-500/20 dark:bg-rose-500/10 dark:text-rose-200">{updateError}</p>}
 
-      <div className="sticky top-[72px] z-10 -mx-4 px-4 py-2 bg-white/80 backdrop-blur-md border-b border-slate-200/60 flex flex-wrap items-center gap-3">
+      <div className="sticky top-[72px] z-10 -mx-4 flex flex-wrap items-center gap-3 border-b border-slate-200/60 bg-white/80 px-4 py-2 backdrop-blur-md dark:border-slate-700/60 dark:bg-slate-950/80">
         <div className="relative flex-1 min-w-[200px]">
-          <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-slate-400" />
+          <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-slate-400 dark:text-slate-500" />
           <input type="search" value={search} onChange={(e) => setSearch(e.target.value)} placeholder="Search candidates..." className="input-surface w-full pl-10 h-10" />
         </div>
         <select value={stageFilter} onChange={(e) => setStageFilter(e.target.value as CandidateStage | "")} className="input-surface h-10 text-xs font-bold" title="Filter by Stage">
@@ -296,16 +296,16 @@ export function RecruitmentPage() {
           >
             <div className="space-y-3">
               {upcomingInterviews.map((c) => (
-                <div key={c.id} className="p-3 rounded-xl border border-slate-100 bg-slate-50/50 hover:bg-white hover:border-slate-200 transition-all cursor-default">
-                  <p className="text-xs font-black text-slate-900 truncate">{c.name}</p>
-                  <p className="mt-0.5 text-[0.65rem] font-bold text-slate-500 truncate">{c.role}</p>
+                <div key={c.id} className="cursor-default rounded-xl border border-slate-100 bg-slate-50/50 p-3 transition-all hover:border-slate-200 hover:bg-white dark:border-slate-700/60 dark:bg-slate-900/70 dark:hover:border-slate-600 dark:hover:bg-slate-900">
+                  <p className="truncate text-xs font-black text-slate-900 dark:text-slate-50">{c.name}</p>
+                  <p className="mt-0.5 truncate text-[0.65rem] font-bold text-slate-500 dark:text-slate-400">{c.role}</p>
                   <div className="mt-2 flex items-center justify-between">
-                    <span className="text-[0.6rem] font-black uppercase text-brand-600">{formatDate(c.interviewDate)}</span>
+                    <span className="text-[0.6rem] font-black uppercase text-brand-600 dark:text-brand-200">{formatDate(c.interviewDate)}</span>
                     <StatusBadge value={c.stage} />
                   </div>
                 </div>
               ))}
-              {upcomingInterviews.length === 0 && <p className="text-center py-4 text-xs font-bold text-slate-400">No scheduled events.</p>}
+              {upcomingInterviews.length === 0 && <p className="py-4 text-center text-xs font-bold text-slate-400 dark:text-slate-500">No scheduled events.</p>}
             </div>
           </SectionCard>
 
@@ -313,8 +313,8 @@ export function RecruitmentPage() {
              <div className="space-y-3">
                 {stageOptions.map((s) => (
                   <div key={s} className="flex items-center justify-between">
-                    <span className="text-[0.65rem] font-black uppercase text-slate-500">{s}</span>
-                    <span className="text-sm font-black text-slate-900">{stageCount[s as keyof typeof stageCount]}</span>
+                    <span className="text-[0.65rem] font-black uppercase text-slate-500 dark:text-slate-400">{s}</span>
+                    <span className="text-sm font-black text-slate-900 dark:text-slate-50">{stageCount[s as keyof typeof stageCount]}</span>
                   </div>
                 ))}
              </div>
@@ -324,14 +324,14 @@ export function RecruitmentPage() {
 
       {showAddModal && (
         <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-slate-950/60 backdrop-blur-sm animate-page-enter">
-          <div className="w-full max-w-xl bg-white rounded-[32px] shadow-panel overflow-hidden border border-slate-200">
-            <div className="p-6 border-b border-slate-100 flex items-center justify-between bg-slate-50/50">
+          <div className="w-full max-w-xl overflow-hidden rounded-[32px] border border-slate-200 bg-white shadow-panel dark:border-slate-700/60 dark:bg-slate-950/95">
+            <div className="flex items-center justify-between border-b border-slate-100 bg-slate-50/50 p-6 dark:border-slate-700/60 dark:bg-slate-900/80">
               <div>
-                <h2 className="text-xl font-black text-slate-900 tracking-tight">Add New Candidate</h2>
-                <p className="text-xs font-bold text-slate-500 mt-1">Capture details to begin the recruitment flow.</p>
+                <h2 className="text-xl font-black tracking-tight text-slate-900 dark:text-slate-50">Add New Candidate</h2>
+                <p className="mt-1 text-xs font-bold text-slate-500 dark:text-slate-400">Capture details to begin the recruitment flow.</p>
               </div>
-              <button onClick={() => setShowAddModal(false)} className="p-2 hover:bg-white rounded-full transition shadow-sm border border-slate-200" title="Close">
-                <X className="h-5 w-5 text-slate-400" />
+              <button onClick={() => setShowAddModal(false)} className="rounded-full border border-slate-200 p-2 transition shadow-sm hover:bg-white dark:border-slate-700/60 dark:bg-slate-900/80 dark:hover:bg-slate-800" title="Close">
+                <X className="h-5 w-5 text-slate-400 dark:text-slate-300" />
               </button>
             </div>
             <form onSubmit={handleCreateCandidate} className="p-6 space-y-4">
@@ -356,7 +356,7 @@ export function RecruitmentPage() {
                  </div>
                  <input type="range" min="1" max="5" value={formState.rating} onChange={(e) => handleFormChange("rating", e.target.value)} className="w-full accent-brand-600" title="Candidate Rating" />
               </div>
-              {submitError && <p className="text-xs font-bold text-rose-600 bg-rose-50 p-2 rounded-lg">{submitError}</p>}
+              {submitError && <p className="rounded-lg bg-rose-50 p-2 text-xs font-bold text-rose-600 dark:bg-rose-500/10 dark:text-rose-200">{submitError}</p>}
               <button type="submit" disabled={submitting} className="btn-primary w-full h-11">
                 <Plus className="h-4 w-4" />
                 {submitting ? "Adding..." : "Confirm Candidate"}
@@ -368,14 +368,14 @@ export function RecruitmentPage() {
 
       {hireCandidate && (
         <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-slate-950/60 backdrop-blur-sm animate-page-enter">
-          <div className="w-full max-w-2xl bg-white rounded-[32px] shadow-panel overflow-hidden border border-slate-200">
-             <div className="p-6 border-b border-slate-100 flex items-center justify-between bg-emerald-50/50">
+          <div className="w-full max-w-2xl overflow-hidden rounded-[32px] border border-slate-200 bg-white shadow-panel dark:border-slate-700/60 dark:bg-slate-950/95">
+             <div className="flex items-center justify-between border-b border-slate-100 bg-emerald-50/50 p-6 dark:border-slate-700/60 dark:bg-emerald-500/10">
               <div>
-                <h2 className="text-xl font-black text-emerald-900 tracking-tight">Confirm Hire</h2>
-                <p className="text-xs font-bold text-emerald-700 mt-1">Convert {hireCandidate.name} into an employee record.</p>
+                <h2 className="text-xl font-black tracking-tight text-emerald-900 dark:text-emerald-100">Confirm Hire</h2>
+                <p className="mt-1 text-xs font-bold text-emerald-700 dark:text-emerald-200">Convert {hireCandidate.name} into an employee record.</p>
               </div>
-              <button onClick={() => setHireCandidate(null)} className="p-2 hover:bg-white rounded-full transition shadow-sm border border-emerald-200" title="Close">
-                <X className="h-5 w-5 text-emerald-400" />
+              <button onClick={() => setHireCandidate(null)} className="rounded-full border border-emerald-200 p-2 transition shadow-sm hover:bg-white dark:border-emerald-500/20 dark:bg-slate-900/80 dark:hover:bg-slate-800" title="Close">
+                <X className="h-5 w-5 text-emerald-400 dark:text-emerald-200" />
               </button>
             </div>
             <form onSubmit={handleConfirmHire} className="p-6 space-y-4">
@@ -391,9 +391,9 @@ export function RecruitmentPage() {
                   <input required value={hireFormState.manager} onChange={(e) => handleHireFormChange("manager", e.target.value)} placeholder="Manager" className="input-surface w-full" />
                   <input required type="date" value={hireFormState.joinDate} onChange={(e) => handleHireFormChange("joinDate", e.target.value)} className="input-surface w-full" title="Join Date" />
                </div>
-               <div className="p-3 rounded-xl bg-brand-50 border border-brand-100 flex items-start gap-3">
-                  <Sparkles className="h-4 w-4 text-brand-600 shrink-0 mt-0.5" />
-                  <p className="text-[0.7rem] font-bold text-brand-800 leading-relaxed">
+               <div className="flex items-start gap-3 rounded-xl border border-brand-100 bg-brand-50 p-3 dark:border-brand-500/20 dark:bg-brand-500/10">
+                  <Sparkles className="mt-0.5 h-4 w-4 shrink-0 text-brand-600 dark:text-brand-200" />
+                  <p className="text-[0.7rem] font-bold leading-relaxed text-brand-800 dark:text-brand-100">
                     This candidate will be added to <span className="font-black">{hireFormState.department}</span> reporting to <span className="font-black">{hireFormState.manager}</span>. A login invite will be sent immediately.
                   </p>
                </div>

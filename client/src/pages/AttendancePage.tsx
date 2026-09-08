@@ -180,7 +180,7 @@ export function AttendancePage() {
   const columns: Array<TableColumn<AttendanceRecord>> = [
     {
       key: "select",
-      header: <input type="checkbox" checked={filteredRecords.length > 0 && selectedIds.length === filteredRecords.length} onChange={() => setSelectedIds(selectedIds.length === filteredRecords.length ? [] : filteredRecords.map(r => r.id))} className="h-4 w-4 accent-white" title="Select All" />,
+      header: <input type="checkbox" checked={filteredRecords.length > 0 && selectedIds.length === filteredRecords.length} onChange={() => setSelectedIds(selectedIds.length === filteredRecords.length ? [] : filteredRecords.map(r => r.id))} className="h-4 w-4 accent-brand-700 dark:accent-brand-300" title="Select All" />,
       headerClassName: "w-10",
       cellClassName: "w-10",
       render: (row) => <input type="checkbox" checked={selectedIds.includes(row.id)} onChange={() => setSelectedIds(c => c.includes(row.id) ? c.filter(id => id !== row.id) : [...c, row.id])} className="h-4 w-4 accent-brand-700" title={`Select ${row.employeeName}`} />,
@@ -190,15 +190,15 @@ export function AttendancePage() {
       header: "Employee",
       render: (row) => (
         <div>
-          <p className="font-bold text-slate-900">{row.employeeName}</p>
-          <p className="text-[0.65rem] font-black uppercase text-slate-400">{employeeDepartmentMap.get(row.employeeId) ?? "Operations"}</p>
+          <p className="font-bold text-slate-900 dark:text-slate-50">{row.employeeName}</p>
+          <p className="text-[0.65rem] font-black uppercase text-slate-400 dark:text-slate-500">{employeeDepartmentMap.get(row.employeeId) ?? "Operations"}</p>
         </div>
       ),
     },
-    { key: "date", header: "Date", render: (r) => <span className="text-xs font-bold text-slate-500">{formatDate(r.date)}</span> },
-    { key: "check-in", header: "Check In", render: (r) => <span className="font-black text-slate-700">{r.checkIn}</span> },
-    { key: "check-out", header: "Check Out", render: (r) => <span className="font-black text-slate-700">{r.checkOut}</span> },
-    { key: "time", header: "Hours", render: (r) => <span className="font-bold text-slate-500">{formatMinutes(r.timeOnSystemMinutes)}</span> },
+    { key: "date", header: "Date", render: (r) => <span className="text-xs font-bold text-slate-500 dark:text-slate-400">{formatDate(r.date)}</span> },
+    { key: "check-in", header: "Check In", render: (r) => <span className="font-black text-slate-700 dark:text-slate-200">{r.checkIn}</span> },
+    { key: "check-out", header: "Check Out", render: (r) => <span className="font-black text-slate-700 dark:text-slate-200">{r.checkOut}</span> },
+    { key: "time", header: "Hours", render: (r) => <span className="font-bold text-slate-500 dark:text-slate-400">{formatMinutes(r.timeOnSystemMinutes)}</span> },
     { key: "status", header: "Status", render: (row) => <StatusBadge value={row.status} /> },
     {
       key: "actions",
@@ -236,10 +236,10 @@ export function AttendancePage() {
         <StatCard title="Missing Out" value={String(summary.missingCheckout)} hint="Pending same-day lock" icon={AlarmClock} />
       </div>
 
-      <div className="sticky top-[72px] z-10 -mx-4 px-4 py-2 bg-white/80 backdrop-blur-md border-b border-slate-200/60 mb-4">
+      <div className="sticky top-[72px] z-10 -mx-4 mb-4 border-b border-slate-200/60 bg-white/80 px-4 py-2 backdrop-blur-md dark:border-slate-700/60 dark:bg-slate-950/80">
         <div className="flex flex-wrap items-center gap-3">
           <div className="relative flex-1 min-w-[240px]">
-            <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-slate-400" />
+            <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-slate-400 dark:text-slate-500" />
             <input type="search" value={search} onChange={(e) => setSearch(e.target.value)} placeholder="Search employee or department..." className="input-surface w-full pl-10 h-10" />
           </div>
           <input type="date" value={dateFilter} onChange={(e) => setDateFilter(e.target.value)} className="input-surface h-10 text-xs font-bold" title="Filter by Date" />
@@ -266,11 +266,11 @@ export function AttendancePage() {
         {showAdvancedFilters ? (
           <div className="mt-3 flex flex-wrap items-center gap-2">
             {[{ id: "day", label: "Single Day" }, { id: "week", label: "7-Day Window" }].map((item) => (
-              <button key={item.id} onClick={() => setRangeMode(item.id as RangeMode)} className={`rounded-full px-3 py-1 text-[0.65rem] font-black uppercase tracking-wider transition ${rangeMode === item.id ? 'bg-brand-700 text-white shadow-sm' : 'bg-slate-100 text-slate-500 hover:bg-slate-200'}`}>{item.label}</button>
+              <button key={item.id} onClick={() => setRangeMode(item.id as RangeMode)} className={`rounded-full px-3 py-1 text-[0.65rem] font-black uppercase tracking-wider transition ${rangeMode === item.id ? 'bg-brand-700 text-white shadow-sm dark:bg-brand-300 dark:text-slate-950' : 'bg-slate-100 text-slate-500 hover:bg-slate-200 dark:bg-slate-900/80 dark:text-slate-300 dark:hover:bg-slate-800'}`}>{item.label}</button>
             ))}
-            <div className="h-4 w-px bg-slate-200 mx-1" />
+            <div className="mx-1 h-4 w-px bg-slate-200 dark:bg-slate-700/60" />
             {[{ id: "all", label: "All Logs" }, { id: "exceptions", label: "Exceptions Only" }, { id: "remote", label: "Remote Only" }].map((item) => (
-              <button key={item.id} onClick={() => setFocusMode(item.id as FocusMode)} className={`rounded-full px-3 py-1 text-[0.65rem] font-black uppercase tracking-wider transition ${focusMode === item.id ? 'bg-brand-900 text-white shadow-sm' : 'bg-slate-100 text-slate-500 hover:bg-slate-200'}`}>{item.label}</button>
+              <button key={item.id} onClick={() => setFocusMode(item.id as FocusMode)} className={`rounded-full px-3 py-1 text-[0.65rem] font-black uppercase tracking-wider transition ${focusMode === item.id ? 'bg-brand-900 text-white shadow-sm dark:bg-brand-300 dark:text-slate-950' : 'bg-slate-100 text-slate-500 hover:bg-slate-200 dark:bg-slate-900/80 dark:text-slate-300 dark:hover:bg-slate-800'}`}>{item.label}</button>
             ))}
           </div>
         ) : null}
@@ -288,36 +288,36 @@ export function AttendancePage() {
         }
       >
         {selectedIds.length > 0 && (
-          <div className="mb-4 flex flex-wrap items-center gap-2 p-3 bg-brand-50 border border-brand-100 rounded-xl animate-page-enter">
-            <span className="text-xs font-black text-brand-800 uppercase tracking-widest mr-2">{selectedIds.length} selected</span>
+          <div className="mb-4 flex flex-wrap items-center gap-2 rounded-xl border border-brand-100 bg-brand-50 p-3 animate-page-enter dark:border-brand-500/20 dark:bg-brand-500/10">
+            <span className="mr-2 text-xs font-black uppercase tracking-widest text-brand-800 dark:text-brand-200">{selectedIds.length} selected</span>
             { (["present", "late", "remote", "absent"] as AttendanceStatus[]).map(s => (
               <button key={s} onClick={() => handleBulkStatus(s)} disabled={bulkUpdating} className="btn-secondary h-8 px-3 text-[0.65rem] uppercase font-black tracking-widest">{s}</button>
             ))}
-            <button onClick={() => setSelectedIds([])} className="ml-auto text-[0.65rem] font-black text-slate-400 uppercase tracking-widest hover:text-slate-600 px-2">Clear</button>
+            <button onClick={() => setSelectedIds([])} className="ml-auto px-2 text-[0.65rem] font-black uppercase tracking-widest text-slate-400 hover:text-slate-600 dark:text-slate-400 dark:hover:text-slate-200">Clear</button>
           </div>
         )}
-        {bulkError && <p className="mb-3 text-xs font-bold text-rose-600 bg-rose-50 p-2 rounded-lg">{bulkError}</p>}
-        {recordsHook.loading && <p className="text-sm font-bold text-brand-600 animate-pulse">Syncing Registry...</p>}
+        {bulkError && <p className="mb-3 rounded-lg bg-rose-50 p-2 text-xs font-bold text-rose-600 dark:bg-rose-500/10 dark:text-rose-200">{bulkError}</p>}
+        {recordsHook.loading && <p className="text-sm font-bold text-brand-600 dark:text-brand-300 animate-pulse">Syncing Registry...</p>}
         
         <DataTable
           columns={columns}
           rows={filteredRecords}
           rowKey={(r) => r.id}
           exportFileName="attendance"
-          rowClassName={(r) => selectedIds.includes(r.id) ? "!bg-brand-50/50" : isExceptionRecord(r) ? "bg-amber-50/30" : ""}
+          rowClassName={(r) => selectedIds.includes(r.id) ? "!bg-brand-50/50 dark:!bg-brand-900/25" : isExceptionRecord(r) ? "bg-amber-50/30 dark:bg-amber-500/10" : ""}
         />
       </SectionCard>
 
       {showCorrectionModal && selectedRecord && (
         <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-slate-950/60 backdrop-blur-sm animate-page-enter">
-          <div className="w-full max-w-lg bg-white rounded-[32px] shadow-panel overflow-hidden border border-slate-200">
-            <div className="p-6 border-b border-slate-100 flex items-center justify-between bg-slate-50/50">
+          <div className="w-full max-w-lg overflow-hidden rounded-[32px] border border-slate-200 bg-white shadow-panel dark:border-slate-700/60 dark:bg-slate-950/95">
+            <div className="flex items-center justify-between border-b border-slate-100 bg-slate-50/50 p-6 dark:border-slate-700/60 dark:bg-slate-900/80">
               <div>
-                <h2 className="text-xl font-black text-slate-900 tracking-tight">Correct Record</h2>
-                <p className="text-xs font-bold text-slate-500 mt-1">{selectedRecord.employeeName} · {formatDate(selectedRecord.date)}</p>
+                <h2 className="text-xl font-black tracking-tight text-slate-900 dark:text-slate-50">Correct Record</h2>
+                <p className="mt-1 text-xs font-bold text-slate-500 dark:text-slate-400">{selectedRecord.employeeName} · {formatDate(selectedRecord.date)}</p>
               </div>
-              <button onClick={() => setShowCorrectionModal(false)} className="p-2 hover:bg-white rounded-full transition shadow-sm border border-slate-200" title="Close">
-                <X className="h-5 w-5 text-slate-400" />
+              <button onClick={() => setShowCorrectionModal(false)} className="rounded-full border border-slate-200 p-2 transition shadow-sm hover:bg-white dark:border-slate-700/60 dark:bg-slate-900/80 dark:hover:bg-slate-800" title="Close">
+                <X className="h-5 w-5 text-slate-400 dark:text-slate-300" />
               </button>
             </div>
             
@@ -333,7 +333,7 @@ export function AttendancePage() {
                <div className="space-y-4">
                  <div className="grid gap-4 grid-cols-2">
                     <div className="space-y-1">
-                       <label className="text-[0.6rem] font-black uppercase tracking-widest text-slate-400 ml-1">Status</label>
+                       <label className="ml-1 text-[0.6rem] font-black uppercase tracking-widest text-slate-400 dark:text-slate-500">Status</label>
                        <select value={editState.status} onChange={(e) => setEditState(c => ({ ...c, status: e.target.value as AttendanceStatus }))} className="input-surface w-full h-10 px-2" title="Select Status">
                           <option value="present">Present</option>
                           <option value="late">Late</option>
@@ -342,8 +342,8 @@ export function AttendancePage() {
                        </select>
                     </div>
                     <div className="space-y-1">
-                       <label className="text-[0.6rem] font-black uppercase tracking-widest text-slate-400 ml-1">Dept</label>
-                       <div className="h-10 px-3 flex items-center bg-slate-50 border border-slate-100 rounded-lg text-xs font-bold text-slate-600">
+                       <label className="ml-1 text-[0.6rem] font-black uppercase tracking-widest text-slate-400 dark:text-slate-500">Dept</label>
+                       <div className="flex h-10 items-center rounded-lg border border-slate-100 bg-slate-50 px-3 text-xs font-bold text-slate-600 dark:border-slate-700/60 dark:bg-slate-900/80 dark:text-slate-200">
                          {employeeDepartmentMap.get(selectedRecord.employeeId) ?? "Operations"}
                        </div>
                     </div>
@@ -351,18 +351,18 @@ export function AttendancePage() {
 
                  <div className="grid gap-4 grid-cols-2">
                     <div className="space-y-1">
-                       <label className="text-[0.6rem] font-black uppercase tracking-widest text-slate-400 ml-1">Check In</label>
+                       <label className="ml-1 text-[0.6rem] font-black uppercase tracking-widest text-slate-400 dark:text-slate-500">Check In</label>
                        <input value={editState.checkIn} onChange={(e) => setEditState(c => ({ ...c, checkIn: e.target.value }))} className="input-surface w-full h-10" placeholder="00:00 or --" title="Check In" />
                     </div>
                     <div className="space-y-1">
-                       <label className="text-[0.6rem] font-black uppercase tracking-widest text-slate-400 ml-1">Check Out</label>
+                       <label className="ml-1 text-[0.6rem] font-black uppercase tracking-widest text-slate-400 dark:text-slate-500">Check Out</label>
                        <input value={editState.checkOut} onChange={(e) => setEditState(c => ({ ...c, checkOut: e.target.value }))} className="input-surface w-full h-10" placeholder="00:00 or --" title="Check Out" />
                     </div>
                  </div>
                </div>
 
-               {updateError && <p className="p-3 rounded-xl bg-rose-50 text-rose-600 text-xs font-bold">{updateError}</p>}
-               {updateMessage && <p className="p-3 rounded-xl bg-emerald-50 text-emerald-600 text-xs font-bold">{updateMessage}</p>}
+               {updateError && <p className="rounded-xl bg-rose-50 p-3 text-xs font-bold text-rose-600 dark:bg-rose-500/10 dark:text-rose-200">{updateError}</p>}
+               {updateMessage && <p className="rounded-xl bg-emerald-50 p-3 text-xs font-bold text-emerald-600 dark:bg-emerald-500/10 dark:text-emerald-200">{updateMessage}</p>}
 
                <button type="button" onClick={() => void handleUpdate()} disabled={updating} className="btn-primary w-full h-12 shadow-lg">
                  <TimerReset className="h-4 w-4" />

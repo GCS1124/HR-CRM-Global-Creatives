@@ -70,22 +70,22 @@ export function LeaveCalendar({ requests, employees, month = new Date() }: Leave
     <div className="space-y-4">
       <div className="flex flex-wrap items-center justify-between gap-3">
         <div>
-          <p className="text-sm font-semibold uppercase tracking-[0.2em] text-brand-500">Coverage Month</p>
-          <p className="text-2xl font-semibold text-brand-950">{label}</p>
+          <p className="text-sm font-semibold uppercase tracking-[0.2em] text-brand-500 dark:text-brand-300">Coverage Month</p>
+          <p className="text-2xl font-semibold text-brand-950 dark:text-slate-50">{label}</p>
         </div>
-        <div className="flex flex-wrap items-center gap-3 text-xs font-semibold text-brand-600">
-          <span className="inline-flex items-center gap-2 rounded-full bg-emerald-50 px-3 py-1">
-            <CalendarDays className="h-4 w-4 text-emerald-600" />
+        <div className="flex flex-wrap items-center gap-3 text-xs font-semibold text-brand-600 dark:text-brand-200">
+          <span className="inline-flex items-center gap-2 rounded-full bg-emerald-50 px-3 py-1 dark:bg-emerald-500/10">
+            <CalendarDays className="h-4 w-4 text-emerald-600 dark:text-emerald-200" />
             Leave scheduled
           </span>
-          <span className="inline-flex items-center gap-2 rounded-full bg-rose-50 px-3 py-1">
-            <Flame className="h-4 w-4 text-rose-600" />
+          <span className="inline-flex items-center gap-2 rounded-full bg-rose-50 px-3 py-1 dark:bg-rose-500/10">
+            <Flame className="h-4 w-4 text-rose-600 dark:text-rose-200" />
             Coverage risk
           </span>
         </div>
       </div>
 
-      <div className="grid grid-cols-7 gap-2 text-xs font-semibold uppercase tracking-[0.14em] text-brand-500">
+      <div className="grid grid-cols-7 gap-2 text-xs font-semibold uppercase tracking-[0.14em] text-brand-500 dark:text-brand-300">
         {weekDays.map((day) => (
           <div key={day} className="text-center">
             {day}
@@ -96,7 +96,7 @@ export function LeaveCalendar({ requests, employees, month = new Date() }: Leave
       <div className="grid grid-cols-7 gap-2">
         {cells.map((cell, index) => {
           if (!cell) {
-            return <div key={`empty-${index}`} className="h-24 rounded-xl border border-dashed border-brand-100 bg-brand-50/30" />;
+            return <div key={`empty-${index}`} className="h-24 rounded-xl border border-dashed border-brand-100 bg-brand-50/30 dark:border-slate-700/60 dark:bg-slate-900/50" />;
           }
 
           const key = getLocalDateKey(cell);
@@ -111,16 +111,16 @@ export function LeaveCalendar({ requests, employees, month = new Date() }: Leave
               key={key}
               className={`h-24 rounded-xl border p-2 transition ${
                 risk
-                  ? "border-rose-200 bg-rose-50"
+                  ? "border-rose-200 bg-rose-50 dark:border-rose-500/20 dark:bg-rose-500/10"
                   : total > 0
-                  ? "border-emerald-200 bg-emerald-50"
-                  : "border-brand-200 bg-white"
+                  ? "border-emerald-200 bg-emerald-50 dark:border-emerald-500/20 dark:bg-emerald-500/10"
+                  : "border-brand-200 bg-white dark:border-slate-700/60 dark:bg-slate-950/80"
               }`}
             >
-              <div className="flex items-start justify-between text-xs font-semibold text-brand-700">
+              <div className="flex items-start justify-between text-xs font-semibold text-brand-700 dark:text-brand-200">
                 <span>{cell.getDate()}</span>
                 {total > 0 ? (
-                  <span className="rounded-full bg-white px-2 py-0.5 text-[0.65rem] font-bold text-brand-700">
+                  <span className="rounded-full bg-white px-2 py-0.5 text-[0.65rem] font-bold text-brand-700 dark:bg-slate-950/80 dark:text-brand-200">
                     {total}
                   </span>
                 ) : null}
@@ -131,14 +131,14 @@ export function LeaveCalendar({ requests, employees, month = new Date() }: Leave
                       .sort((a, b) => b[1] - a[1])
                       .slice(0, 2)
                       .map(([department, value]) => (
-                        <div key={department} className="flex items-center justify-between text-[0.7rem] font-semibold text-brand-600">
+                        <div key={department} className="flex items-center justify-between text-[0.7rem] font-semibold text-brand-600 dark:text-brand-200">
                           <span className="truncate">{department}</span>
                           <span>{value}</span>
                         </div>
                       ))
                   : null}
                 {risk ? (
-                  <div className="mt-1 inline-flex items-center gap-1 rounded-full bg-rose-100 px-2 py-0.5 text-[0.65rem] font-bold text-rose-700">
+                  <div className="mt-1 inline-flex items-center gap-1 rounded-full bg-rose-100 px-2 py-0.5 text-[0.65rem] font-bold text-rose-700 dark:bg-rose-500/10 dark:text-rose-200">
                     <Flame className="h-3 w-3" />
                     Risk
                   </div>

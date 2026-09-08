@@ -198,12 +198,12 @@ export function EmployeesPage() {
       header: "Employee",
       render: (row) => (
         <div className="flex items-center gap-3">
-          <span className="inline-flex h-9 w-9 items-center justify-center rounded-full bg-brand-100 text-[0.7rem] font-black text-brand-700">
+          <span className="inline-flex h-9 w-9 items-center justify-center rounded-full bg-brand-100 text-[0.7rem] font-black text-brand-700 dark:bg-brand-500/15 dark:text-brand-200">
             {getInitials(row.name)}
           </span>
           <div className="min-w-0">
-            <p className="font-bold text-slate-900 truncate">{row.name}</p>
-            <p className="text-[0.65rem] text-slate-400 truncate">{row.email}</p>
+            <p className="truncate font-bold text-slate-900 dark:text-slate-50">{row.name}</p>
+            <p className="truncate text-[0.65rem] text-slate-400 dark:text-slate-400">{row.email}</p>
           </div>
         </div>
       ),
@@ -213,12 +213,12 @@ export function EmployeesPage() {
       header: "Role / Dept",
       render: (row) => (
         <div>
-          <p className="font-bold text-slate-700 truncate">{row.role}</p>
-          <p className="text-[0.65rem] font-black uppercase text-slate-400">{row.department}</p>
+          <p className="truncate font-bold text-slate-700 dark:text-slate-200">{row.role}</p>
+          <p className="text-[0.65rem] font-black uppercase text-slate-400 dark:text-slate-500">{row.department}</p>
         </div>
       ),
     },
-    { key: "manager", header: "Manager", render: (row) => <span className="font-bold text-slate-600">{row.manager}</span> },
+    { key: "manager", header: "Manager", render: (row) => <span className="font-bold text-slate-600 dark:text-slate-300">{row.manager}</span> },
     {
       key: "performance",
       header: "Performance",
@@ -385,12 +385,12 @@ export function EmployeesPage() {
                     type="button"
                     onClick={() => setManagerFocus(active ? "" : m.manager)}
                     className={`rounded-xl border p-4 text-left transition-all ${
-                      active ? "border-brand-300 bg-brand-50/50 ring-2 ring-brand-100" : "border-slate-100 bg-white hover:border-slate-300 shadow-sm"
+                      active ? "border-brand-300 bg-brand-50/50 ring-2 ring-brand-100 dark:border-brand-400/30 dark:bg-brand-500/10 dark:ring-brand-400/20" : "border-slate-100 bg-white hover:border-slate-300 shadow-sm dark:border-slate-700/60 dark:bg-slate-900/80 dark:hover:border-slate-600"
                     }`}
                   >
-                    <p className="text-[0.6rem] font-black uppercase tracking-[0.14em] text-slate-400">{m.manager}</p>
-                    <p className="mt-2 text-2xl font-black text-slate-900">{m.count}</p>
-                    <div className="mt-3 flex items-center justify-between text-[0.65rem] font-bold text-slate-500">
+                    <p className="text-[0.6rem] font-black uppercase tracking-[0.14em] text-slate-400 dark:text-slate-500">{m.manager}</p>
+                    <p className="mt-2 text-2xl font-black text-slate-900 dark:text-slate-50">{m.count}</p>
+                    <div className="mt-3 flex items-center justify-between text-[0.65rem] font-bold text-slate-500 dark:text-slate-400">
                       <span>{m.averagePerformance}% Score</span>
                       <span className={ratio > 20 ? "text-amber-600" : ""}>{ratio}% Attention</span>
                     </div>
@@ -402,10 +402,10 @@ export function EmployeesPage() {
         </div>
       ) : null}
 
-      <div className="sticky top-[72px] z-10 -mx-4 px-4 py-2 bg-white/80 backdrop-blur-md border-b border-slate-200/60 mb-4">
+      <div className="sticky top-[72px] z-10 -mx-4 mb-4 border-b border-slate-200/60 bg-white/80 px-4 py-2 backdrop-blur-md dark:border-slate-700/60 dark:bg-slate-950/80">
         <div className="flex flex-wrap items-center gap-3">
           <div className="relative flex-1 min-w-[240px]">
-            <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-slate-400" />
+            <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-slate-400 dark:text-slate-500" />
             <input
               type="search"
               value={search}
@@ -454,8 +454,8 @@ export function EmployeesPage() {
               <button
                 key={p.id}
                 onClick={() => setViewPreset(p.id as ViewPreset)}
-                className={`rounded-full px-3 py-1 text-[0.65rem] font-black uppercase tracking-wider transition ${
-                  viewPreset === p.id ? "bg-brand-700 text-white shadow-sm" : "bg-slate-100 text-slate-500 hover:bg-slate-200"
+              className={`rounded-full px-3 py-1 text-[0.65rem] font-black uppercase tracking-wider transition ${
+                  viewPreset === p.id ? "bg-brand-700 text-white shadow-sm dark:bg-brand-300 dark:text-slate-950" : "bg-slate-100 text-slate-500 hover:bg-slate-200 dark:bg-slate-900/80 dark:text-slate-300 dark:hover:bg-slate-800"
                 }`}
               >
                 {p.label}
@@ -468,13 +468,13 @@ export function EmployeesPage() {
       <div className={`grid gap-6 transition-all duration-300 ${selectedEmployeeId ? 'lg:grid-cols-[1fr_400px]' : 'grid-cols-1'}`}>
         <SectionCard title="Employee Directory" rightSlot={<span className="insight-pill">{filteredEmployees.length} profiles</span>}>
           {loading && <p className="text-sm font-bold text-brand-600">Syncing...</p>}
-          {actionMessage && <p className="mb-4 text-xs font-bold text-emerald-600 bg-emerald-50 p-2 rounded-lg">{actionMessage}</p>}
+          {actionMessage && <p className="mb-4 rounded-lg bg-emerald-50 p-2 text-xs font-bold text-emerald-600 dark:bg-emerald-500/10 dark:text-emerald-200">{actionMessage}</p>}
           <DataTable
             columns={columns}
             rows={filteredEmployees}
             rowKey={(r) => r.id}
             exportFileName="employees"
-            rowClassName={(r) => r.id === selectedEmployeeId ? "!bg-brand-50/80 ring-1 ring-brand-200 ring-inset" : ""}
+            rowClassName={(r) => r.id === selectedEmployeeId ? "!bg-brand-50/80 ring-1 ring-brand-200 ring-inset dark:!bg-brand-900/30 dark:ring-brand-400/20" : ""}
           />
         </SectionCard>
 
@@ -483,19 +483,19 @@ export function EmployeesPage() {
             <SectionCard 
               title="Profile Editor" 
               rightSlot={
-                <button onClick={() => setSelectedEmployeeId(null)} className="p-1 hover:bg-slate-100 rounded-lg transition" title="Close editor">
-                  <X className="h-5 w-5 text-slate-400" />
+                <button onClick={() => setSelectedEmployeeId(null)} className="rounded-lg p-1 transition hover:bg-slate-100 dark:hover:bg-slate-800" title="Close editor">
+                  <X className="h-5 w-5 text-slate-400 dark:text-slate-300" />
                 </button>
               }
             >
               <form onSubmit={handleUpdate} className="space-y-5">
-                <div className="flex items-center gap-4 p-4 rounded-xl bg-slate-50 border border-slate-100">
-                   <span className="h-12 w-12 flex items-center justify-center rounded-full bg-white border border-slate-200 text-sm font-black text-brand-700 shadow-sm">
+                <div className="flex items-center gap-4 rounded-xl border border-slate-100 bg-slate-50 p-4 dark:border-slate-700/60 dark:bg-slate-900/70">
+                   <span className="flex h-12 w-12 items-center justify-center rounded-full border border-slate-200 bg-white text-sm font-black text-brand-700 shadow-sm dark:border-slate-700/60 dark:bg-slate-900 dark:text-brand-200">
                       {getInitials(selectedEmployee.name)}
                    </span>
                    <div className="min-w-0">
-                      <p className="font-black text-slate-900 truncate">{selectedEmployee.name}</p>
-                      <p className="text-xs font-bold text-slate-500 truncate">{selectedEmployee.email}</p>
+                      <p className="truncate font-black text-slate-900 dark:text-slate-50">{selectedEmployee.name}</p>
+                      <p className="truncate text-xs font-bold text-slate-500 dark:text-slate-400">{selectedEmployee.email}</p>
                    </div>
                 </div>
 
@@ -507,7 +507,7 @@ export function EmployeesPage() {
                       onClick={() => void handleQuickStatusAction(s)}
                       disabled={actionLoading !== null}
                       className={`rounded-lg border py-2 text-[0.65rem] font-black uppercase tracking-widest transition ${
-                        editState.status === s ? "border-brand-600 bg-brand-50 text-brand-700 shadow-sm" : "border-slate-200 bg-white text-slate-400 hover:bg-slate-50"
+                        editState.status === s ? "border-brand-600 bg-brand-50 text-brand-700 shadow-sm dark:border-brand-400/30 dark:bg-brand-500/10 dark:text-brand-200" : "border-slate-200 bg-white text-slate-400 hover:bg-slate-50 dark:border-slate-700/60 dark:bg-slate-900/80 dark:text-slate-300 dark:hover:bg-slate-800"
                       }`}
                     >
                       {s.replace("_", " ")}
@@ -542,21 +542,21 @@ export function EmployeesPage() {
                   </div>
                 </div>
 
-                <div className="rounded-xl border border-slate-200 bg-slate-50 px-4 py-3">
+                <div className="rounded-xl border border-slate-200 bg-slate-50 px-4 py-3 dark:border-slate-700/60 dark:bg-slate-900/70">
                   <div className="flex items-center justify-between gap-3">
                     <div>
-                      <label className="text-[0.6rem] font-black uppercase tracking-widest text-slate-400 ml-1">Performance</label>
-                      <p className="mt-1 text-sm font-semibold text-slate-500">Computed from attendance and completed workload.</p>
+                      <label className="ml-1 text-[0.6rem] font-black uppercase tracking-widest text-slate-400 dark:text-slate-500">Performance</label>
+                      <p className="mt-1 text-sm font-semibold text-slate-500 dark:text-slate-300">Computed from attendance and completed workload.</p>
                     </div>
-                    <span className="rounded-full bg-white px-3 py-1.5 text-sm font-black text-brand-700 shadow-sm ring-1 ring-brand-100">
+                    <span className="rounded-full bg-white px-3 py-1.5 text-sm font-black text-brand-700 shadow-sm ring-1 ring-brand-100 dark:bg-slate-900 dark:text-brand-200 dark:ring-brand-400/20">
                       {selectedEmployee.performanceScore}%
                     </span>
                   </div>
                 </div>
 
-                <div className="p-3 rounded-xl bg-brand-50/50 border border-brand-100 flex gap-3">
-                  <Briefcase className="h-4 w-4 text-brand-600 shrink-0 mt-0.5" />
-                  <p className="text-[0.7rem] font-bold text-brand-800 leading-relaxed">{getRecommendation(selectedEmployee)}</p>
+                <div className="flex gap-3 rounded-xl border border-brand-100 bg-brand-50/50 p-3 dark:border-brand-500/20 dark:bg-brand-500/10">
+                  <Briefcase className="mt-0.5 h-4 w-4 shrink-0 text-brand-600 dark:text-brand-200" />
+                  <p className="text-[0.7rem] font-bold leading-relaxed text-brand-800 dark:text-brand-100">{getRecommendation(selectedEmployee)}</p>
                 </div>
 
                 <div className="flex flex-col gap-2">
@@ -564,7 +564,7 @@ export function EmployeesPage() {
                     <PencilLine className="h-4 w-4" />
                     {updating ? "Saving..." : "Save Profile"}
                   </button>
-                  <button type="button" onClick={() => void handleDelete()} disabled={actionLoading !== null} className="btn-secondary w-full h-10 border-rose-100 text-rose-600 hover:bg-rose-50 hover:border-rose-200">
+                  <button type="button" onClick={() => void handleDelete()} disabled={actionLoading !== null} className="btn-secondary w-full h-10 border-rose-100 text-rose-600 hover:bg-rose-50 hover:border-rose-200 dark:border-rose-500/30 dark:text-rose-200 dark:hover:bg-rose-500/10">
                     <Trash2 className="h-4 w-4" />
                     Delete Record
                   </button>
@@ -577,14 +577,14 @@ export function EmployeesPage() {
 
       {showAddModal && (
         <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-slate-950/60 backdrop-blur-sm animate-page-enter">
-          <div className="w-full max-w-xl bg-white rounded-[32px] shadow-panel overflow-hidden border border-slate-200">
-            <div className="p-6 border-b border-slate-100 flex items-center justify-between bg-slate-50/50">
+          <div className="w-full max-w-xl overflow-hidden rounded-[32px] border border-slate-200 bg-white shadow-panel dark:border-slate-700/60 dark:bg-slate-950/95">
+            <div className="flex items-center justify-between border-b border-slate-100 bg-slate-50/50 p-6 dark:border-slate-700/60 dark:bg-slate-900/80">
               <div>
-                <h2 className="text-xl font-black text-slate-900 tracking-tight">Onboard New Talent</h2>
-                <p className="text-xs font-bold text-slate-500 mt-1">Create a system profile and send access credentials.</p>
+                <h2 className="text-xl font-black tracking-tight text-slate-900 dark:text-slate-50">Onboard New Talent</h2>
+                <p className="mt-1 text-xs font-bold text-slate-500 dark:text-slate-400">Create a system profile and send access credentials.</p>
               </div>
-              <button onClick={() => setShowAddModal(false)} className="p-2 hover:bg-white rounded-full transition shadow-sm border border-slate-200" title="Close onboarder">
-                <X className="h-5 w-5 text-slate-400" />
+              <button onClick={() => setShowAddModal(false)} className="rounded-full border border-slate-200 p-2 transition shadow-sm hover:bg-white dark:border-slate-700/60 dark:bg-slate-900/80 dark:hover:bg-slate-800" title="Close onboarder">
+                <X className="h-5 w-5 text-slate-400 dark:text-slate-300" />
               </button>
             </div>
             
@@ -609,14 +609,14 @@ export function EmployeesPage() {
                 </select>
               </div>
 
-              <div className="rounded-2xl border border-brand-200 bg-brand-50/70 px-4 py-3">
-                <p className="text-[0.6rem] font-black uppercase tracking-[0.16em] text-brand-700">Performance is automatic</p>
-                <p className="mt-1 text-xs font-semibold text-brand-700/80">
+              <div className="rounded-2xl border border-brand-200 bg-brand-50/70 px-4 py-3 dark:border-brand-500/20 dark:bg-brand-500/10">
+                <p className="text-[0.6rem] font-black uppercase tracking-[0.16em] text-brand-700 dark:text-brand-200">Performance is automatic</p>
+                <p className="mt-1 text-xs font-semibold text-brand-700/80 dark:text-brand-100/80">
                   The employee performance score is calculated after onboarding from attendance and completed workload.
                 </p>
               </div>
 
-              {submitError && <p className="p-3 rounded-xl bg-rose-50 text-rose-600 text-xs font-bold">{submitError}</p>}
+              {submitError && <p className="rounded-xl bg-rose-50 p-3 text-xs font-bold text-rose-600 dark:bg-rose-500/10 dark:text-rose-200">{submitError}</p>}
               
               <div className="pt-4 flex gap-3">
                 <button type="button" onClick={handleApplyStarterTemplate} className="btn-secondary flex-1">
