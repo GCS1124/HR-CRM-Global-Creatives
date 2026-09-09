@@ -875,17 +875,32 @@ function normalizeAttendanceTime(value: string): string | null {
   return `${String(hours).padStart(2, "0")}:${match[2]}`;
 }
 
+function normalizeAttendanceDate(value: string): string | null {
+  const match = value.trim().match(/^(\d{4})-(\d{2})-(\d{2})(?:$|T)/);
+  if (!match) {
+    return null;
+  }
+
+  const normalized = `${match[1]}-${match[2]}-${match[3]}`;
+  const date = new Date(`${normalized}T00:00:00Z`);
+  if (Number.isNaN(date.valueOf()) || date.toISOString().slice(0, 10) !== normalized) {
+    return null;
+  }
+
+  return normalized;
+}
+
 function isValidAttendanceDate(value: string): boolean {
-  if (!/^\d{4}-\d{2}-\d{2}$/.test(value)) {
+  if (normalizeAttendanceDate(value) !== value) {
     return false;
   }
 
-  const date = new Date(`${value}T00:00:00`);
-  return !Number.isNaN(date.valueOf()) && date.toISOString().slice(0, 10) === value;
+  return true;
 }
 
 function attendanceTimestamp(date: string, time: string): string | null {
-  if (!isValidAttendanceDate(date)) {
+  const normalizedDate = normalizeAttendanceDate(date);
+  if (!normalizedDate) {
     throw new Error("This correction request has an invalid date or time.");
   }
 
@@ -898,7 +913,7 @@ function attendanceTimestamp(date: string, time: string): string | null {
     throw new Error("This correction request has an invalid date or time.");
   }
 
-  const timestamp = new Date(`${date}T${normalizedTime}:00`);
+  const timestamp = new Date(`${normalizedDate}T${normalizedTime}:00`);
   if (Number.isNaN(timestamp.valueOf())) {
     throw new Error("This correction request has an invalid date or time.");
   }
@@ -2495,24 +2510,31 @@ export const hrService = {
 
     if (status === "approved" && requestRow.type === "attendance_correction" && isAttendanceCorrectionPayload(requestRow.payload)) {
       const p = requestRow.payload;
+      const date = normalizeAttendanceDate(p.date);
+      const checkIn = normalizeAttendanceTime(p.checkIn);
+      const checkOut = normalizeAttendanceTime(p.checkOut);
+      if (!date || !checkIn || !checkOut) {
+        throw new Error("This correction request has an invalid date or time.");
+      }
+
       const correctedStatus: AttendanceRecord["status"] =
-        p.checkIn === "--" && p.checkOut === "--" ? "absent" : "present";
+        checkIn === "--" && checkOut === "--" ? "absent" : "present";
 
       const { data: existing, error: existingError } = await client
         .from("attendance_records")
         .select("id")
         .eq("employee_id", requestRow.employee_id)
-        .eq("date", p.date)
+        .eq("date", date)
         .maybeSingle();
 
       throwIfError(existingError, "attendance correction lookup");
       
       const updateData = {
-        check_in: p.checkIn,
-        check_out: p.checkOut,
+        check_in: checkIn,
+        check_out: checkOut,
         status: correctedStatus,
-        check_in_at: attendanceTimestamp(p.date, p.checkIn),
-        check_out_at: attendanceTimestamp(p.date, p.checkOut),
+        check_in_at: attendanceTimestamp(date, checkIn),
+        check_out_at: attendanceTimestamp(date, checkOut),
       };
 
       if (existing) {
@@ -2526,7 +2548,7 @@ export const hrService = {
           id: createId("ATT"),
           employee_id: requestRow.employee_id,
           employee_name: requestRow.employee_name,
-          date: p.date,
+          date,
           ...updateData
         });
         throwIfError(insertError, "attendance correction apply");
