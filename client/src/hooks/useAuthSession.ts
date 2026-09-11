@@ -16,7 +16,6 @@ interface ProfileRow {
   role: UserRole;
 }
 
-const ADMIN_EMAIL = "test@crm.co.in";
 const SIGNUP_REPAIR_SQL_PATH = "supabase/auth-signup-repair.sql";
 let profileSchemaState: "unknown" | "legacy" | "ready" = "unknown";
 let cachedProfile: UserProfile | null = null;
@@ -35,16 +34,8 @@ function normalizeAuthEmail(email: string): string {
   return email.trim().toLowerCase();
 }
 
-function toUserRole(value: string | null | undefined, email: string | undefined): UserRole {
-  if (value === "admin" || value === "employee") {
-    return value;
-  }
-
-  if (email?.toLowerCase() === ADMIN_EMAIL) {
-    return "admin";
-  }
-
-  return "employee";
+function toUserRole(value: string | null | undefined): UserRole {
+  return value === "admin" ? "admin" : "employee";
 }
 
 function resolveSessionFullName(session: Session): string | null {
@@ -68,7 +59,7 @@ function toProfile(row: ProfileRow, fallbackEmail?: string): UserProfile {
     id: row.id,
     email: row.email || fallbackEmail || "",
     fullName: row.full_name,
-    role: toUserRole(row.role, row.email || fallbackEmail),
+    role: toUserRole(row.role),
   };
 }
 
@@ -77,10 +68,7 @@ function buildFallbackProfile(session: Session): UserProfile {
     id: session.user.id,
     email: normalizeAuthEmail(session.user.email ?? ""),
     fullName: resolveSessionFullName(session),
-    role: toUserRole(
-      typeof session.user.user_metadata.role === "string" ? session.user.user_metadata.role : undefined,
-      session.user.email,
-    ),
+    role: "employee",
   };
 }
 
@@ -121,10 +109,7 @@ async function provisionProfileFromSession(session: Session): Promise<UserProfil
 
   const email = normalizeAuthEmail(session.user.email ?? "");
   const fullName = resolveSessionFullName(session);
-  const role = toUserRole(
-    typeof session.user.user_metadata.role === "string" ? session.user.user_metadata.role : undefined,
-    email,
-  );
+  const role: UserRole = "employee";
 
   const { data, error } = await supabase
     .from("profiles")
@@ -339,7 +324,6 @@ export function useAuthSession() {
         data: {
           full_name: normalizedName,
           name: normalizedName,
-          role: "employee",
         },
       },
     });

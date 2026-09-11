@@ -63,6 +63,14 @@ interface EmployeeQuery {
   status?: string;
 }
 
+// Directory-only exclusions keep non-directory accounts usable by their owners
+// while preventing them from appearing in the admin employee directory.
+const DIRECTORY_EXCLUDED_EMAILS = new Set(["test@crm.co.in"]);
+
+function isDirectoryExcludedEmail(email: string | null | undefined): boolean {
+  return DIRECTORY_EXCLUDED_EMAILS.has(email?.trim().toLowerCase() ?? "");
+}
+
 interface EmployeeRow {
   id: string;
   user_id: string | null;
@@ -1695,7 +1703,8 @@ export const hrService = {
     const { data, error } = await builder.order("join_date", { ascending: false });
     throwIfError(error, "employees fetch");
 
-    return enrichEmployees((data ?? []) as EmployeeRow[]);
+    const directoryRows = ((data ?? []) as EmployeeRow[]).filter((row) => !isDirectoryExcludedEmail(row.email));
+    return enrichEmployees(directoryRows);
   },
 
   createEmployee: async (payload: NewEmployeePayload): Promise<CreateEmployeeResult> => {

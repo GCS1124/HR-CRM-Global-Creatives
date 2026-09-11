@@ -411,7 +411,7 @@ stable
 security definer
 set search_path = public
 as $$
-  select array['test@crm.co.in', 'raonelucifer527@gmail.com'];
+  select array['raonelucifer527@gmail.com'];
 $$;
 
 create or replace function public.task_admin_emails()
@@ -421,7 +421,7 @@ stable
 security definer
 set search_path = public
 as $$
-  select array['test@crm.co.in'];
+  select array[]::text[];
 $$;
 
 create or replace function public.is_task_assigner()
@@ -534,7 +534,6 @@ declare
     'User'
   );
   v_role text := case
-    when lower(coalesce(new.raw_user_meta_data ->> 'role', 'employee')) = 'admin' then 'admin'
     when v_email = any(public.admin_emails()) then 'admin'
     else 'employee'
   end;
@@ -857,6 +856,5 @@ create policy announcements_write_policy on public.announcements
   using (public.is_admin())
   with check (public.is_admin());
 
--- Use the script `supabase/bootstrap-admin.mjs` to create/update the admin auth account:
---   email: test@crm.co.in
---   password: @12131415@
+-- Use `supabase/bootstrap-admin.mjs` with server-side ADMIN_EMAIL,
+-- ADMIN_PASSWORD, and SUPABASE_SERVICE_ROLE_KEY environment variables.

@@ -1,14 +1,17 @@
 import { createClient } from "@supabase/supabase-js";
 
-const ADMIN_EMAIL = "test@crm.co.in";
-const ADMIN_PASSWORD = "@12131415@";
+const ADMIN_EMAIL = process.env.ADMIN_EMAIL?.trim().toLowerCase();
+const ADMIN_PASSWORD = process.env.ADMIN_PASSWORD;
+const ADMIN_FULL_NAME = process.env.ADMIN_FULL_NAME?.trim() || "CRM Super Admin";
 
 const supabaseUrl = process.env.SUPABASE_URL ?? process.env.VITE_SUPABASE_URL;
 const serviceRoleKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
 
-if (!supabaseUrl || !serviceRoleKey) {
+if (!supabaseUrl || !serviceRoleKey || !ADMIN_EMAIL || !ADMIN_PASSWORD) {
   console.error("Missing required environment variables.");
-  console.error("Set SUPABASE_URL (or VITE_SUPABASE_URL) and SUPABASE_SERVICE_ROLE_KEY.");
+  console.error(
+    "Set SUPABASE_URL (or VITE_SUPABASE_URL), SUPABASE_SERVICE_ROLE_KEY, ADMIN_EMAIL, and ADMIN_PASSWORD.",
+  );
   process.exit(1);
 }
 
@@ -36,7 +39,7 @@ async function ensureAdminUser() {
       password: ADMIN_PASSWORD,
       email_confirm: true,
       user_metadata: {
-        full_name: "CRM Super Admin",
+        full_name: ADMIN_FULL_NAME,
       },
     });
 
@@ -52,7 +55,7 @@ async function ensureAdminUser() {
     password: ADMIN_PASSWORD,
     email_confirm: true,
     user_metadata: {
-      full_name: "CRM Super Admin",
+      full_name: ADMIN_FULL_NAME,
     },
   });
 
@@ -89,7 +92,7 @@ async function enforceRoleModel(adminUserId) {
     {
       id: adminUserId,
       email: ADMIN_EMAIL,
-      full_name: "CRM Super Admin",
+      full_name: ADMIN_FULL_NAME,
       role: "admin",
     },
     { onConflict: "id" },
@@ -134,7 +137,7 @@ async function ensureAdminEmployeeRecord(adminUserId) {
   const { error: insertError } = await supabase.from("employees").insert({
     id: "EMP-0001",
     user_id: adminUserId,
-    name: "CRM Super Admin",
+    name: ADMIN_FULL_NAME,
     email: ADMIN_EMAIL,
     role: "System Administrator",
     department: "Administration",

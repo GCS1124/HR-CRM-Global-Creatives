@@ -50,15 +50,18 @@ npm run build
 ## Supabase setup
 
 1. Run `supabase/schema.sql` in Supabase SQL Editor.
-2. Bootstrap the fixed admin account:
+2. Bootstrap a designated admin account without storing credentials in the repository:
 
 ```bash
+export ADMIN_EMAIL="admin@example.com"
+read -s ADMIN_PASSWORD
+export ADMIN_PASSWORD
 npm run setup:admin
+unset ADMIN_PASSWORD
 ```
 
 This enforces:
 
-- Admin account: `test@crm.co.in` / `@12131415@`
 - All other profiles: `employee`
 
 ## OAuth checklist

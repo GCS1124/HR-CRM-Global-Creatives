@@ -28,7 +28,7 @@ stable
 security definer
 set search_path = public
 as $$
-  select array['test@crm.co.in', 'raonelucifer527@gmail.com'];
+  select array['raonelucifer527@gmail.com'];
 $$;
 
 create or replace function public.handle_new_auth_user_compat()
@@ -46,7 +46,6 @@ declare
     'User'
   );
   v_role text := case
-    when lower(coalesce(new.raw_user_meta_data ->> 'role', 'employee')) = 'admin' then 'admin'
     when v_email = any(public.admin_emails()) then 'admin'
     else 'employee'
   end;

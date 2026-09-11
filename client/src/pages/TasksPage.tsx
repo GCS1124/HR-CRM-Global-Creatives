@@ -14,7 +14,6 @@ import { formatDate, formatNumericDate } from "../utils/formatters";
 const PAGE_SIZE = 10;
 const statusOptions: TaskStatus[] = ["todo", "in_progress", "blocked", "done"];
 const priorityOptions: TaskPriority[] = ["low", "medium", "high", "critical"];
-const taskAssignerEmails = ["test@crm.co.in"];
 
 function resolveAssigneeLabel(task: Task) {
   return task.assigneeName ?? "Unassigned";
@@ -98,8 +97,7 @@ export function TasksPage() {
 
   const currentEmployee = currentEmployeeHook.data ?? null;
   const isClientAssigner = currentEmployee?.department === "Client Success";
-  const isAdminEmail = profile?.email ? taskAssignerEmails.includes(profile.email.toLowerCase()) : false;
-  const canAssign = role === "admin" || isClientAssigner || isAdminEmail;
+  const canAssign = role === "admin" || isClientAssigner;
   const isAdminView = role === "admin";
 
   const [formState, setFormState] = useState<NewTaskPayload>({
